@@ -1,7 +1,7 @@
 #ifndef MYSTL_VECTOR_H
 #define MYSTL_VECTOR_H
 
-#include "stl_config.h"
+#include "stl_config.hpp"
 #include <algorithm>
 #include <cstring>
 #include <stdexcept>
@@ -52,15 +52,15 @@ public:
 template<typename T>
 class vector {
 public:
-    typedef T value_type;
-    typedef T* pointer;
-    typedef const T* const_pointer;
-    typedef T& reference;
-    typedef const T& const_reference;
-    typedef size_t size_type;
-    typedef ptrdiff_t difference_type;
-    typedef vector_iterator<T> iterator;
-    typedef const vector_iterator<T> const_iterator;
+    typedef T                           value_type;
+    typedef T*                          pointer;
+    typedef const T*                    const_pointer;
+    typedef T&                          reference;
+    typedef const T&                    const_reference;
+    typedef size_t                      size_type;
+    typedef ptrdiff_t                   difference_type;
+    typedef vector_iterator<T>          iterator;
+    typedef const vector_iterator<T>    const_iterator;
 
 private:
     pointer data_;
@@ -81,7 +81,8 @@ private:
         delete[] ptr;
     }
 
-    void construct(pointer ptr, const_reference value) {
+    //创建未定义的值
+    void construct(pointer ptr, const_reference value){
         MYSTL_TRY {
             new (ptr) T(value);
         }
@@ -90,12 +91,13 @@ private:
         }
     }
 
+    //调用vector元素的析构函数
     void destroy(pointer ptr) {
         ptr->~T();
     }
 
 public:
-    // 构造函数
+    // 构造函数,data_为nullptr
     vector() : data_(nullptr), size_(0), capacity_(0) {}
     
     explicit vector(size_type n) : size_(n), capacity_(n) {
@@ -127,9 +129,8 @@ public:
     // 析构函数
     ~vector() {
         if (data_) {
-            for (size_type i = 0; i < size_; ++i) {
+            for (size_type i = 0; i < size_; ++i)
                 destroy(data_ + i);
-            }
             deallocate(data_);
         }
     }
@@ -221,9 +222,8 @@ public:
 
     reference at(size_type index) {
         MYSTL_TRY {
-            if (index >= size_) {
+            if (index >= size_) 
                 MYSTL_THROW(std::out_of_range("Index out of range"));
-            }
             return data_[index];
         }
         MYSTL_CATCH_ALL {
@@ -233,9 +233,8 @@ public:
 
     const_reference at(size_type index) const {
         MYSTL_TRY {
-            if (index >= size_) {
+            if (index >= size_)
                 MYSTL_THROW(std::out_of_range("Index out of range"));
-            }
             return data_[index];
         }
         MYSTL_CATCH_ALL {

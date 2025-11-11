@@ -25,7 +25,7 @@
   "editor.inlineSuggest.experimental.emptyResponseInformation": false,
   "editor.suggest.showFunctions": false,
   "terminal.integrated.suggest.inlineSuggestion": "off",
-  "workbench.colorTheme": "Dracula Theme",
+  "workbench.colorTheme": "Default Dark Modern",
   "editor.mouseWheelZoom": true,
   "code-runner.executorMap": {
     "javascript": "node",
@@ -136,7 +136,8 @@
     "streambuf": "cpp",
     "text_encoding": "cpp",
     "typeinfo": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "cstring": "cpp"
   },
   "git.ignoreLimitWarning": true,
   "C_Cpp.errorSquiggles": "enabled",
