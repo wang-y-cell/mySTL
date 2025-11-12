@@ -179,7 +179,7 @@ public:
     }
 #endif
 
-    // 拷贝赋值运算符
+    // kao bei yuan su
     vector& operator=(const vector& other) {
         if (this != &other) {
             vector tmp(other);
@@ -188,7 +188,7 @@ public:
         return *this;
     }
 
-    // 添加元素
+    // cha ru yuan su
     void push_back(const_reference value) {
         if (size_ >= capacity_) {
             reserve(capacity_ == 0 ? 1 : capacity_ * 2);
@@ -197,7 +197,7 @@ public:
         ++size_;
     }
 
-    // 删除最后一个元素
+    // shan chu yuan su
     void pop_back() {
         MYSTL_TRY {
             if (empty()) {
@@ -211,7 +211,7 @@ public:
         }
     }
 
-    // 访问元素
+    // fang wen yuan su 
     reference operator[](size_type index) {
         return data_[index];
     }

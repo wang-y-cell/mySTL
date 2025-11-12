@@ -164,7 +164,7 @@ void test_exception_handling() {
 
 void test_swap() {
     std::cout << "\n=== 测试swap操作 ===" << std::endl;
-    
+
     mystl::vector<int> v1;
     v1.push_back(1);
     v1.push_back(2);

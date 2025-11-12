@@ -25,7 +25,7 @@
   "editor.inlineSuggest.experimental.emptyResponseInformation": false,
   "editor.suggest.showFunctions": false,
   "terminal.integrated.suggest.inlineSuggestion": "off",
-  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.colorTheme": "Dracula Theme",
   "editor.mouseWheelZoom": true,
   "code-runner.executorMap": {
     "javascript": "node",
@@ -137,7 +137,13 @@
     "text_encoding": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "cstring": "cpp"
+    "cstring": "cpp",
+    "cerrno": "cpp",
+    "climits": "cpp",
+    "ios": "cpp",
+    "locale": "cpp",
+    "queue": "cpp",
+    "*.rh": "cpp"
   },
   "git.ignoreLimitWarning": true,
   "C_Cpp.errorSquiggles": "enabled",
