@@ -22,14 +22,15 @@ inline void destroy(T* ptr) {
 
 // 针对POD类型优化的批量析构
 template <class ForwardIterator>
-inline void destroy(ForwardIterator first) {
-    __destroy(first, first, value_type(first));
+inline void destroy(ForwardIterator first, ForwardIterator last) {
+    __destroy(first, last, value_type(first));
 }
 
+//暂时使用c++标准库的is_trivially_destructible来判断是否为POD类型
 template<typename forward_iterator, typename T>
 inline void __destroy(forward_iterator first, forward_iterator last, T*) {
-    typedef typename iterator_traits<T>::has_trivial_destructor has_trivial_destructor;
-    __destroy_aux(first, last, has_trivial_destructor());
+    typedef typename std::is_trivially_destructible<T> trivial_destructor;
+    __destroy_aux(first, last, trivial_destructor());
 }
 
 template<typename forward_iterator, typename T>
