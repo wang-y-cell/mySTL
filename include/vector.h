@@ -1,7 +1,8 @@
 #ifndef MYSTL_VECTOR_H
 #define MYSTL_VECTOR_H
 
-#include "stl_config.hpp"
+#include "stl_config.h"
+#include "stl_alloc.h"
 #include <algorithm>
 #include <cstring>
 #include <stdexcept>
