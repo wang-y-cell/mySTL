@@ -10,9 +10,9 @@
 // OOM 行为宏：控制在内存不足时的默认动作
 // - 若定义为抛异常：建议写为 throw bad_alloc
 // - 若未定义：默认打印错误并退出（不可恢复，适用于演示/临时场景）
-#if 0
+#if 1                                                                                                     
 #   include <new>
-#   define __THROW_BAD_ALLOC throw bad_alloc
+#   define __THROW_BAD_ALLOC throw std::bad_alloc()
 #elif !defined(__THROW_BAD_ALLOC)
 #   include<iostream>
 #   define __THROW_BAD_ALLOC std::cerr << "out of memory" << std::endl;exit(1);
@@ -76,11 +76,11 @@ public:
 
 // 为每个 inst 专门化定义并初始化静态 OOM 处理器指针（此处使用 0，可改为 nullptr）
 template <int inst>
-void (*malloc_alloc_template<inst>::__malloc_alloc_oom_handler)() = 0;
+void (*malloc_alloc_template<inst>::__malloc_alloc_oom_handler)() = 0;//c++11可以使用nullptr
 
 // OOM 回退实现：循环调用处理器并重试分配，直到成功或处理器未设置时触发默认 OOM 行为
-template<int inset>
-void* malloc_alloc_template<inset>::oom_malloc(size_t n) {
+template<int inst>
+void* malloc_alloc_template<inst>::oom_malloc(size_t n) {
     void (* handler)();
     void* ret;
     for(;;){
@@ -88,6 +88,19 @@ void* malloc_alloc_template<inset>::oom_malloc(size_t n) {
         if(!handler) __THROW_BAD_ALLOC;
         (*handler)();
         ret = malloc(n);
+        if(ret) return ret;
+    }
+}
+
+template<int inst>
+void* malloc_alloc_template<inst>::oom_realloc(void*p, size_t new_sz) {
+    void (* handler)();
+    void* ret;
+    for(;;){
+        handler = __malloc_alloc_oom_handler;
+        if(!handler) __THROW_BAD_ALLOC;
+        (*handler)();//调用处理器
+        ret = realloc(p, new_sz);
         if(ret) return ret;
     }
 }
@@ -111,12 +124,12 @@ struct simple_alloc {
 
     // 释放 n 个元素的存储空间
     static void deallocate(T* p, std::size_t n) {
-        Alloc::deallocate(static_cast<void*>(p), n * sizeof(T));
+        Alloc::deallocate(p, n * sizeof(T));
     }
 
     // 释放单个元素的存储空间
     static void deallocate(T* p) {
-        Alloc::deallocate(static_cast<void*>(p), sizeof(T));
+        Alloc::deallocate(p, sizeof(T));
     }
 };
 
