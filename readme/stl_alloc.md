@@ -1,6 +1,6 @@
 # 概览
-- 当前 `stl_alloc.h` 为占时文件，仅实现“第一级内存配置器”（基于 `malloc/free`）。第二级内存配置器（小块内存池/自由链表等）尚未实现，接口与行为后续可能调整。
-- 已包含的组成：条件编译的 OOM 宏、`malloc_alloc_template<int>` 模板类、静态 OOM 处理器、`oom_malloc` 实现、默认别名 `malloc_alloc`、以及按元素类型封装的 `simple_alloc<T, Alloc>`。
+- 当前 `stl_alloc.h` 已实现“第一级内存配置器”（基于 `malloc/free`）与“第二级内存配置器”（小块内存池/分级自由链表）。
+- 组成：`__THROW_BAD_ALLOC` 宏、`malloc_alloc_template<int>`、`default_alloc_template<int>`、别名 `malloc_alloc`/`default_alloc`、以及按元素封装的 `simple_alloc<T, Alloc>`。
 
 # 头文件与宏
 - 头文件防卫：`include/stl_alloc.h:1-2`
@@ -43,11 +43,26 @@
   - 调用处理器后再次尝试 `malloc(n)`，成功则返回：`include/stl_alloc.h:72-75`
   - 用法：由 `allocate(n)` 在失败时内部调用，无需直接使用
 - `oom_realloc`：已声明但当前文件未定义（`include/stl_alloc.h:25` 与 `include/stl_alloc.h:39-43`），若运行时触发将导致链接错误，需要补全与 `oom_malloc` 类似的重试逻辑。
-- 第二级内存配置器：未实现（例如分级自由链表、小块内存对齐与整合作为优化层），未来会在单独文件或在本文件后续版本中补充。
+- 第二级内存配置器：已实现（`default_alloc_template<inst>`），对齐 8 字节、管理 `<=128` 字节的小块（共 `NFREELISTS=16` 条自由链表），大于 128 字节回退到一级；详见 `include/stl_alloc.h:122-231`。
 
 # 默认别名
 - 提供 `typedef malloc_alloc_template<0> malloc_alloc`，作为默认实例类型使用：`include/stl_alloc.h:78`
   - 不同 `inst` 专门化拥有独立的静态 OOM 处理器，做到“按实例隔离状态”。
+
+# 第二级配置器：default_alloc_template<inst>
+- 概览：小块内存池 + 分级自由链表，`ALIGN=8`、`MAX_BYTES=128`、`NFREELISTS=16`，位置 `include/stl_alloc.h:122-131`
+- 静态成员：`free_list`（表头数组，`obj* volatile`）、`start_free/end_free`（池边界）、`heap_size`（扩容累计），位置 `include/stl_alloc.h:123, 166-176`
+- 工具函数：`ROUND_UP(bytes)` 与 `FREELIST_INDEX(bytes)`，位置 `include/stl_alloc.h:128-129`
+- 公有接口：
+  - `allocate(std::size_t n)`：小块走自由链表，大块委托一级，位置 `include/stl_alloc.h:133-141`
+  - `deallocate(void* p, std::size_t n)`：头插回链，位置 `include/stl_alloc.h:143-148`
+  - `reallocate(void* p, std::size_t old_sz, std::size_t new_sz)`：同类块直接返回；否则新块拷贝后释放旧块，位置 `include/stl_alloc.h:149-160`
+- 私有逻辑：
+  - `refill(size_t n)`：向对应自由链表批量补仓，位置 `include/stl_alloc.h:168-190`
+  - `chunk_alloc(size_t size, int& nobjs)`：从池切块；不足时向系统申请并可能回退一级，位置 `include/stl_alloc.h:195-231`
+- 别名：`typedef default_alloc_template<0> default_alloc;` 位置 `include/stl_alloc.h:232`
+- 用法：`auto* p = simple_alloc<int, default_alloc>::allocate(32); simple_alloc<int, default_alloc>::deallocate(p, 32);`
+- 说明：`volatile` 仅抑制优化，非线程安全；`bytes==0` 不适用该映射，元素适配层已避免（`simple_alloc::allocate(n)` 在 `n==0` 返回空指针）。
 
 # simple_alloc 封装
 - 模板 `simple_alloc<T, Alloc>`：按元素类型数量进行分配与释放的适配层，`include/stl_alloc.h:80-97`
