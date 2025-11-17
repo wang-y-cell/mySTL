@@ -18,6 +18,8 @@
 #   define __THROW_BAD_ALLOC std::cerr << "out of memory" << std::endl;exit(1);
 #endif
 
+
+
 // 所有实现位于 mystl 命名空间中，便于与标准库或其他库隔离
 namespace mystl {
 
@@ -108,10 +110,15 @@ void* malloc_alloc_template<inst>::oom_realloc(void*p, size_t new_sz) {
 // 默认实例别名：使用 inst=0 的配置器；如需隔离处理器状态可选择其他 inst 值
 typedef malloc_alloc_template<0> malloc_alloc;
 
+
+
+//第二级内存配置器模板：内存池 + 自由链表
 enum { ALIGN = 8 };
 enum { MAX_BYTES = 128 };
 enum { NFREELISTS = MAX_BYTES / ALIGN };
 
+
+//单线程内存配置器
 template <int inst>
 class default_alloc_template {
 private:
@@ -191,6 +198,7 @@ void* default_alloc_template<inst>::refill(size_t n) {
     return (void*)chunk;
 }
 
+
 template <int inst>
 char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
     size_t total_bytes = size * nobjs;
@@ -212,10 +220,26 @@ char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
             obj* volatile* my_list = free_list + index;
             ((obj*)start_free)->free_list_link = *my_list;
             *my_list = (obj*)start_free;
+            // 把池尾的这段剩余空间视为一个自由块： (obj*)start_free
+            // 将其 free_list_link 指向原表头： ((obj*)start_free)->free_list_link = *my_list
+            // 更新表头为该块： *my_list = (obj*)start_free 
         }
-        size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
+        size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4); // 申请两倍于需求量 + 额外量的内存
         start_free = (char*)malloc(bytes_to_get);
         if (start_free == 0) {
+            int i;
+            obj* volatile * me_free_list,*p;
+            for(i = size; i <= MAX_BYTES; i += ALIGN) {
+                me_free_list = free_list + FREELIST_INDEX(i);
+                p = *me_free_list;
+                if(p) {
+                    *me_free_list = p->free_list_link;
+                    start_free = (char*)p;
+                    end_free = start_free + i;
+                    return(chunk_alloc(size,nobjs));
+                }
+            }      
+            end_free = 0;    
             start_free = (char*)malloc_alloc::allocate(bytes_to_get);
         }
         heap_size += bytes_to_get;
