@@ -2,7 +2,7 @@
 #define MYSTL_VECTOR_H
 
 #include "stl_config.h"
-#include "stl_alloc.h"
+#include "memory.h"
 #include <algorithm>
 #include <cstring>
 #include <stdexcept>
