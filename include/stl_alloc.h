@@ -248,7 +248,15 @@ char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
     }
 }
 
+
 typedef default_alloc_template<0> default_alloc;
+
+#ifdef __USE_SECOND_ALLOC //默认是没有定义这个宏的
+    typedef malloc_alloc alloc;
+#else
+    typedef default_alloc alloc;
+#endif
+
 
 // 元素级适配器：将字节级配置器适配为按元素个数进行分配/释放
 // 用法示例：auto* arr = simple_alloc<int, malloc_alloc>::allocate(10);
