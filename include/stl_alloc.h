@@ -85,10 +85,12 @@ template<int inst>
 void* malloc_alloc_template<inst>::oom_malloc(size_t n) {
     void (* handler)();
     void* ret;
+    // 循环调用 OOM 处理器，直到分配成功
+    // 风险：若 OOM 处理器无法释放内存也未终止程序，将导致死循环
     for(;;){
         handler = __malloc_alloc_oom_handler;
         if(!handler) __THROW_BAD_ALLOC;
-        (*handler)();
+        (*handler)(); // OOM 处理器必须能释放内存或终止程序
         ret = malloc(n);
         if(ret) return ret;
     }
@@ -98,10 +100,12 @@ template<int inst>
 void* malloc_alloc_template<inst>::oom_realloc(void*p, size_t new_sz) {
     void (* handler)();
     void* ret;
+    // 循环调用 OOM 处理器，直到重分配成功
+    // 风险：若 OOM 处理器无法释放内存也未终止程序，将导致死循环
     for(;;){
         handler = __malloc_alloc_oom_handler;
         if(!handler) __THROW_BAD_ALLOC;
-        (*handler)();//调用处理器
+        (*handler)(); // OOM 处理器必须能释放内存或终止程序
         ret = realloc(p, new_sz);
         if(ret) return ret;
     }
@@ -127,7 +131,8 @@ private:
         char client_data[1]; 
     };
     
-    static obj* volatile free_list[NFREELISTS];
+        // volatile 不保证原子性，此内存池严格单线程，移除 volatile 避免误解
+    static obj* free_list[NFREELISTS];
     static char* start_free;
     static char* end_free;
     static size_t heap_size;
@@ -166,7 +171,7 @@ public:
 };
 
 template <int inst>
-typename default_alloc_template<inst>::obj* volatile
+typename default_alloc_template<inst>::obj*
 default_alloc_template<inst>::free_list[NFREELISTS] = {0};
 
 template <int inst>
