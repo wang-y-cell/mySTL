@@ -3,7 +3,8 @@
 
 
 
-#include"stl_construct.h"
+//#include"stl_construct.h"
+#include"auto_ptr.h"
 /*
 目前还没有迭代器类,萃取功能还未实现,占时注释
 #include"stl_uninitialized.h"
