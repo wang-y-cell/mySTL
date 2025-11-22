@@ -145,7 +145,7 @@ public:
     static void* allocate(std::size_t n) {
         if (n > MAX_BYTES) return malloc_alloc::allocate(n);
         size_t index = FREELIST_INDEX(n);
-        obj* volatile* my_list = free_list + index;
+        obj** my_list = free_list + index;
         obj* result = *my_list;
         if (result) { *my_list = result->free_list_link; return result; }
         return refill(ROUND_UP(n));
@@ -189,7 +189,7 @@ void* default_alloc_template<inst>::refill(size_t n) {
     char* chunk = chunk_alloc(n, nobjs);
     if (nobjs == 1) return (void*)chunk;
     size_t index = FREELIST_INDEX(n);
-    obj* volatile* my_list = free_list + index;
+    obj** my_list = free_list + index;
     char* cur = chunk + n;
     *my_list = (obj*)cur;
     obj* current = (obj*)cur;
@@ -222,7 +222,7 @@ char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
     } else {
         if (bytes_left > 0) {
             size_t index = FREELIST_INDEX(bytes_left);
-            obj* volatile* my_list = free_list + index;
+            obj** my_list = free_list + index;
             ((obj*)start_free)->free_list_link = *my_list;
             *my_list = (obj*)start_free;
             // 把池尾的这段剩余空间视为一个自由块： (obj*)start_free
@@ -233,7 +233,7 @@ char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
         start_free = (char*)malloc(bytes_to_get);
         if (start_free == 0) {
             int i;
-            obj* volatile * me_free_list,*p;
+            obj** me_free_list, *p;
             for(i = size; i <= MAX_BYTES; i += ALIGN) {
                 me_free_list = free_list + FREELIST_INDEX(i);
                 p = *me_free_list;

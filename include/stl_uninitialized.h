@@ -3,6 +3,8 @@
 
 #include "iterator.h"
 #include "type_traits.h"
+#include "stl_construct.h"
+#include <algorithm> //copy,fill,fill_n 暂时
 
 namespace mystl {
 
@@ -21,13 +23,13 @@ inline Forward_iterator __uninitialized_copy(Input_iterator first,Input_iterator
 template <class Input_iterator, class Forward_iterator,class T >
 inline Forward_iterator __uninitialized_copy_aux(Input_iterator first,Input_iterator last,Forward_iterator result,false_type) {
     for (; first != last; ++first, ++result)
-        mystl::construct(&*result, *first); //传地址
+        construct(&*result, *first); //传地址
     return result;
 }
 
 template <class Input_iterator, class Forward_iterator,class T >
 inline Forward_iterator __uninitialized_copy_aux(Input_iterator first,Input_iterator last,Forward_iterator result,true_type) {
-    return mystl::copy(first,last,result);
+    return std::copy(first, last, result);
 }
 
 // uninitialized_fill()
@@ -45,12 +47,12 @@ inline void __uninitialized_fill(Forward_iterator first,Forward_iterator last,co
 template <class Forward_iterator,class T >
 inline void __uninitialized_fill_aux(Forward_iterator first,Forward_iterator last,const T& value,false_type) {
     for (; first != last; ++first)
-        mystl::construct(&*first, value);
+        construct(&*first, value);
 }
 
 template <class Forward_iterator,class T >
 inline void __uninitialized_fill_aux(Forward_iterator first,Forward_iterator last,const T& value,true_type) {
-    mystl::fill(first,last,value);
+    std::fill(first, last, value);
 }
 
 
@@ -67,15 +69,14 @@ inline Forward_iterator __uninitialized_fill_n(Forward_iterator first,Size n,con
 }
 
 template <class Forward_iterator,class Size,class T >
-inline Forward_iterator __uninitialized_fill_n(Forward_iterator first,Size n,const T& value,true_type) {
-    mystl::fill(first,first+n,value);
-    return first+n;
+inline Forward_iterator __uninitialized_fill_n_aux(Forward_iterator first,Size n,const T& value,true_type) {
+    return std::fill_n(first, n, value);
 }
 
 template <class Forward_iterator,class Size,class T >
 inline Forward_iterator __uninitialized_fill_n_aux(Forward_iterator first,Size n,const T& value,false_type) {
     for (; n > 0; --n, ++first)
-        mystl::construct(&*first, value);
+        construct(&*first, value);
     return first;   
 }
 
