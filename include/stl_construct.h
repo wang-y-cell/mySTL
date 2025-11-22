@@ -2,6 +2,8 @@
 #define MY_STL_CONSTRUCT_HPP_
 
 #include <new>          // placement new
+#include "iterator.h"
+#include "type_traits.h"
 
 namespace mystl {
 

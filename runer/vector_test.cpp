@@ -1,6 +1,7 @@
 #include "../include/vector.h"
 #include <iostream>
 #include <string>
+#include <utility>
 
 void test_basic_operations() {
     std::cout << "=== 测试基本操作 ===" << std::endl;

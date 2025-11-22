@@ -1,7 +1,8 @@
 #ifndef STL_UNINITIALIZED_H
 #define STL_UNINITIALIZED_H
 
-//do not have value_type()
+#include "iterator.h"
+#include "type_traits.h"
 
 namespace mystl {
 
@@ -13,7 +14,7 @@ inline Forward_iterator uninitialized_copy(Input_iterator first,Input_iterator l
 
 template <class Input_iterator, class Forward_iterator,class T >
 inline Forward_iterator __uninitialized_copy(Input_iterator first,Input_iterator last,Forward_iterator result,T*) {
-    typedef typename iterator_traits<T>::is_pod_type is_pod_type;
+    typedef typename type_traits<T>::is_pod_type is_pod_type;
     return __uninitialized_copy_aux(first,last,result,is_pod_type());
 }   
 
@@ -37,7 +38,7 @@ inline void uninitialized_fill(Forward_iterator first,Forward_iterator last,cons
 
 template <class Forward_iterator,class T >
 inline void __uninitialized_fill(Forward_iterator first,Forward_iterator last,const T& value,T*) {
-    typedef typename iterator_traits<T>::is_pod_type is_pod_type;
+    typedef typename type_traits<T>::is_pod_type is_pod_type;
     __uninitialized_fill_aux(first,last,value,is_pod_type());
 }
 
@@ -61,7 +62,7 @@ inline Forward_iterator uninitialized_fill_n(Forward_iterator first,Size n,const
 
 template <class Forward_iterator,class Size,class T >
 inline Forward_iterator __uninitialized_fill_n(Forward_iterator first,Size n,const T& value,T*) {
-    typedef typename iterator_traits<T>::is_pod_type is_pod_type;
+    typedef typename type_traits<T>::is_pod_type is_pod_type;
     return __uninitialized_fill_n_aux(first,n,value,is_pod_type());
 }
 

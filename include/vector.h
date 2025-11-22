@@ -3,10 +3,10 @@
 
 #include "stl_config.h"
 #include "memory.h"
+#include "iterator.h"
 #include <algorithm>
 #include <cstring>
 #include <stdexcept>
-
 namespace mystl {
 
 // 前置声明
@@ -22,7 +22,7 @@ public:
     typedef T& reference;
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
-    typedef std::random_access_iterator_tag iterator_category;
+    typedef mystl::random_access_iterator_tag iterator_category;
 
 private:
     pointer ptr_;

@@ -44,7 +44,7 @@
 #endif
 
 // 特性检测
-#if defined(__GNUC__) && (__GNUC__ >= 5)
+#if MYSTL_CPP_VERSION >= 11
 #   define MYSTL_HAS_MOVE_SEMANTICS
 #   define MYSTL_HAS_VARIADIC_TEMPLATES
 #   define MYSTL_HAS_RVALUE_REFERENCES
