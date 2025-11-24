@@ -28,7 +28,7 @@ namespace mystl {
 
 // 第一级内存配置器模板：直接使用 malloc/free/realloc
 // - 非类型模板参数 inst 用于隔离静态 OOM 处理器（不同 inst 拥有各自的处理器状态）
-template <int inst>
+template <int inst> //似乎没有派上用场
 class malloc_alloc_template {
 private:
     // 在 malloc 失败时的回退逻辑：调用处理器并重试分配

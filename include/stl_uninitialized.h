@@ -1,6 +1,7 @@
 #ifndef STL_UNINITIALIZED_H
 #define STL_UNINITIALIZED_H
 
+#include "stl_config.h"
 #include "iterator.h"
 #include "type_traits.h"
 #include "stl_construct.h"
@@ -8,7 +9,7 @@
 
 namespace mystl {
 
-// uninitialized_copy()
+// uninitialized_copy(),返回新的结束迭代器
 template <class Input_iterator,class Forward_iterator >
 inline Forward_iterator uninitialized_copy(Input_iterator first,Input_iterator last,Forward_iterator result) {
     return  __uninitialized_copy(first,last,result,value_type(result));
@@ -22,9 +23,16 @@ inline Forward_iterator __uninitialized_copy(Input_iterator first,Input_iterator
 
 template <class Input_iterator, class Forward_iterator,class T >
 inline Forward_iterator __uninitialized_copy_aux(Input_iterator first,Input_iterator last,Forward_iterator result,false_type) {
-    for (; first != last; ++first, ++result)
-        construct(&*result, *first); //传地址
-    return result;
+    Forward_iterator cur = result;
+    MYSTL_TRY {
+        for (; first != last; ++first, ++cur)
+            construct(&*cur, *first);
+        return cur;
+    }
+    MYSTL_CATCH_ALL {
+        destroy(result, cur);
+        MYSTL_RETHROW;
+    }
 }
 
 template <class Input_iterator, class Forward_iterator,class T >
@@ -32,7 +40,7 @@ inline Forward_iterator __uninitialized_copy_aux(Input_iterator first,Input_iter
     return std::copy(first, last, result);
 }
 
-// uninitialized_fill()
+// uninitialized_fill(),返回新的结束迭代器
 template <class Forward_iterator,class T >
 inline void uninitialized_fill(Forward_iterator first,Forward_iterator last,const T& value) {
     __uninitialized_fill(first,last,value,value_type(first));
@@ -46,8 +54,15 @@ inline void __uninitialized_fill(Forward_iterator first,Forward_iterator last,co
 
 template <class Forward_iterator,class T >
 inline void __uninitialized_fill_aux(Forward_iterator first,Forward_iterator last,const T& value,false_type) {
-    for (; first != last; ++first)
-        construct(&*first, value);
+    Forward_iterator cur = first;
+    MYSTL_TRY {
+        for (; cur != last; ++cur)
+            construct(&*cur, value);
+    }
+    MYSTL_CATCH_ALL {
+        destroy(first, cur);
+        MYSTL_RETHROW;
+    }
 }
 
 template <class Forward_iterator,class T >
@@ -75,9 +90,16 @@ inline Forward_iterator __uninitialized_fill_n_aux(Forward_iterator first,Size n
 
 template <class Forward_iterator,class Size,class T >
 inline Forward_iterator __uninitialized_fill_n_aux(Forward_iterator first,Size n,const T& value,false_type) {
-    for (; n > 0; --n, ++first)
-        construct(&*first, value);
-    return first;   
+    Forward_iterator cur = first;
+    MYSTL_TRY {
+        for (; n > 0; --n, ++cur)
+            construct(&*cur, value);
+        return cur;
+    }
+    MYSTL_CATCH_ALL {
+        destroy(first, cur);
+        MYSTL_RETHROW;
+    }
 }
 
 
