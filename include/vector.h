@@ -130,17 +130,6 @@ private:
     iterator end() { return finish_; }
     const_iterator end() const { return finish_; }
 
-    reverse_iterator rbegin()
-    { return reverse_iterator(end()); }
-
-    const_reverse_iterator rbegin() const
-    { return const_reverse_iterator(end()); }
-
-    reverse_iterator rend()
-    { return reverse_iterator(begin()); }
-    
-    const_reverse_iterator rend() const
-    { return const_reverse_iterator(begin()); }
     
     size_type size() const 
     { return static_cast<size_type>(finish_ - start_); }
