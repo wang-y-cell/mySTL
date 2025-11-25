@@ -40,7 +40,7 @@
 #elif __cplusplus >= 201103L
 #   define MYSTL_CPP_VERSION 11
 #else
-#   define MYSTL_CPP_VERSION 98
+#   define MYSTL_CPP_VERSION 3 //98太大
 #endif
 
 // 特性检测
@@ -106,17 +106,17 @@
 #endif
 
 // 常用类型定义
-namespace mystl {
+namespace msl {
     typedef unsigned int size_t;
     
     // nullptr 实现（如果编译器不支持）
     #if MYSTL_CPP_VERSION < 11
         const class {
         public:
-            template<class T>
+            template<typename T>
             operator T*() const { return 0; }
             
-            template<class C, class T>
+            template<typename C, typename T>
             operator T C::*() const { return 0; }
         
         private:
@@ -133,7 +133,8 @@ namespace mystl {
         struct StaticAssert<true> {};
         
         #define static_assert(expr, msg) \
-            { mystl::StaticAssert<(expr)> static_assert_failed; (void)static_assert_failed; }
+            { msl::StaticAssert<(expr)> static_assert_failed; (void)static_assert_failed; }
+
     #endif
 }
 

@@ -5,14 +5,14 @@
 // 简易类型萃取：为内建类型与指针提供五个编译期属性
 // 用途：配合未初始化算法/构造析构进行静态分派
 
-namespace mystl {
+namespace msl {
 
 // 编译期布尔标记类型
 struct true_type {};
 struct false_type {};
 
 // 默认模板：全部属性为 false，具体类型通过特化设为 true
-template <class T>
+template <typename T>
 struct type_traits {
     typedef false_type is_pod_type;
     typedef false_type is_trivially_destructible;
@@ -172,7 +172,7 @@ template <> struct type_traits<char32_t> {
 #endif
 
 // 指针类型特化：视为 POD，构造/拷贝/赋值均平凡
-template<class T> struct type_traits<T*> {
+template<typename T> struct type_traits<T*> {
     typedef true_type is_pod_type;
     typedef true_type is_trivially_destructible;
     typedef true_type is_trivially_default_constructible;
@@ -180,6 +180,7 @@ template<class T> struct type_traits<T*> {
     typedef true_type is_trivial_assignment_operator;
 };
 
-} // namespace mystl
+
+} // namespace msl
 
 #endif // MYSTL_TYPE_TRAITS_H

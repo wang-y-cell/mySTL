@@ -4,7 +4,7 @@
 #include <cstddef>
 #include "type_traits.h"
 
-namespace mystl {
+namespace msl {
 
 
 struct input_iterator_tag{};
@@ -14,11 +14,11 @@ struct bidirectional_iterator_tag : public forward_iterator_tag{};
 struct random_access_iterator_tag : public bidirectional_iterator_tag{};
 
 
-template   <class Category,
-            class T,
-            class Distance = ptrdiff_t,
-            class Pointer = T*,
-            class Reference = T&>
+template   <typename Category,
+            typename T,
+            typename Distance = ptrdiff_t,
+            typename Pointer = T*,
+            typename Reference = T&>
 struct iterator {
     typedef Category iterator_category;
     typedef T value_type;
@@ -27,7 +27,7 @@ struct iterator {
     typedef Reference reference;
 };
 
-template <class InputIterator>
+template <typename InputIterator>
 struct iterator_traits {
     typedef typename InputIterator::iterator_category iterator_category;
     typedef typename InputIterator::value_type value_type;
@@ -37,7 +37,7 @@ struct iterator_traits {
 };
 
 //偏特化
-template <class T>
+template <typename T>
 struct iterator_traits<T*> {
     typedef random_access_iterator_tag iterator_category;
     typedef T value_type;
@@ -48,7 +48,7 @@ struct iterator_traits<T*> {
 };
 
 //偏特化
-template <class T>
+template <typename T>
 struct iterator_traits<const T*> {
     typedef random_access_iterator_tag iterator_category;
     typedef T value_type;
@@ -60,26 +60,26 @@ struct iterator_traits<const T*> {
 
 
 
-template <class InputIterator>
+template <typename InputIterator>
 inline typename iterator_traits<InputIterator>::iterator_category
 iterator_category(const InputIterator&) {
     typedef typename iterator_traits<InputIterator>::iterator_category category;
     return category();
 }
     
-template<class InputIterator>
+template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type*
 distance_type(const InputIterator&) {
     return static_cast<typename iterator_traits<InputIterator>::difference_type*>(0);
 }
 
-template<class InputIterator>
+template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::value_type*
 value_type(const InputIterator&) {
     return static_cast<typename iterator_traits<InputIterator>::value_type*>(0);
 }
 
-template<class InputIterator>
+template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type
 __distance(InputIterator first, InputIterator last,
            input_iterator_tag) {
@@ -90,7 +90,7 @@ __distance(InputIterator first, InputIterator last,
     return n;
 }
 
-template<class InputIterator>
+template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type
 __distance(InputIterator first, InputIterator last,
            forward_iterator_tag) {
@@ -101,7 +101,7 @@ __distance(InputIterator first, InputIterator last,
     return n;
 }
 
-template<class InputIterator>
+template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type
 __distance(InputIterator first, InputIterator last,
            bidirectional_iterator_tag) {
@@ -112,7 +112,7 @@ __distance(InputIterator first, InputIterator last,
     return n;
 }
 
-template<class RandomAccessIterator>
+template<typename RandomAccessIterator>
 inline typename iterator_traits<RandomAccessIterator>::difference_type
 __distance(RandomAccessIterator first, RandomAccessIterator last,
            random_access_iterator_tag) {
@@ -120,13 +120,13 @@ __distance(RandomAccessIterator first, RandomAccessIterator last,
 }
 
 
-template<class InputIterator>
+template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type
 distance(InputIterator first, InputIterator last) {
     return __distance(first, last, iterator_category(first));
 }
 
-template<class InputIterator, class Distance>
+template<typename InputIterator, typename Distance>
 inline void
 __advance(InputIterator& i, Distance n, input_iterator_tag) {
     while (n--) {
@@ -134,7 +134,7 @@ __advance(InputIterator& i, Distance n, input_iterator_tag) {
     }
 }
 
-template<class BidirectionalIterator, class Distance>
+template<typename BidirectionalIterator, typename Distance>
 inline void
 __advance(BidirectionalIterator& i, Distance n, bidirectional_iterator_tag) {
     if (n >= 0) {
@@ -148,7 +148,7 @@ __advance(BidirectionalIterator& i, Distance n, bidirectional_iterator_tag) {
     }
 }
 
-template<class RandomAccessIterator, class Distance>
+template<typename RandomAccessIterator, typename Distance>
 inline void
 __advance(RandomAccessIterator& i, Distance n, random_access_iterator_tag) {
     i += n;
@@ -156,25 +156,25 @@ __advance(RandomAccessIterator& i, Distance n, random_access_iterator_tag) {
 
 
 
-template<class InputIterator, class Distance>
+template<typename InputIterator, typename Distance>
 inline void
 advance(InputIterator& i, Distance n) {
     __advance(i, n, iterator_category(i));
 }
 
-template <class ForwardIterator>
+template <typename ForwardIterator>
 inline ForwardIterator next(ForwardIterator it, typename iterator_traits<ForwardIterator>::difference_type n = 1) {
     advance(it, n);
     return it;
 }
 
-template <class BidirectionalIterator>
+template <typename BidirectionalIterator>
 inline BidirectionalIterator prev(BidirectionalIterator it, typename iterator_traits<BidirectionalIterator>::difference_type n = 1) {
     advance(it, -n);
     return it;
 }
 
-template <class InputIterator>
+template <typename InputIterator>
 class reverse_iterator {
 public:
     typedef InputIterator iterator_type;
@@ -191,7 +191,7 @@ public:
     reverse_iterator() : current() {}
     explicit reverse_iterator(iterator_type x) : current(x) {}
     
-    template <class U>
+    template <typename U>
     reverse_iterator(const reverse_iterator<U>& other) : current(other.base()) {}
 
     iterator_type base() const { return current; }
@@ -226,42 +226,42 @@ public:
     { return *(*this + n); }
 };
 
-template <class Iter1, class Iter2>
+template <typename Iter1, typename Iter2>
 inline bool operator==
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return x.base() == y.base(); }
 
-template <class Iter1, class Iter2>
+template <typename Iter1, typename Iter2>
 inline bool operator!=
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return x.base() != y.base(); }
 
-template <class Iter1, class Iter2>
+template <typename Iter1, typename Iter2>
 inline bool operator<
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return y.base() < x.base(); }
 
-template <class Iter1, class Iter2>
+template <typename Iter1, typename Iter2>
 inline bool operator>
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return y.base() > x.base(); }
 
-template <class Iter1, class Iter2>
+template <typename Iter1, typename Iter2>
 inline bool operator<=
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return !(y < x); }
 
-template <class Iter1, class Iter2>
+template <typename Iter1, typename Iter2>
 inline bool operator>=
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return !(x < y); }
 
-template <class Iter>
+template <typename Iter>
 inline reverse_iterator<Iter> operator+
 (typename reverse_iterator<Iter>::difference_type n, const reverse_iterator<Iter>& x)
 { return reverse_iterator<Iter>(x.base() - n); }
 
-template <class Iter1, class Iter2>
+template <typename Iter1, typename Iter2>
 inline typename reverse_iterator<Iter1>::difference_type operator-
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return y.base() - x.base(); }
@@ -270,6 +270,6 @@ inline typename reverse_iterator<Iter1>::difference_type operator-
 
 
 
-} // namespace mystl
+} // namespace msl
 
 #endif //__ITERATOR_H__

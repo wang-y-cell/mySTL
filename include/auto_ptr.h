@@ -8,13 +8,13 @@
 //在c++11中引入的shared_ptr可以解决这个问题,因为有了右值引用的存在
 //#if MYSTL_CPP_VERSION < 17
 
-namespace mystl {
+namespace msl {
 
 // auto_ptr_ref 的前置声明
-template<class T>
+template<typename T>
 struct auto_ptr_ref;
 
-template<class T>
+template<typename T>
 class auto_ptr {
 private:
     T* pointee;
@@ -29,7 +29,7 @@ public:
     auto_ptr(auto_ptr& rhs) : pointee(rhs.release()) {}
 
     // 兼容类型的拷贝构造函数：转移所有权
-    template<class U>
+    template<typename U>
     auto_ptr(auto_ptr<U>& rhs) : pointee(rhs.release()) {}
 
     // 赋值操作符：转移所有权
@@ -42,7 +42,7 @@ public:
     }
 
     // 兼容类型的赋值操作符：转移所有权
-    template<class U>
+    template<typename U>
     auto_ptr& operator=(auto_ptr<U>& rhs) {
         if (this->get() != rhs.get()) {
             delete pointee;
@@ -89,25 +89,25 @@ public:
     }
 
     // 转换到 auto_ptr_ref，用于处理赋值过程中的临时 auto_ptr 对象
-    template<class U>
+    template<typename U>
     operator auto_ptr_ref<U>() {
         return auto_ptr_ref<U>(this->release());
     }
 
-    template<class U>
+    template<typename U>
     operator auto_ptr<U>() {
         return auto_ptr<U>(this->release());
     }
 };
 
 // 用于从临时 auto_ptr 对象转移所有权的辅助结构体
-template<class T>
+template<typename T>
 struct auto_ptr_ref {
     T* ptr;
     explicit auto_ptr_ref(T* p) : ptr(p) {}
 };
 
-} // namespace mystl
+} // namespace msl
 
 //#endif // MYSTL_CPP_VERSION < 17
 

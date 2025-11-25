@@ -21,7 +21,7 @@
 
 
 // 所有实现位于 mystl 命名空间中，便于与标准库或其他库隔离
-namespace mystl {
+namespace msl {
 
 
 
@@ -151,11 +151,16 @@ public:
         return refill(ROUND_UP(n));
     }
     static void deallocate(void* p, std::size_t n) {
-        if (n > MAX_BYTES) { malloc_alloc::deallocate(p, n); return; }
-        size_t index = FREELIST_INDEX(n);
-        obj* q = (obj*)p;
-        q->free_list_link = free_list[index];
-        free_list[index] = q;
+        if (!p || n == 0) return;
+        obj *q = (obj*)p;
+        obj ** my_free_list;
+        if(n > (size_t)MAX_BYTES) {
+            malloc_alloc::deallocate(p, n);
+            return;
+        }
+        my_free_list = free_list + FREELIST_INDEX(n);
+        q->free_list_link = *my_free_list;
+        *my_free_list = q;
     }
     static void* reallocate(void* p, std::size_t old_sz, std::size_t new_sz) {
         if (old_sz > MAX_BYTES && new_sz > MAX_BYTES) return malloc_alloc::reallocate(p, old_sz, new_sz);
@@ -265,7 +270,7 @@ typedef default_alloc_template<0> default_alloc;
 
 // 元素级适配器：将字节级配置器适配为按元素个数进行分配/释放
 // 用法示例：auto* arr = simple_alloc<int, malloc_alloc>::allocate(10);
-template <class T, class Alloc>
+template <typename T, typename Alloc>
 struct simple_alloc {
     // 分配 n 个元素的存储空间；当 n==0 时返回空指针
     static T* allocate(std::size_t n) {
@@ -279,16 +284,18 @@ struct simple_alloc {
 
     // 释放 n 个元素的存储空间
     static void deallocate(T* p, std::size_t n) {
+        if (!p || n == 0) return;
         Alloc::deallocate(p, n * sizeof(T));
     }
 
     // 释放单个元素的存储空间
     static void deallocate(T* p) {
+        if (!p) return;
         Alloc::deallocate(p, sizeof(T));
     }
 };
 
 
-} // namespace mystl
+} // namespace msl
 
 #endif
