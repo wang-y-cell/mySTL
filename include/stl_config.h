@@ -107,7 +107,11 @@
 
 // 常用类型定义
 namespace msl {
+#if MYSTL_CPP_VERSION < 11
     typedef unsigned int size_t;
+#else
+    typedef unsigned long long size_t;
+#endif
     
     // nullptr 实现（如果编译器不支持）
     #if MYSTL_CPP_VERSION < 11

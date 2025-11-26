@@ -181,6 +181,79 @@ template<typename T> struct type_traits<T*> {
 };
 
 
+
+
+template<typename T> struct is_integer{
+    typedef false_type Integral;
+};
+
+
+template<> struct is_integer<bool>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<char>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<wchar_t>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<signed char>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<unsigned char>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<short>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<unsigned short>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<int>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<unsigned int>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<long>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<unsigned long>{
+    typedef true_type Integral;
+};
+
+#if MYSTL_CPP_VERSION >= 11
+// C++11 及以上：long long/char16_t/char32_t 等特化
+
+template<> struct is_integer<long long>{
+    typedef true_type Integral;
+};
+
+template<> struct is_integer<unsigned long long>{
+    typedef true_type Integral; 
+};
+
+template<> struct is_integer<char16_t>{
+    typedef true_type Integral; 
+};
+
+template<> struct is_integer<char32_t>{
+    typedef true_type Integral;
+};
+#endif
+
+
+
 } // namespace msl
 
 #endif // MYSTL_TYPE_TRAITS_H
