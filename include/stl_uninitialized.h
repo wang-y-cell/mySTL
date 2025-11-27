@@ -6,6 +6,9 @@
 #include "type_traits.h"
 #include "stl_construct.h"
 #include <algorithm> //copy,fill,fill_n 暂时
+#if MYSTL_CPP_VERSION >= 11
+#include <utility>
+#endif
 
 namespace msl {
 
@@ -107,6 +110,38 @@ inline Forward_iterator uninitialized_fill_n(Forward_iterator first,Size n,const
 }
 
 
+
+#if MYSTL_CPP_VERSION >= 11
+template <typename Input_iterator, typename Forward_iterator>
+inline Forward_iterator __uninitialized_move_aux(Input_iterator first,Input_iterator last,Forward_iterator result,true_type) {
+    return std::move(first, last, result);
+}
+
+template <typename Input_iterator, typename Forward_iterator>
+inline Forward_iterator __uninitialized_move_aux(Input_iterator first,Input_iterator last,Forward_iterator result,false_type) {
+    Forward_iterator cur = result;
+    MYSTL_TRY {
+        for (; first != last; ++first, ++cur)
+            msl::construct(&*cur, std::move(*first));
+        return cur;
+    }
+    MYSTL_CATCH_ALL {
+        msl::destroy(result, cur);
+        MYSTL_RETHROW;
+    }
+}
+
+template <typename Input_iterator, typename Forward_iterator, typename T>
+inline Forward_iterator __uninitialized_move(Input_iterator first,Input_iterator last,Forward_iterator result,T*) {
+    typedef typename is_move_constructible<T>::Movable Movable;
+    return __uninitialized_move_aux(first,last,result,Movable());
+}
+
+template <typename Input_iterator, typename Forward_iterator>
+inline Forward_iterator uninitialized_move(Input_iterator first,Input_iterator last,Forward_iterator result) {
+    return __uninitialized_move(first,last,result,msl::value_type(result));
+}
+#endif
 
 } // namespace msl
 

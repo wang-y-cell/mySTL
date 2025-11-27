@@ -6,6 +6,7 @@
 //这个类的存在使得auto_ptr可以指向临时变量,但是这也是auto_ptr最终的设计缺陷.
 //auto_ptr在c++17中被废弃,因为他的设计缺陷使得他的使用十分复杂,导致了很多错误.
 //在c++11中引入的shared_ptr可以解决这个问题,因为有了右值引用的存在
+
 //#if MYSTL_CPP_VERSION < 17
 
 namespace msl {

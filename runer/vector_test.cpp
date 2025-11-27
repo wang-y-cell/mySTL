@@ -8,6 +8,7 @@
 #include <utility>
 #include <iostream>
 #include <chrono>
+#include<vector>
 #include "vector.h"
 
 static void assert_equal(const msl::vector<int>& a, const std::vector<int>& b) {
@@ -22,7 +23,6 @@ int main() {
 
     msl::vector<int> v;
     std::vector<int> ref;
-
     for (int i = 0; i < 200; ++i) {
         int x = std::rand() % 1000;
         v.push_back(x);

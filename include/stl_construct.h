@@ -49,7 +49,6 @@ inline void destroy(long*, long*) {}
 inline void destroy(float*, float*) {}
 inline void destroy(double*, double*) {}
 
-
 } // namespace msl
 
 #endif // MY_STL_CONSTRUCT_HPP_

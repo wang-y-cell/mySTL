@@ -253,6 +253,12 @@ template<> struct is_integer<char32_t>{
 #endif
 
 
+template<typename T>
+struct is_move_constructible {
+    typedef typename type_traits<T>::is_pod_type Movable;
+};
+
+
 
 } // namespace msl
 

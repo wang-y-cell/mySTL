@@ -78,6 +78,13 @@ inline typename iterator_traits<InputIterator>::value_type*
 value_type(const InputIterator&) {
     return static_cast<typename iterator_traits<InputIterator>::value_type*>(0);
 }
+//是否是msl迭代器
+template<typename T> struct is_msl_iterator_tag { static const bool value = false; };
+template<> struct is_msl_iterator_tag<input_iterator_tag> { static const bool value = true; };
+template<> struct is_msl_iterator_tag<output_iterator_tag> { static const bool value = true; };
+template<> struct is_msl_iterator_tag<forward_iterator_tag> { static const bool value = true; };
+template<> struct is_msl_iterator_tag<bidirectional_iterator_tag> { static const bool value = true; };
+template<> struct is_msl_iterator_tag<random_access_iterator_tag> { static const bool value = true; };
 
 template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type
