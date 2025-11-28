@@ -7,19 +7,19 @@
 
 namespace msl {
 
-// construct: 在已分配的内存上构造对象
+// construct:
 template <typename T1,typename T2>
 inline void construct(T1* ptr, const T2& val) {
     new (ptr) T1(val);  
 }
 
-// destroy: 调用对象的析构函数
+// destroy:
 template <typename T>
 inline void destroy(T* ptr) {
     ptr->~T();
 }
 
-// 针对POD类型优化的批量析构
+
 template<typename forward_iterator>
 inline void __destroy_aux(forward_iterator first, forward_iterator last, false_type) {
     for (; first != last; ++first)
@@ -28,7 +28,6 @@ inline void __destroy_aux(forward_iterator first, forward_iterator last, false_t
 
 template<typename forward_iterator>
 inline void __destroy_aux(forward_iterator first, forward_iterator last, true_type) {
-    // 什么都不做
 }
 
 template<typename forward_iterator, typename T>

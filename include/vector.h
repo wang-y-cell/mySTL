@@ -86,14 +86,14 @@ protected:
     #endif
     
 
-    // 填充初始化：分配 n 个元素并填充值
+    // fill initialize: allocate n elements and fill with value
     void fill_initialize(size_type n, const T& value) {
         start_ = allocate_and_fill(n, value);
         finish_ = start_ + n;
         end_of_storage_ = finish_;
     }
 
-    // 分配 n 个元素并填充值
+    // allocate n elements and fill with value
     iterator allocate_and_fill(size_type n, const T& value) {
         iterator result = data_allocator::allocate(n);
         msl::uninitialized_fill_n(result, n, value);
@@ -106,7 +106,7 @@ protected:
         }
     }
 public:
-    // 构造函数
+    // constructor
     vector(const allocator_type& alloc = allocator_type()) : base(alloc) {}
 
     explicit vector(size_type n, const allocator_type& alloc = allocator_type()) : base(n, alloc) {
@@ -136,7 +136,7 @@ public:
     }
 #endif
 
-//移动语句
+// move semantics
 #ifdef MYSTL_HAS_MOVE_SEMANTICS
     vector(vector&& other) noexcept : base(other.get_allocator()) {
         start_ = other.start_;
@@ -157,7 +157,7 @@ public:
     }
 #endif
 
-    // 赋值运算符
+    // assignment operator
     vector& operator=(const vector& other) {
         if (this != &other) {
             assign(other.begin(), other.end());
@@ -165,7 +165,7 @@ public:
         return *this;
     }
 
-    // 析构函数
+    // destructor
     ~vector() { msl::destroy(start_, finish_); }
 
 private:
@@ -316,7 +316,7 @@ public:
     }
 
 };
-
+ 
 template<typename T,typename Alloc>
 void vector<T,Alloc>::insert_aux(iterator position, const_reference value) {
     if (finish_ != end_of_storage_) {
@@ -671,18 +671,10 @@ vector<T,Alloc>::realloc_emplace(iterator position, Args&&... args) {
     iterator new_start = data_allocator::allocate(new_capacity);
     iterator new_finish = new_start;
     size_type pos_index = static_cast<size_type>(position - start_);
-    #if MYSTL_CPP_VERSION >= 11
     new_finish = msl::uninitialized_move(start_, position, new_start);
-    #else
-    new_finish = msl::uninitialized_copy(start_, position, new_start);
-    #endif
     new (new_finish) T(std::forward<Args>(args)...);
     ++new_finish;
-    #if MYSTL_CPP_VERSION >= 11
     new_finish = msl::uninitialized_move(position, finish_, new_finish);
-    #else
-    new_finish = msl::uninitialized_copy(position, finish_, new_finish);
-    #endif
     msl::destroy(start_, finish_);
     data_allocator::deallocate(start_, end_of_storage_ - start_);
     start_ = new_start;

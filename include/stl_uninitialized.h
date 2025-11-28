@@ -5,14 +5,14 @@
 #include "iterator.h"
 #include "type_traits.h"
 #include "stl_construct.h"
-#include <algorithm> //copy,fill,fill_n 暂时
+#include <algorithm> //copy,fill,fill_n 
 #if MYSTL_CPP_VERSION >= 11
 #include <utility>
 #endif
 
 namespace msl {
 
-// uninitialized_copy(),返回新的结束迭代器
+// uninitialized_copy()
 template <typename Input_iterator, typename Forward_iterator>
 inline Forward_iterator __uninitialized_copy_aux(Input_iterator first,Input_iterator last,Forward_iterator result,false_type) {
     Forward_iterator cur = result;
@@ -46,7 +46,7 @@ inline Forward_iterator uninitialized_copy(Input_iterator first,Input_iterator l
 
 
 
-// uninitialized_fill(),返回新的结束迭代器
+// uninitialized_fill()
 template <typename Forward_iterator,typename T >
 inline void _uninitialized_fill_aux(Forward_iterator first,Forward_iterator last,const T& value,false_type) {
     Forward_iterator cur = first;
