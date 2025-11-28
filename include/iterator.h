@@ -36,7 +36,7 @@ struct iterator_traits {
     typedef typename InputIterator::reference reference;
 };
 
-//偏特化
+//Partial specialization
 template <typename T>
 struct iterator_traits<T*> {
     typedef random_access_iterator_tag iterator_category;
@@ -47,7 +47,7 @@ struct iterator_traits<T*> {
     typedef typename type_traits<T>::is_pod_type is_pod_type;
 };
 
-//偏特化
+//Partial specialization
 template <typename T>
 struct iterator_traits<const T*> {
     typedef random_access_iterator_tag iterator_category;

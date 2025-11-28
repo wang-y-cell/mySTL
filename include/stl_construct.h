@@ -14,6 +14,7 @@ inline void construct(T1* ptr, const T2& val) {
 }
 
 // destroy:
+
 template <typename T>
 inline void destroy(T* ptr) {
     ptr->~T();
@@ -41,12 +42,9 @@ inline void destroy(ForwardIterator first, ForwardIterator last) {
     __destroy(first, last, value_type(first));
 }
 
-inline void destroy(char*, char*) {}
-inline void destroy(wchar_t*, wchar_t*) {}
-inline void destroy(int*, int*) {}
-inline void destroy(long*, long*) {}
-inline void destroy(float*, float*) {}
-inline void destroy(double*, double*) {}
+
+
+
 
 } // namespace msl
 

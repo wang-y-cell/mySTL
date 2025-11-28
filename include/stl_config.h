@@ -149,6 +149,7 @@
 #include <cstddef> // for size_t, ptrdiff_t, nullptr_t
 
 
+
 namespace msl {
     
     using size_t = std::size_t;
@@ -167,8 +168,9 @@ namespace msl {
         private:
             void operator&() const;
         } nullptr = {};
+
     #endif
-    
+
    
     #if MYSTL_CPP_VERSION < 11
         template<bool>
@@ -182,5 +184,9 @@ namespace msl {
 
     #endif
 }
+
+    #if MYSTL_CPP_VERSION < 11
+        using msl::nullptr;
+    #endif
 
 #endif // MYSTL_CONFIG_H
