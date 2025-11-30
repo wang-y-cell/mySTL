@@ -61,6 +61,7 @@ class vector : protected vector_base<T, Alloc> {
 public:
     typedef typename base::allocator_type allocator_type;
     allocator_type get_allocator() const { return base::get_allocator(); }
+
     typedef T value_type;
     typedef T* pointer;
     typedef const T* const_pointer;
@@ -70,13 +71,16 @@ public:
     typedef ptrdiff_t difference_type;
     typedef T* iterator;
     typedef const T* const_iterator;
+
+
     typedef msl::reverse_iterator<iterator> reverse_iterator;
     typedef msl::reverse_iterator<const_iterator> const_reverse_iterator;
 
 protected:
-    typedef simple_alloc<T, Alloc> data_allocator;
+    typedef typename base::data_allocator data_allocator;
 
     void insert_aux(iterator position, const_reference value);
+    
     #if MYSTL_CPP_VERSION >= 11
     template<typename... Args>
     iterator realloc_emplace(iterator position, Args&&... args);
@@ -634,6 +638,8 @@ void vector<T,Alloc>::shrink_to_fit() {
     }
 }
 
+
+
 #if MYSTL_CPP_VERSION >= 11
 template<typename T, typename Alloc>
 template<typename... Args>
@@ -684,6 +690,11 @@ vector<T,Alloc>::realloc_emplace(iterator position, Args&&... args) {
 }
 
 #endif
+
+
+
+
+
 
 
 

@@ -5,6 +5,7 @@
 #include "iterator.h"
 #include "memory.h"
 #include <cstddef>
+#include <iostream>
 
 namespace msl {
 
@@ -15,7 +16,7 @@ struct __node_base{
 };
 
 template<typename T>
-struct __list_node : __node_base{
+struct __list_node : public __node_base{
     T data;
 };
 
@@ -96,9 +97,9 @@ public:
 
     void clear();
 protected:
-    typedef simple_alloc<__list_node<T>,Alloc> alloc_type;
-    __list_node<T>* get_node() { return alloc_type::allocate(); }
-    void put_node(__list_node<T>* p) { alloc_type::deallocate(p); }
+    typedef simple_alloc<__list_node<T>,Alloc> data_allocator;
+    __list_node<T>* get_node() { return data_allocator::allocate(); }
+    void put_node(__list_node<T>* p) { data_allocator::deallocate(p); }
 protected:
     __list_node<T>* node_;
 };
@@ -144,14 +145,107 @@ protected:
     using base::get_node;
     using base::put_node;
 
+
+    link_type create_node(const_reference val = T()) {
+        link_type p = get_node();
+        MYSTL_TRY{
+            construct(&p->data, val);
+            return p;
+        }
+        MYSTL_CATCH_ALL{
+            put_node(p);
+            MYSTL_RETHROW;
+        }
+    }
+
+    void destroy_node(link_type p) {
+        destroy(&p->data);
+        put_node(p);
+    }
+
 public:
     explicit list(const allocator_type& a = allocator_type()) : base(a) {}
     iterator begin()             { return static_cast<link_type>(node_->next); }
     const_iterator begin() const { return static_cast<const link_type>(node_->next); }
     iterator end()               { return static_cast<link_type>(node_); }
     const_iterator end() const   { return static_cast<const link_type>(node_); }
+    #if MYSTL_CPP_VERSION >= 11
+    const_iterator cbegin() const { return begin(); }
+    const_iterator cend() const { return end(); }
+    #endif
+
+
+    reverse_iterator rbegin()             { return reverse_iterator(end()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+    reverse_iterator rend()               { return reverse_iterator(begin()); }
+    const_reverse_iterator rend() const   { return const_reverse_iterator(begin()); }
+    #if MYSTL_CPP_VERSION >= 11
+    const_iterator crbegin() const {return end(); }
+    const_iterator crend() const { return begin(); }
+    #endif
+
+    bool empty() const { return begin() == end(); }
+    size_type size() const {return distance(begin(),end());}
+    reference front() { return *begin(); }
+    const_reference front() const { return *begin(); }
+    reference back() { return *--end(); }
+    const_reference back() const { return *--end(); }
+
+    void insert(iterator pos, const_reference val) {
+        link_type p = create_node(val);
+        p->next = pos.node;
+        p->prev = pos.node->prev;
+        pos.node->prev->next = p;
+        pos.node->prev = p;
+    }
+
+    void push_back(const_reference val) {
+        insert(end(), val);
+    }
+
+    void push_front(const_reference val) {
+        insert(begin(), val);
+    }
+
+    iterator erase(iterator pos){
+        link_type p = static_cast<link_type>(pos.node);
+        link_type next = static_cast<link_type>(p->next);
+        p->prev->next = p->next;
+        p->next->prev = p->prev;
+        destroy_node(p);
+        return iterator(next);
+    }
+
+    void clear() { base::clear(); }
+
+    void remove(const_reference val) {
+        iterator first = begin();
+        iterator last = end();
+        while(first != last) {
+            if (*first == val) {
+                first = erase(first);
+            } else {
+                ++first;
+            }
+        }
+    }
+
+    void unique(){
+        iterator first = begin();
+        iterator last = end();
+        if (first == last) return;
+        iterator next = first;
+        while (++next != last) {
+            if (*first == *next)erase(next);
+            else first = next;
+            next = first;
+        }
+    }
+
+
+    
 };
 
 } // namespace msl
 
-#endif // MYSTL_LIST_H
+#endif // MYSTL_LIST_H                          

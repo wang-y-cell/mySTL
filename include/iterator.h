@@ -85,6 +85,31 @@ template<> struct is_msl_iterator_tag<forward_iterator_tag> { static const bool 
 template<> struct is_msl_iterator_tag<bidirectional_iterator_tag> { static const bool value = true; };
 template<> struct is_msl_iterator_tag<random_access_iterator_tag> { static const bool value = true; };
 
+
+
+
+
+template<typename InputIterator, typename Distance>
+inline void __distance(InputIterator first, InputIterator last, Distance& n, input_iterator_tag) {
+    n = 0;
+    while (first != last) {
+        ++first;++n;
+    }
+}
+
+
+template<typename RandomAccessIterator, typename Distance>
+inline void __distance(RandomAccessIterator first, RandomAccessIterator last, Distance& n, 
+                      random_access_iterator_tag) {
+    n = last - first;
+}
+
+template<typename InputIterator, typename Distance>
+inline void distance(InputIterator first, InputIterator last, Distance& n) {
+    return __distance(first, last,n,iterator_category(first));
+}
+
+
 template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type
 __distance(InputIterator first, InputIterator last,
@@ -96,27 +121,6 @@ __distance(InputIterator first, InputIterator last,
     return n;
 }
 
-template<typename InputIterator>
-inline typename iterator_traits<InputIterator>::difference_type
-__distance(InputIterator first, InputIterator last,
-           forward_iterator_tag) {
-    typename iterator_traits<InputIterator>::difference_type n = 0;
-    while (first != last) {
-        ++first;++n;
-    }
-    return n;
-}
-
-template<typename InputIterator>
-inline typename iterator_traits<InputIterator>::difference_type
-__distance(InputIterator first, InputIterator last,
-           bidirectional_iterator_tag) {
-    typename iterator_traits<InputIterator>::difference_type n = 0;
-    while (first != last) {
-        ++first;++n;
-    }
-    return n;
-}
 
 template<typename RandomAccessIterator>
 inline typename iterator_traits<RandomAccessIterator>::difference_type
@@ -131,6 +135,8 @@ inline typename iterator_traits<InputIterator>::difference_type
 distance(InputIterator first, InputIterator last) {
     return __distance(first, last, iterator_category(first));
 }
+
+
 
 template<typename InputIterator, typename Distance>
 inline void
