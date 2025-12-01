@@ -163,6 +163,19 @@ protected:
         put_node(p);
     }
 
+
+    void transfer(iterator pos, iterator first, iterator last) {
+        if (pos != last) {
+            last.node->prev->next = pos.node;
+            first.node->prev->next = last.node;
+            pos.node->prev->next = first.node;
+            link_type tmp = static_cast<link_type>(pos.node->prev);
+            pos.node->prev = last.node->prev;
+            last.node->prev = first.node->prev;
+            first.node->prev = tmp;
+        }
+    }
+
 public:
     explicit list(const allocator_type& a = allocator_type()) : base(a) {}
     iterator begin()             { return static_cast<link_type>(node_->next); }
@@ -190,6 +203,7 @@ public:
     const_reference front() const { return *begin(); }
     reference back() { return *--end(); }
     const_reference back() const { return *--end(); }
+    void swap(list& x){std::swap(node_, x.node_);}
 
     void insert(iterator pos, const_reference val) {
         link_type p = create_node(val);
@@ -242,7 +256,73 @@ public:
         }
     }
 
+    void splice(iterator pos, list& x) {
+        if (!x.empty()) {
+            transfer(pos, x.begin(), x.end());
+        }
+    }
 
+    void splice(iterator pos, list& x, iterator i) {
+        iterator j = i;
+        ++j;
+        if (pos == i || pos == j) return;
+        transfer(pos, i, j);
+    }
+
+    void merge(list& x) {
+        if (this != &x) {
+            iterator first1 = begin();
+            iterator last1 = end();
+            iterator first2 = x.begin();
+            iterator last2 = x.end();
+            while (first1 != last1 && first2 != last2) {
+                if (*first2 < *first1) {
+                    iterator next = first2;
+                    transfer(first1, first2, ++next);
+                    first2 = next;
+                } else {
+                    ++first1;
+                }
+            }
+            if (first2 != last2) transfer(last1, first2, last2);
+        }
+    }
+
+    void reverse() {
+        if (node_->next != node_) {
+            link_type first = static_cast<link_type>(node_->next);
+            link_type last = first->prev;
+            do {
+                link_type tmp = first->prev;
+                first->prev = first->next;
+                first->next = tmp;
+                first = first->prev;
+            } while (first != last);
+            node_->next = last;
+            last->prev = node_;
+        }
+    }
+    
+    // 归并排序
+    void sort(){
+        if (node_->next != node_->prev) {
+            list carry;
+            list counter[64]; // 归并排序的辅助数组
+            int fill = 0;
+            while (!empty()) {
+                carry.splice(carry.begin(), *this, begin());
+                int i = 0;
+                while (i < fill && !counter[i].empty()) {
+                    counter[i].merge(carry);
+                    carry.swap(counter[i++]);
+                }
+                carry.swap(counter[i]);
+                if (i == fill) ++fill;
+            }
+            for (int i = 1; i < fill; ++i) counter[i].merge(counter[i - 1]);
+            swap(counter[fill-1]);
+        }
+    }
     
 };
 

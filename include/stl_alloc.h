@@ -37,18 +37,18 @@ private:
 
 public:
 
-    static void* allocate(std::size_t n) {
+    static void* allocate(size_t n) {
         void* p = malloc(n);
         if (!p) p = oom_malloc(n);
         return p;
     }
 
 
-    static void deallocate(void* p, std::size_t) {
-        std::free(p);
+    static void deallocate(void* p, size_t) {
+        free(p);
     }
 
-    static void* reallocate(void* p, std::size_t, std::size_t new_sz) {
+    static void* reallocate(void* p, size_t, size_t new_sz) {
         void* r = realloc(p, new_sz);
         if (!r) r = oom_realloc(p, new_sz);
         return r;
@@ -131,7 +131,7 @@ public:
         if (result) { *my_list = result->free_list_link; return result; }
         return refill(ROUND_UP(n));
     }
-    static void deallocate(void* p, std::size_t n) {
+    static void deallocate(void* p, size_t n) {
         if (!p || n == 0) return;
         obj *q = (obj*)p;
         obj ** my_free_list;
@@ -143,7 +143,7 @@ public:
         q->free_list_link = *my_free_list;
         *my_free_list = q;
     }
-    static void* reallocate(void* p, std::size_t old_sz, std::size_t new_sz) {
+    static void* reallocate(void* p, size_t old_sz, size_t new_sz) {
         if (old_sz > MAX_BYTES && new_sz > MAX_BYTES) return malloc_alloc::reallocate(p, old_sz, new_sz);
         if (ROUND_UP(old_sz) == ROUND_UP(new_sz)) return p;
         void* result = allocate(new_sz);
