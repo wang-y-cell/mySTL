@@ -303,7 +303,7 @@ public:
         }
     }
     
-    // 归并排序
+    // 归并排序,非递归实现
     void sort(){
         if (node_->next != node_->prev) {
             list carry;
