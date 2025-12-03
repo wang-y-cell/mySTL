@@ -52,7 +52,7 @@ struct __list_iterator : _iterator_base{
 
     __list_iterator(){ }
     __list_iterator(list_node* p) : _iterator_base(p) { }
-    __list_iterator(iterator& x) : _iterator_base(x.node) { }
+    __list_iterator(const iterator& x) : _iterator_base(x.node) { }
 
     reference operator*() const {return ((list_node*)node)->data;}
     pointer operator->() const {return &operator*();}
@@ -193,8 +193,8 @@ public:
     reverse_iterator rend()               { return reverse_iterator(begin()); }
     const_reverse_iterator rend() const   { return const_reverse_iterator(begin()); }
     #if MYSTL_CPP_VERSION >= 11
-    const_iterator crbegin() const {return end(); }
-    const_iterator crend() const { return begin(); }
+    const_reverse_iterator crbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator crend() const { return const_reverse_iterator(begin()); }
     #endif
 
     bool empty() const { return begin() == end(); }
@@ -289,17 +289,15 @@ public:
     }
 
     void reverse() {
-        if (node_->next != node_) {
-            link_type first = static_cast<link_type>(node_->next);
-            link_type last = first->prev;
-            do {
-                link_type tmp = first->prev;
-                first->prev = first->next;
-                first->next = tmp;
-                first = first->prev;
-            } while (first != last);
-            node_->next = last;
-            last->prev = node_;
+        if (node_->next != node_ && node_->next->next != node_) {
+            iterator first = begin();
+            ++first;
+            while (first != end()) { // 第一个元素不移动,之后每个元素移到begin()
+                iterator next = first;
+                ++next;
+                transfer(begin(), first, next);
+                first = next;
+            }
         }
     }
     

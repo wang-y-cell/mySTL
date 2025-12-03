@@ -71,29 +71,29 @@ include CMakeFiles/APP.dir/flags.make
 CMakeFiles/APP.dir/codegen:
 .PHONY : CMakeFiles/APP.dir/codegen
 
-CMakeFiles/APP.dir/src/vector_test.cpp.obj: CMakeFiles/APP.dir/flags.make
-CMakeFiles/APP.dir/src/vector_test.cpp.obj: CMakeFiles/APP.dir/includes_CXX.rsp
-CMakeFiles/APP.dir/src/vector_test.cpp.obj: C:/Users/30840/OneDrive/Desktop/code/stl/runner/src/vector_test.cpp
-CMakeFiles/APP.dir/src/vector_test.cpp.obj: CMakeFiles/APP.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/APP.dir/src/vector_test.cpp.obj"
-	D:\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/APP.dir/src/vector_test.cpp.obj -MF CMakeFiles\APP.dir\src\vector_test.cpp.obj.d -o CMakeFiles\APP.dir\src\vector_test.cpp.obj -c C:\Users\30840\OneDrive\Desktop\code\stl\runner\src\vector_test.cpp
+CMakeFiles/APP.dir/src/list_text.cpp.obj: CMakeFiles/APP.dir/flags.make
+CMakeFiles/APP.dir/src/list_text.cpp.obj: CMakeFiles/APP.dir/includes_CXX.rsp
+CMakeFiles/APP.dir/src/list_text.cpp.obj: C:/Users/30840/OneDrive/Desktop/code/stl/runner/src/list_text.cpp
+CMakeFiles/APP.dir/src/list_text.cpp.obj: CMakeFiles/APP.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/APP.dir/src/list_text.cpp.obj"
+	D:\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/APP.dir/src/list_text.cpp.obj -MF CMakeFiles\APP.dir\src\list_text.cpp.obj.d -o CMakeFiles\APP.dir\src\list_text.cpp.obj -c C:\Users\30840\OneDrive\Desktop\code\stl\runner\src\list_text.cpp
 
-CMakeFiles/APP.dir/src/vector_test.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/APP.dir/src/vector_test.cpp.i"
-	D:\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\30840\OneDrive\Desktop\code\stl\runner\src\vector_test.cpp > CMakeFiles\APP.dir\src\vector_test.cpp.i
+CMakeFiles/APP.dir/src/list_text.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/APP.dir/src/list_text.cpp.i"
+	D:\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\30840\OneDrive\Desktop\code\stl\runner\src\list_text.cpp > CMakeFiles\APP.dir\src\list_text.cpp.i
 
-CMakeFiles/APP.dir/src/vector_test.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/APP.dir/src/vector_test.cpp.s"
-	D:\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\30840\OneDrive\Desktop\code\stl\runner\src\vector_test.cpp -o CMakeFiles\APP.dir\src\vector_test.cpp.s
+CMakeFiles/APP.dir/src/list_text.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/APP.dir/src/list_text.cpp.s"
+	D:\mingw64\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\30840\OneDrive\Desktop\code\stl\runner\src\list_text.cpp -o CMakeFiles\APP.dir\src\list_text.cpp.s
 
 # Object files for target APP
 APP_OBJECTS = \
-"CMakeFiles/APP.dir/src/vector_test.cpp.obj"
+"CMakeFiles/APP.dir/src/list_text.cpp.obj"
 
 # External object files for target APP
 APP_EXTERNAL_OBJECTS =
 
-C:/Users/30840/OneDrive/Desktop/code/stl/runner/bin/APP.exe: CMakeFiles/APP.dir/src/vector_test.cpp.obj
+C:/Users/30840/OneDrive/Desktop/code/stl/runner/bin/APP.exe: CMakeFiles/APP.dir/src/list_text.cpp.obj
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/bin/APP.exe: CMakeFiles/APP.dir/build.make
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/bin/APP.exe: CMakeFiles/APP.dir/linkLibs.rsp
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/bin/APP.exe: CMakeFiles/APP.dir/objects1.rsp

@@ -128,29 +128,29 @@ APP/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/build
 .PHONY : APP/fast
 
-src/vector_test.obj: src/vector_test.cpp.obj
-.PHONY : src/vector_test.obj
+src/list_text.obj: src/list_text.cpp.obj
+.PHONY : src/list_text.obj
 
 # target to build an object file
-src/vector_test.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/vector_test.cpp.obj
-.PHONY : src/vector_test.cpp.obj
+src/list_text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/list_text.cpp.obj
+.PHONY : src/list_text.cpp.obj
 
-src/vector_test.i: src/vector_test.cpp.i
-.PHONY : src/vector_test.i
+src/list_text.i: src/list_text.cpp.i
+.PHONY : src/list_text.i
 
 # target to preprocess a source file
-src/vector_test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/vector_test.cpp.i
-.PHONY : src/vector_test.cpp.i
+src/list_text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/list_text.cpp.i
+.PHONY : src/list_text.cpp.i
 
-src/vector_test.s: src/vector_test.cpp.s
-.PHONY : src/vector_test.s
+src/list_text.s: src/list_text.cpp.s
+.PHONY : src/list_text.s
 
 # target to generate assembly for a file
-src/vector_test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/vector_test.cpp.s
-.PHONY : src/vector_test.cpp.s
+src/list_text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/list_text.cpp.s
+.PHONY : src/list_text.cpp.s
 
 # Help Target
 help:
@@ -161,9 +161,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... APP
-	@echo ... src/vector_test.obj
-	@echo ... src/vector_test.i
-	@echo ... src/vector_test.s
+	@echo ... src/list_text.obj
+	@echo ... src/list_text.i
+	@echo ... src/list_text.s
 .PHONY : help
 
 
