@@ -3,19 +3,21 @@
 
 #include "stl_config.h"
 #include "iterator.h"
+#include "stl_alloc.h"
 #include <cstddef>
 
 namespace msl {
 
-inline size_t _deque_buf_size(size_t sz) {
-    return sz < 512 ? static_cast<size_t>(512 / sz) : static_cast<size_t>(1);
+inline size_t _deque_buf_size(size_t BufSiz, size_t sz) {
+    return BufSiz == 0 ? sz < 512 ? static_cast<size_t>(512 / sz) : static_cast<size_t>(1)
+                        : BufSiz;
 }
 
-template <typename T, typename Ref, typename Ptr>
+template <typename T, typename Ref, typename Ptr, size_t BufSiz>
 struct __deque_iterator {
-    typedef __deque_iterator<T, T&, T*>              iterator;
-    typedef __deque_iterator<T, const T&, const T*>  const_iterator;
-    typedef __deque_iterator<T, Ref, Ptr>            self;
+    typedef __deque_iterator<T, T&, T*, BufSiz>              iterator;
+    typedef __deque_iterator<T, const T&, const T*, BufSiz>  const_iterator;
+    typedef __deque_iterator<T, Ref, Ptr, BufSiz>            self;
 
     typedef random_access_iterator_tag iterator_category;
     typedef T value_type;
@@ -31,10 +33,10 @@ struct __deque_iterator {
     T* last;
     map_pointer node;
 
-    static size_type buffer_size() { return _deque_buf_size(sizeof(T)); }
+    static size_type buffer_size() { return _deque_buf_size(BufSiz, sizeof(T)); }
 
-    __deque_iterator() : cur(nullptr), first(nullptr), last(nullptr), node(nullptr) {}
-    __deque_iterator(T* x, map_pointer y) : cur(x), first(nullptr), last(nullptr), node(nullptr) {
+    __deque_iterator() : cur(0), first(0), last(0), node(0) {}
+    __deque_iterator(T* x, map_pointer y) : cur(x), first(0), last(0), node(0) {
         set_node(y);
     }
 
@@ -95,14 +97,21 @@ struct __deque_iterator {
     }
 };
 
-template <typename T, typename Alloc>
+
+
+
+
+
+template <typename T, typename Alloc, size_t BufSiz>
 class _deque_base {
 public:
     typedef Alloc allocator_type;
     allocator_type get_allocator() const { return allocator_type(); }
 
 protected:
-    typedef __deque_iterator<T, T&, T*> iterator;
+    typedef __deque_iterator<T, T&, T*, BufSiz> iterator;
+    typedef __deque_iterator<T, const T&, const T*, BufSiz> const_iterator;
+
     typedef simple_alloc<T, Alloc> data_allocator;
     typedef simple_alloc<T*, Alloc> map_allocator;
 
@@ -135,6 +144,9 @@ protected:
 
 public:
     _deque_base(const allocator_type&) : map_(0), map_size_(0), start_(), finish_() {}
+    _deque_base(const allocator_type&, size_t n) : map_(0), map_size_(0), start_(), finish_() 
+    { create_map_and_nodes(n); }
+
     ~_deque_base() {
         if (map_) {
             for (T** n = start_.node; n <= finish_.node; ++n) {
@@ -143,6 +155,57 @@ public:
             deallocate_map(map_, map_size_);
         }
     }
+};
+
+template<class T, class Alloc = alloc, size_t BufSiz = 0>
+class deque : public _deque_base<T, Alloc, BufSiz> {
+    typedef _deque_base<T, Alloc, BufSiz> base;
+public:
+    typedef T value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+
+    typedef typename base::allocator_type allocator_type;
+    typedef typename base::iterator iterator;
+    typedef typename base::const_iterator const_iterator;
+    allocator_type get_allocator() const { return base::get_allocator(); }
+
+
+protected:
+
+    using base::start_;
+    using base::finish_;
+    using base::map_;
+    using base::map_size_;
+
+public:
+    iterator begin() { return start_;}
+    const_iterator begin() const { return start_;}
+
+    iterator end() { return finish_;}
+    const_iterator end() const { return finish_;}
+
+    reference front(){return *start_;}
+    const_reference front() const { return *start_;}
+    reference back(){return *(finish_ - 1);}
+    const_reference back() const { return *(finish_ - 1);}
+
+    size_type size() const { return finish_ - start_;}
+    size_type max_size() const { return size_type(-1);}
+    bool empty() const { return start_ == finish_;}
+
+    reference operator[](difference_type n) const {return start_[n];}
+
+    
+
+
+
+
+
 };
 
 } // namespace msl
