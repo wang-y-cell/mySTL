@@ -695,10 +695,6 @@ vector<T,Alloc>::realloc_emplace(iterator position, Args&&... args) {
 
 
 
-
-
-
-
 } // namespace msl
 
 #endif // MYSTL_VECTOR_H

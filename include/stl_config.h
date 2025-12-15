@@ -134,11 +134,13 @@
 #   define MYSTL_CATCH_ALL catch(...)
 #   define MYSTL_THROW(x) throw x
 #   define MYSTL_RETHROW throw
+#   define MYSTL_UNWIND(action) catch(...) { action; throw; }
 #else
 #   define MYSTL_TRY
 #   define MYSTL_CATCH_ALL if(false)
 #   define MYSTL_THROW(x)
 #   define MYSTL_RETHROW
+#   define MYSTL_UNWIND(action)
 #endif
 
 
