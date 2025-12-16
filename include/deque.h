@@ -225,9 +225,12 @@ private:
     void fill_initialize(size_type n, const value_type& value);
     void push_back_aux(const value_type& value);
     void push_front_aux(const value_type& value);
+    void pop_back_aux();
+    void pop_front_aux();
     void reserve_amp_at_back(size_type nodes_to_add = 1);
     void reserve_amp_at_front(size_type nodes_to_add = 1);
     void reallocate_map(size_type nodes_to_add,bool add_at_front);
+    iterator insert_aux(iterator pos, const value_type& value);
 
 public:
     deque(allocator_type alloc = allocator_type())
@@ -251,6 +254,99 @@ public:
             --start_.cur;
         } else {
             push_front_aux(value);
+        }
+    }
+
+    void pop_back() {
+        if (finish_.cur != finish_.first) {
+            --finish_.cur;
+            msl::destroy(finish_.cur);
+        } else {
+            pop_back_aux();
+        }
+    }
+
+    void pop_front() {
+        if (start_.cur != start_.last - 1) {
+            msl::destroy(start_.cur);
+            ++start_.cur;
+        } else {
+            pop_front_aux();
+        }
+    }
+
+    void clear(){
+        for(map_pointer n = start_.node + 1; n < finish_.node; ++n) {
+            destroy(*n,*n + buffer_size());
+            deallocate_node(*n);
+        }
+
+        if(finish_.node != start_.node){
+            destroy(start_.cur, start_.last);
+            destroy(finish_.first, finish_.cur);
+            deallocate_node(*finish_.node);
+        }else{
+            destroy(start_.cur, finish_.cur); //如果头尾在一个缓冲区中
+        }
+        finish_ = start_;  //更新状态
+    }
+
+    iterator erase(iterator pos) {
+        iterator next = pos;
+        ++next;
+        difference_type index = pos - start_;
+        if (index < size() >> 1) {
+            std::copy_backward(start_, pos, next);
+            pop_front();
+        } else {
+            std::copy(next, finish_, pos);
+            pop_back();
+        }
+        return start_ + index;
+    }
+
+    iterator erase(iterator first, iterator last) {
+        if (first == start_ && last == finish_) { //如果是整个区间
+            clear();
+            return finish_;
+        }
+        difference_type n = last - first; // 计算删除的元素个数
+        difference_type elems_before = first - start_; // 计算删除区间前的元素个数
+        if(elems_before < ((size() - n) >> 1)){
+            std::copy_backward(start_, first, last);
+            iterator new_start = start_ + n;
+            destroy(start_,new_start);// 销毁删除区间前的元素
+
+            // 释放删除区间前的缓冲区
+            for(map_pointer n = start_.node; n < new_start.node; ++n) {
+                deallocate_node(*n);
+            }
+            start_ = new_start;
+        }else{
+            std::copy(last, finish_, first);
+            iterator new_finish = finish_ - n;
+            destroy(new_finish, finish_);// 销毁删除区间后的元素
+            // 释放删除区间后的缓冲区
+            for(map_pointer n = new_finish.node; n < finish_.node; ++n) {
+                deallocate_node(*n);
+            }
+            finish_ = new_finish;
+        }
+        return start_ + elems_before;
+    }
+
+    //insert
+    iterator insert(iterator pos, const value_type& value) {
+        if(pos == start_) { // 如果插入位置在头部
+            push_front(value);
+            return start_;
+        }
+        else if(pos == finish_) { // 如果插入位置在尾部
+            push_back(value);
+            return finish_ - 1;
+        }
+        else{
+            return insert_aux(pos, value);
         }
     }
 
@@ -348,9 +444,48 @@ void deque<T, Alloc, BufSiz>::reallocate_map(size_type nodes_to_add,bool add_at_
     finish_.set_node(new_nstart + old_num_nodes - 1);
 }
 
+template<typename T, typename Alloc, size_t BufSiz>
+void deque<T, Alloc, BufSiz>::pop_back_aux() {
+    deallocate_node(*finish_.node);
+    finish_.set_node(finish_.node - 1);
+    finish_.cur = finish_.last - 1;
+    msl::destroy(finish_.cur);
+}
 
+template<typename T, typename Alloc, size_t BufSiz>
+void deque<T, Alloc, BufSiz>::pop_front_aux() {
+    destroy(start_.cur);
+    deallocate_node(*start_.node);
+    start_.set_node(start_.node + 1);
+    start_.cur = start_.first;
+}
 
-
+template<typename T, typename Alloc, size_t BufSiz>
+typename deque<T, Alloc, BufSiz>::iterator
+deque<T, Alloc, BufSiz>::insert_aux(iterator pos, const value_type& value) {
+    difference_type index = pos - start_;
+    if(index < size() / 2) {
+        push_front(front());
+        iterator front1 = start_;
+        ++front1;
+        iterator front2 = front1;
+        ++front2;
+        pos = start_ + index;
+        iterator pos1 = pos;
+        ++pos1;
+        std::copy(front2, pos1, front1);
+    } else {
+        push_back(back());
+        iterator back1 = finish_;
+        --back1;
+        iterator back2 = back1;
+        --back2;
+        pos = start_ + index;
+        std::copy_backward(pos, back2, back1);
+    }
+    *pos = value;
+    return pos;
+}
 
 
 
