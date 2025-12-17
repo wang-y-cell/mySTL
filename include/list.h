@@ -221,6 +221,15 @@ public:
         insert(begin(), val);
     }
 
+    void pop_front() {
+        erase(begin());
+    }
+
+    void pop_back() {
+        iterator tmp = end();
+        erase(--tmp);
+    }
+
     iterator erase(iterator pos){
         link_type p = static_cast<link_type>(pos.node);
         link_type next = static_cast<link_type>(p->next);

@@ -40,6 +40,7 @@ struct __deque_iterator {
     __deque_iterator(T* x, map_pointer y) : cur(x), first(0), last(0), node(0) {
         set_node(y);
     }
+    __deque_iterator(const iterator& x) : cur(x.cur), first(x.first), last(x.last), node(x.node) {}
 
     reference operator*() const { return *cur; }
     pointer operator->() const { return &(operator*()); }
@@ -485,6 +486,16 @@ deque<T, Alloc, BufSiz>::insert_aux(iterator pos, const value_type& value) {
     }
     *pos = value;
     return pos;
+}
+
+template <typename T, typename Alloc, size_t BufSiz>
+bool operator==(const deque<T, Alloc, BufSiz>& x, const deque<T, Alloc, BufSiz>& y) {
+    return x.size() == y.size() && std::equal(x.begin(), x.end(), y.begin());
+}
+
+template <typename T, typename Alloc, size_t BufSiz>
+bool operator<(const deque<T, Alloc, BufSiz>& x, const deque<T, Alloc, BufSiz>& y) {
+    return std::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
 }
 
 
