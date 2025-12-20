@@ -21,7 +21,7 @@ struct __list_node : public __node_base{
 };
 
 struct _iterator_base{
-    // don't need typename T or Ref or Ptr,put in base
+
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
     typedef bidirectional_iterator_tag iterator_category;
@@ -144,7 +144,6 @@ protected:
     using base::node_;
     using base::get_node;
     using base::put_node;
-
 
     link_type create_node(const_reference val = T()) {
         link_type p = get_node();

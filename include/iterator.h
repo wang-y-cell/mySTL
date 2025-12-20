@@ -59,20 +59,22 @@ struct iterator_traits<const T*> {
 };
 
 
-
+//返回迭代器的类别类型
 template <typename InputIterator>
 inline typename iterator_traits<InputIterator>::iterator_category
 iterator_category(const InputIterator&) {
     typedef typename iterator_traits<InputIterator>::iterator_category category;
     return category();
 }
-    
+
+//返回迭代器的距离类型
 template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type*
 distance_type(const InputIterator&) {
     return static_cast<typename iterator_traits<InputIterator>::difference_type*>(0);
 }
 
+//返回迭代器的值类型
 template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::value_type*
 value_type(const InputIterator&) {
@@ -85,8 +87,6 @@ template<> struct is_msl_iterator_tag<output_iterator_tag> { static const bool v
 template<> struct is_msl_iterator_tag<forward_iterator_tag> { static const bool value = true; };
 template<> struct is_msl_iterator_tag<bidirectional_iterator_tag> { static const bool value = true; };
 template<> struct is_msl_iterator_tag<random_access_iterator_tag> { static const bool value = true; };
-
-
 
 
 
@@ -278,9 +278,6 @@ template <typename Iter1, typename Iter2>
 inline typename reverse_iterator<Iter1>::difference_type operator-
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return y.base() - x.base(); }
-
-
-
 
 
 } // namespace msl

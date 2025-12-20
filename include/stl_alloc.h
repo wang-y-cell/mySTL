@@ -30,9 +30,7 @@ class malloc_alloc_template {
 private:
 
     static void* oom_malloc(size_t);
-
     static void* oom_realloc(void* p, size_t new_sz);
-
     static void (* __malloc_alloc_oom_handler)();
 
 public:
@@ -42,7 +40,6 @@ public:
         if (!p) p = oom_malloc(n);
         return p;
     }
-
 
     static void deallocate(void* p, size_t) {
         free(p);
@@ -59,7 +56,6 @@ public:
         __malloc_alloc_oom_handler = f;
         return old;
     }
-
 
 };
 
@@ -248,20 +244,18 @@ typedef default_alloc_template<0> default_alloc;
 
 template <typename T, typename Alloc>
 struct simple_alloc {
-    static T* allocate(std::size_t n) {
+    static T* allocate(size_t n) {
         return n ? static_cast<T*>(Alloc::allocate(n * sizeof(T))) : 0;
     }
-
 
     static T* allocate() {
         return static_cast<T*>(Alloc::allocate(sizeof(T)));
     }
 
-    static void deallocate(T* p, std::size_t n) {
+    static void deallocate(T* p, size_t n) {
         if (!p || n == 0) return;
         Alloc::deallocate(p, n * sizeof(T));
     }
-
 
     static void deallocate(T* p) {
         if (!p) return;
