@@ -448,7 +448,6 @@ public:
 
 private:
     void empty_initialize() {
-        header = get_node(); // 请求一个节点作为header
         color(header) = __rb_tree_red; // header为红色，与root区分(root为黑色)
         
         root() = 0;
@@ -464,7 +463,31 @@ public:
 
     ~rb_tree() {
         clear();
-        put_node(header);
+    }
+
+    rb_tree(const rb_tree& x) : base(Alloc()), node_count(0), key_compare(x.key_compare) {
+        empty_initialize();
+        if (x.root() != 0) {
+            root() = __copy(x.root(), header);
+            leftmost() = minimum(root());
+            rightmost() = maximum(root());
+            node_count = x.node_count;
+        }
+    }
+
+    rb_tree& operator=(const rb_tree& x) {
+        if (this != &x) {
+            clear();
+            node_count = 0;
+            key_compare = x.key_compare;
+            if (x.root() != 0) {
+                root() = __copy(x.root(), header);
+                leftmost() = minimum(root());
+                rightmost() = maximum(root());
+                node_count = x.node_count;
+            }
+        }
+        return *this;
     }
 
     Compare key_comp() const { return key_compare; }
@@ -556,6 +579,31 @@ public:
     }
 
 private:
+    link_type __copy(link_type x, link_type p) {
+        link_type top = clone_node(x);
+        top->parent = p;
+        
+        MYSTL_TRY {
+            if (x->right)
+                top->right = __copy(right(x), top);
+            p = top;
+            x = left(x);
+            while (x != 0) {
+                link_type y = clone_node(x);
+                p->left = y;
+                y->parent = p;
+                if (x->right)
+                    y->right = __copy(right(x), y);
+                p = y;
+                x = left(x);
+            }
+        } MYSTL_CATCH_ALL {
+            __erase(top);
+            throw;
+        }
+        return top;
+    }
+
     void __erase(link_type __x);  //递归删除所有子节点
     iterator __insert(base_ptr x_, base_ptr y_, const value_type& v) {
         link_type x = (link_type)x_;
@@ -728,7 +776,8 @@ rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::equal_range(const Key& k) {
 }
 
 template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Alloc>
-pair<typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::const_iterator, typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::const_iterator> 
+pair<typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::const_iterator,
+typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::const_iterator> 
 rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::equal_range(const Key& k) const {
     return pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
 }
