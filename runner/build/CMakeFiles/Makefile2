@@ -62,11 +62,31 @@ CMAKE_BINARY_DIR = C:\Users\30840\OneDrive\Desktop\code\stl\runner\build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/APP.dir/all
+all: CMakeFiles/deque_text.dir/all
+all: CMakeFiles/heap_test.dir/all
+all: CMakeFiles/list_text.dir/all
+all: CMakeFiles/main.dir/all
+all: CMakeFiles/map_test.dir/all
+all: CMakeFiles/queue_text.dir/all
+all: CMakeFiles/rb_tree.dir/all
+all: CMakeFiles/set_test.dir/all
+all: CMakeFiles/sort_heap_test.dir/all
+all: CMakeFiles/stack_text.dir/all
+all: CMakeFiles/vector_test.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
-codegen: CMakeFiles/APP.dir/codegen
+codegen: CMakeFiles/deque_text.dir/codegen
+codegen: CMakeFiles/heap_test.dir/codegen
+codegen: CMakeFiles/list_text.dir/codegen
+codegen: CMakeFiles/main.dir/codegen
+codegen: CMakeFiles/map_test.dir/codegen
+codegen: CMakeFiles/queue_text.dir/codegen
+codegen: CMakeFiles/rb_tree.dir/codegen
+codegen: CMakeFiles/set_test.dir/codegen
+codegen: CMakeFiles/sort_heap_test.dir/codegen
+codegen: CMakeFiles/stack_text.dir/codegen
+codegen: CMakeFiles/vector_test.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -74,40 +94,370 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/APP.dir/clean
+clean: CMakeFiles/deque_text.dir/clean
+clean: CMakeFiles/heap_test.dir/clean
+clean: CMakeFiles/list_text.dir/clean
+clean: CMakeFiles/main.dir/clean
+clean: CMakeFiles/map_test.dir/clean
+clean: CMakeFiles/queue_text.dir/clean
+clean: CMakeFiles/rb_tree.dir/clean
+clean: CMakeFiles/set_test.dir/clean
+clean: CMakeFiles/sort_heap_test.dir/clean
+clean: CMakeFiles/stack_text.dir/clean
+clean: CMakeFiles/vector_test.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/APP.dir
+# Target rules for target CMakeFiles/deque_text.dir
 
 # All Build rule for target.
-CMakeFiles/APP.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=1,2 "Built target APP"
-.PHONY : CMakeFiles/APP.dir/all
+CMakeFiles/deque_text.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=1,2 "Built target deque_text"
+.PHONY : CMakeFiles/deque_text.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/APP.dir/rule: cmake_check_build_system
+CMakeFiles/deque_text.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/APP.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/deque_text.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
-.PHONY : CMakeFiles/APP.dir/rule
+.PHONY : CMakeFiles/deque_text.dir/rule
 
 # Convenience name for target.
-APP: CMakeFiles/APP.dir/rule
-.PHONY : APP
+deque_text: CMakeFiles/deque_text.dir/rule
+.PHONY : deque_text
 
 # codegen rule for target.
-CMakeFiles/APP.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=1,2 "Finished codegen for target APP"
-.PHONY : CMakeFiles/APP.dir/codegen
+CMakeFiles/deque_text.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=1,2 "Finished codegen for target deque_text"
+.PHONY : CMakeFiles/deque_text.dir/codegen
 
 # clean rule for target.
-CMakeFiles/APP.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/clean
-.PHONY : CMakeFiles/APP.dir/clean
+CMakeFiles/deque_text.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/clean
+.PHONY : CMakeFiles/deque_text.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/heap_test.dir
+
+# All Build rule for target.
+CMakeFiles/heap_test.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=3,4 "Built target heap_test"
+.PHONY : CMakeFiles/heap_test.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/heap_test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/heap_test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/heap_test.dir/rule
+
+# Convenience name for target.
+heap_test: CMakeFiles/heap_test.dir/rule
+.PHONY : heap_test
+
+# codegen rule for target.
+CMakeFiles/heap_test.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=3,4 "Finished codegen for target heap_test"
+.PHONY : CMakeFiles/heap_test.dir/codegen
+
+# clean rule for target.
+CMakeFiles/heap_test.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/clean
+.PHONY : CMakeFiles/heap_test.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/list_text.dir
+
+# All Build rule for target.
+CMakeFiles/list_text.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=5,6 "Built target list_text"
+.PHONY : CMakeFiles/list_text.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/list_text.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/list_text.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/list_text.dir/rule
+
+# Convenience name for target.
+list_text: CMakeFiles/list_text.dir/rule
+.PHONY : list_text
+
+# codegen rule for target.
+CMakeFiles/list_text.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=5,6 "Finished codegen for target list_text"
+.PHONY : CMakeFiles/list_text.dir/codegen
+
+# clean rule for target.
+CMakeFiles/list_text.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/clean
+.PHONY : CMakeFiles/list_text.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/main.dir
+
+# All Build rule for target.
+CMakeFiles/main.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=7,8 "Built target main"
+.PHONY : CMakeFiles/main.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/main.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/main.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/main.dir/rule
+
+# Convenience name for target.
+main: CMakeFiles/main.dir/rule
+.PHONY : main
+
+# codegen rule for target.
+CMakeFiles/main.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=7,8 "Finished codegen for target main"
+.PHONY : CMakeFiles/main.dir/codegen
+
+# clean rule for target.
+CMakeFiles/main.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/clean
+.PHONY : CMakeFiles/main.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/map_test.dir
+
+# All Build rule for target.
+CMakeFiles/map_test.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=9,10 "Built target map_test"
+.PHONY : CMakeFiles/map_test.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/map_test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/map_test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/map_test.dir/rule
+
+# Convenience name for target.
+map_test: CMakeFiles/map_test.dir/rule
+.PHONY : map_test
+
+# codegen rule for target.
+CMakeFiles/map_test.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=9,10 "Finished codegen for target map_test"
+.PHONY : CMakeFiles/map_test.dir/codegen
+
+# clean rule for target.
+CMakeFiles/map_test.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/clean
+.PHONY : CMakeFiles/map_test.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/queue_text.dir
+
+# All Build rule for target.
+CMakeFiles/queue_text.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=11,12 "Built target queue_text"
+.PHONY : CMakeFiles/queue_text.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/queue_text.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/queue_text.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/queue_text.dir/rule
+
+# Convenience name for target.
+queue_text: CMakeFiles/queue_text.dir/rule
+.PHONY : queue_text
+
+# codegen rule for target.
+CMakeFiles/queue_text.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=11,12 "Finished codegen for target queue_text"
+.PHONY : CMakeFiles/queue_text.dir/codegen
+
+# clean rule for target.
+CMakeFiles/queue_text.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/clean
+.PHONY : CMakeFiles/queue_text.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/rb_tree.dir
+
+# All Build rule for target.
+CMakeFiles/rb_tree.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=13,14 "Built target rb_tree"
+.PHONY : CMakeFiles/rb_tree.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/rb_tree.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/rb_tree.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/rb_tree.dir/rule
+
+# Convenience name for target.
+rb_tree: CMakeFiles/rb_tree.dir/rule
+.PHONY : rb_tree
+
+# codegen rule for target.
+CMakeFiles/rb_tree.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=13,14 "Finished codegen for target rb_tree"
+.PHONY : CMakeFiles/rb_tree.dir/codegen
+
+# clean rule for target.
+CMakeFiles/rb_tree.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/clean
+.PHONY : CMakeFiles/rb_tree.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/set_test.dir
+
+# All Build rule for target.
+CMakeFiles/set_test.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=15,16 "Built target set_test"
+.PHONY : CMakeFiles/set_test.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/set_test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/set_test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/set_test.dir/rule
+
+# Convenience name for target.
+set_test: CMakeFiles/set_test.dir/rule
+.PHONY : set_test
+
+# codegen rule for target.
+CMakeFiles/set_test.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=15,16 "Finished codegen for target set_test"
+.PHONY : CMakeFiles/set_test.dir/codegen
+
+# clean rule for target.
+CMakeFiles/set_test.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/clean
+.PHONY : CMakeFiles/set_test.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/sort_heap_test.dir
+
+# All Build rule for target.
+CMakeFiles/sort_heap_test.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=17,18 "Built target sort_heap_test"
+.PHONY : CMakeFiles/sort_heap_test.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/sort_heap_test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/sort_heap_test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/sort_heap_test.dir/rule
+
+# Convenience name for target.
+sort_heap_test: CMakeFiles/sort_heap_test.dir/rule
+.PHONY : sort_heap_test
+
+# codegen rule for target.
+CMakeFiles/sort_heap_test.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=17,18 "Finished codegen for target sort_heap_test"
+.PHONY : CMakeFiles/sort_heap_test.dir/codegen
+
+# clean rule for target.
+CMakeFiles/sort_heap_test.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/clean
+.PHONY : CMakeFiles/sort_heap_test.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/stack_text.dir
+
+# All Build rule for target.
+CMakeFiles/stack_text.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=19,20 "Built target stack_text"
+.PHONY : CMakeFiles/stack_text.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/stack_text.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/stack_text.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/stack_text.dir/rule
+
+# Convenience name for target.
+stack_text: CMakeFiles/stack_text.dir/rule
+.PHONY : stack_text
+
+# codegen rule for target.
+CMakeFiles/stack_text.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=19,20 "Finished codegen for target stack_text"
+.PHONY : CMakeFiles/stack_text.dir/codegen
+
+# clean rule for target.
+CMakeFiles/stack_text.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/clean
+.PHONY : CMakeFiles/stack_text.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/vector_test.dir
+
+# All Build rule for target.
+CMakeFiles/vector_test.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=21,22 "Built target vector_test"
+.PHONY : CMakeFiles/vector_test.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/vector_test.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/vector_test.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles 0
+.PHONY : CMakeFiles/vector_test.dir/rule
+
+# Convenience name for target.
+vector_test: CMakeFiles/vector_test.dir/rule
+.PHONY : vector_test
+
+# codegen rule for target.
+CMakeFiles/vector_test.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\30840\OneDrive\Desktop\code\stl\runner\build\CMakeFiles --progress-num=21,22 "Finished codegen for target vector_test"
+.PHONY : CMakeFiles/vector_test.dir/codegen
+
+# clean rule for target.
+CMakeFiles/vector_test.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/clean
+.PHONY : CMakeFiles/vector_test.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

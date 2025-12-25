@@ -116,24 +116,202 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named APP
+# Target rules for targets named deque_text
 
 # Build rule for target.
-APP: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 APP
-.PHONY : APP
+deque_text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 deque_text
+.PHONY : deque_text
 
 # fast build rule for target.
-APP/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/build
-.PHONY : APP/fast
+deque_text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/build
+.PHONY : deque_text/fast
+
+#=============================================================================
+# Target rules for targets named heap_test
+
+# Build rule for target.
+heap_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 heap_test
+.PHONY : heap_test
+
+# fast build rule for target.
+heap_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/build
+.PHONY : heap_test/fast
+
+#=============================================================================
+# Target rules for targets named list_text
+
+# Build rule for target.
+list_text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 list_text
+.PHONY : list_text
+
+# fast build rule for target.
+list_text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/build
+.PHONY : list_text/fast
+
+#=============================================================================
+# Target rules for targets named main
+
+# Build rule for target.
+main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 main
+.PHONY : main
+
+# fast build rule for target.
+main/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/build
+.PHONY : main/fast
+
+#=============================================================================
+# Target rules for targets named map_test
+
+# Build rule for target.
+map_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 map_test
+.PHONY : map_test
+
+# fast build rule for target.
+map_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/build
+.PHONY : map_test/fast
+
+#=============================================================================
+# Target rules for targets named queue_text
+
+# Build rule for target.
+queue_text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 queue_text
+.PHONY : queue_text
+
+# fast build rule for target.
+queue_text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/build
+.PHONY : queue_text/fast
+
+#=============================================================================
+# Target rules for targets named rb_tree
+
+# Build rule for target.
+rb_tree: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 rb_tree
+.PHONY : rb_tree
+
+# fast build rule for target.
+rb_tree/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/build
+.PHONY : rb_tree/fast
+
+#=============================================================================
+# Target rules for targets named set_test
+
+# Build rule for target.
+set_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 set_test
+.PHONY : set_test
+
+# fast build rule for target.
+set_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/build
+.PHONY : set_test/fast
+
+#=============================================================================
+# Target rules for targets named sort_heap_test
+
+# Build rule for target.
+sort_heap_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 sort_heap_test
+.PHONY : sort_heap_test
+
+# fast build rule for target.
+sort_heap_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/build
+.PHONY : sort_heap_test/fast
+
+#=============================================================================
+# Target rules for targets named stack_text
+
+# Build rule for target.
+stack_text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 stack_text
+.PHONY : stack_text
+
+# fast build rule for target.
+stack_text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/build
+.PHONY : stack_text/fast
+
+#=============================================================================
+# Target rules for targets named vector_test
+
+# Build rule for target.
+vector_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 vector_test
+.PHONY : vector_test
+
+# fast build rule for target.
+vector_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/build
+.PHONY : vector_test/fast
+
+src/deque_text.obj: src/deque_text.cpp.obj
+.PHONY : src/deque_text.obj
+
+# target to build an object file
+src/deque_text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/src/deque_text.cpp.obj
+.PHONY : src/deque_text.cpp.obj
+
+src/deque_text.i: src/deque_text.cpp.i
+.PHONY : src/deque_text.i
+
+# target to preprocess a source file
+src/deque_text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/src/deque_text.cpp.i
+.PHONY : src/deque_text.cpp.i
+
+src/deque_text.s: src/deque_text.cpp.s
+.PHONY : src/deque_text.s
+
+# target to generate assembly for a file
+src/deque_text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\deque_text.dir\build.make CMakeFiles/deque_text.dir/src/deque_text.cpp.s
+.PHONY : src/deque_text.cpp.s
+
+src/heap_test.obj: src/heap_test.cpp.obj
+.PHONY : src/heap_test.obj
+
+# target to build an object file
+src/heap_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/src/heap_test.cpp.obj
+.PHONY : src/heap_test.cpp.obj
+
+src/heap_test.i: src/heap_test.cpp.i
+.PHONY : src/heap_test.i
+
+# target to preprocess a source file
+src/heap_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/src/heap_test.cpp.i
+.PHONY : src/heap_test.cpp.i
+
+src/heap_test.s: src/heap_test.cpp.s
+.PHONY : src/heap_test.s
+
+# target to generate assembly for a file
+src/heap_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/src/heap_test.cpp.s
+.PHONY : src/heap_test.cpp.s
 
 src/list_text.obj: src/list_text.cpp.obj
 .PHONY : src/list_text.obj
 
 # target to build an object file
 src/list_text.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/list_text.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/src/list_text.cpp.obj
 .PHONY : src/list_text.cpp.obj
 
 src/list_text.i: src/list_text.cpp.i
@@ -141,7 +319,7 @@ src/list_text.i: src/list_text.cpp.i
 
 # target to preprocess a source file
 src/list_text.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/list_text.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/src/list_text.cpp.i
 .PHONY : src/list_text.cpp.i
 
 src/list_text.s: src/list_text.cpp.s
@@ -149,8 +327,200 @@ src/list_text.s: src/list_text.cpp.s
 
 # target to generate assembly for a file
 src/list_text.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\APP.dir\build.make CMakeFiles/APP.dir/src/list_text.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/src/list_text.cpp.s
 .PHONY : src/list_text.cpp.s
+
+src/main.obj: src/main.cpp.obj
+.PHONY : src/main.obj
+
+# target to build an object file
+src/main.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/src/main.cpp.obj
+.PHONY : src/main.cpp.obj
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
+src/map_test.obj: src/map_test.cpp.obj
+.PHONY : src/map_test.obj
+
+# target to build an object file
+src/map_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/src/map_test.cpp.obj
+.PHONY : src/map_test.cpp.obj
+
+src/map_test.i: src/map_test.cpp.i
+.PHONY : src/map_test.i
+
+# target to preprocess a source file
+src/map_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/src/map_test.cpp.i
+.PHONY : src/map_test.cpp.i
+
+src/map_test.s: src/map_test.cpp.s
+.PHONY : src/map_test.s
+
+# target to generate assembly for a file
+src/map_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/src/map_test.cpp.s
+.PHONY : src/map_test.cpp.s
+
+src/queue_text.obj: src/queue_text.cpp.obj
+.PHONY : src/queue_text.obj
+
+# target to build an object file
+src/queue_text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/src/queue_text.cpp.obj
+.PHONY : src/queue_text.cpp.obj
+
+src/queue_text.i: src/queue_text.cpp.i
+.PHONY : src/queue_text.i
+
+# target to preprocess a source file
+src/queue_text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/src/queue_text.cpp.i
+.PHONY : src/queue_text.cpp.i
+
+src/queue_text.s: src/queue_text.cpp.s
+.PHONY : src/queue_text.s
+
+# target to generate assembly for a file
+src/queue_text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\queue_text.dir\build.make CMakeFiles/queue_text.dir/src/queue_text.cpp.s
+.PHONY : src/queue_text.cpp.s
+
+src/rb_tree.text.obj: src/rb_tree.text.cpp.obj
+.PHONY : src/rb_tree.text.obj
+
+# target to build an object file
+src/rb_tree.text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/src/rb_tree.text.cpp.obj
+.PHONY : src/rb_tree.text.cpp.obj
+
+src/rb_tree.text.i: src/rb_tree.text.cpp.i
+.PHONY : src/rb_tree.text.i
+
+# target to preprocess a source file
+src/rb_tree.text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/src/rb_tree.text.cpp.i
+.PHONY : src/rb_tree.text.cpp.i
+
+src/rb_tree.text.s: src/rb_tree.text.cpp.s
+.PHONY : src/rb_tree.text.s
+
+# target to generate assembly for a file
+src/rb_tree.text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rb_tree.dir\build.make CMakeFiles/rb_tree.dir/src/rb_tree.text.cpp.s
+.PHONY : src/rb_tree.text.cpp.s
+
+src/set_test.obj: src/set_test.cpp.obj
+.PHONY : src/set_test.obj
+
+# target to build an object file
+src/set_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/src/set_test.cpp.obj
+.PHONY : src/set_test.cpp.obj
+
+src/set_test.i: src/set_test.cpp.i
+.PHONY : src/set_test.i
+
+# target to preprocess a source file
+src/set_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/src/set_test.cpp.i
+.PHONY : src/set_test.cpp.i
+
+src/set_test.s: src/set_test.cpp.s
+.PHONY : src/set_test.s
+
+# target to generate assembly for a file
+src/set_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\set_test.dir\build.make CMakeFiles/set_test.dir/src/set_test.cpp.s
+.PHONY : src/set_test.cpp.s
+
+src/sort_heap_test.obj: src/sort_heap_test.cpp.obj
+.PHONY : src/sort_heap_test.obj
+
+# target to build an object file
+src/sort_heap_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/src/sort_heap_test.cpp.obj
+.PHONY : src/sort_heap_test.cpp.obj
+
+src/sort_heap_test.i: src/sort_heap_test.cpp.i
+.PHONY : src/sort_heap_test.i
+
+# target to preprocess a source file
+src/sort_heap_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/src/sort_heap_test.cpp.i
+.PHONY : src/sort_heap_test.cpp.i
+
+src/sort_heap_test.s: src/sort_heap_test.cpp.s
+.PHONY : src/sort_heap_test.s
+
+# target to generate assembly for a file
+src/sort_heap_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\sort_heap_test.dir\build.make CMakeFiles/sort_heap_test.dir/src/sort_heap_test.cpp.s
+.PHONY : src/sort_heap_test.cpp.s
+
+src/stack_text.obj: src/stack_text.cpp.obj
+.PHONY : src/stack_text.obj
+
+# target to build an object file
+src/stack_text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/src/stack_text.cpp.obj
+.PHONY : src/stack_text.cpp.obj
+
+src/stack_text.i: src/stack_text.cpp.i
+.PHONY : src/stack_text.i
+
+# target to preprocess a source file
+src/stack_text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/src/stack_text.cpp.i
+.PHONY : src/stack_text.cpp.i
+
+src/stack_text.s: src/stack_text.cpp.s
+.PHONY : src/stack_text.s
+
+# target to generate assembly for a file
+src/stack_text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/src/stack_text.cpp.s
+.PHONY : src/stack_text.cpp.s
+
+src/vector_test.obj: src/vector_test.cpp.obj
+.PHONY : src/vector_test.obj
+
+# target to build an object file
+src/vector_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/src/vector_test.cpp.obj
+.PHONY : src/vector_test.cpp.obj
+
+src/vector_test.i: src/vector_test.cpp.i
+.PHONY : src/vector_test.i
+
+# target to preprocess a source file
+src/vector_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/src/vector_test.cpp.i
+.PHONY : src/vector_test.cpp.i
+
+src/vector_test.s: src/vector_test.cpp.s
+.PHONY : src/vector_test.s
+
+# target to generate assembly for a file
+src/vector_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_test.dir\build.make CMakeFiles/vector_test.dir/src/vector_test.cpp.s
+.PHONY : src/vector_test.cpp.s
 
 # Help Target
 help:
@@ -160,10 +530,50 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... APP
+	@echo ... deque_text
+	@echo ... heap_test
+	@echo ... list_text
+	@echo ... main
+	@echo ... map_test
+	@echo ... queue_text
+	@echo ... rb_tree
+	@echo ... set_test
+	@echo ... sort_heap_test
+	@echo ... stack_text
+	@echo ... vector_test
+	@echo ... src/deque_text.obj
+	@echo ... src/deque_text.i
+	@echo ... src/deque_text.s
+	@echo ... src/heap_test.obj
+	@echo ... src/heap_test.i
+	@echo ... src/heap_test.s
 	@echo ... src/list_text.obj
 	@echo ... src/list_text.i
 	@echo ... src/list_text.s
+	@echo ... src/main.obj
+	@echo ... src/main.i
+	@echo ... src/main.s
+	@echo ... src/map_test.obj
+	@echo ... src/map_test.i
+	@echo ... src/map_test.s
+	@echo ... src/queue_text.obj
+	@echo ... src/queue_text.i
+	@echo ... src/queue_text.s
+	@echo ... src/rb_tree.text.obj
+	@echo ... src/rb_tree.text.i
+	@echo ... src/rb_tree.text.s
+	@echo ... src/set_test.obj
+	@echo ... src/set_test.i
+	@echo ... src/set_test.s
+	@echo ... src/sort_heap_test.obj
+	@echo ... src/sort_heap_test.i
+	@echo ... src/sort_heap_test.s
+	@echo ... src/stack_text.obj
+	@echo ... src/stack_text.i
+	@echo ... src/stack_text.s
+	@echo ... src/vector_test.obj
+	@echo ... src/vector_test.i
+	@echo ... src/vector_test.s
 .PHONY : help
 
 

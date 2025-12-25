@@ -5,9 +5,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 include_directories(${PROJECT_SOURCE_DIR}/../include)
 
-add_executable(APP ${PROJECT_SOURCE_DIR}/src/list_text.cpp)
-add_executable(DEQUE_APP ${PROJECT_SOURCE_DIR}/src/deque_text.cpp)
-set_target_properties(DEQUE_APP PROPERTIES CXX_STANDARD 98 CXX_STANDARD_REQUIRED ON)
+file(GLOB SRC ${CMAKE_SOURCE_DIR}/src/*.cpp)
+foreach(src ${SRC})
+    get_filename_component(name ${src} NAME_WE)
+    add_executable(${name} ${src})
+endforeach()
+
 
 
 

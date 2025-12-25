@@ -3,3 +3,5 @@ exe/
 readme/日志.md
 runner/bin/
 runner/build/
+*.exe
+*.o
