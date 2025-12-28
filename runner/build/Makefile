@@ -181,6 +181,19 @@ map_test/fast:
 .PHONY : map_test/fast
 
 #=============================================================================
+# Target rules for targets named numeric_text
+
+# Build rule for target.
+numeric_text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 numeric_text
+.PHONY : numeric_text
+
+# fast build rule for target.
+numeric_text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\numeric_text.dir\build.make CMakeFiles/numeric_text.dir/build
+.PHONY : numeric_text/fast
+
+#=============================================================================
 # Target rules for targets named queue_text
 
 # Build rule for target.
@@ -378,6 +391,30 @@ src/map_test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/src/map_test.cpp.s
 .PHONY : src/map_test.cpp.s
 
+src/numeric_text.obj: src/numeric_text.cpp.obj
+.PHONY : src/numeric_text.obj
+
+# target to build an object file
+src/numeric_text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\numeric_text.dir\build.make CMakeFiles/numeric_text.dir/src/numeric_text.cpp.obj
+.PHONY : src/numeric_text.cpp.obj
+
+src/numeric_text.i: src/numeric_text.cpp.i
+.PHONY : src/numeric_text.i
+
+# target to preprocess a source file
+src/numeric_text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\numeric_text.dir\build.make CMakeFiles/numeric_text.dir/src/numeric_text.cpp.i
+.PHONY : src/numeric_text.cpp.i
+
+src/numeric_text.s: src/numeric_text.cpp.s
+.PHONY : src/numeric_text.s
+
+# target to generate assembly for a file
+src/numeric_text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\numeric_text.dir\build.make CMakeFiles/numeric_text.dir/src/numeric_text.cpp.s
+.PHONY : src/numeric_text.cpp.s
+
 src/queue_text.obj: src/queue_text.cpp.obj
 .PHONY : src/queue_text.obj
 
@@ -535,6 +572,7 @@ help:
 	@echo ... list_text
 	@echo ... main
 	@echo ... map_test
+	@echo ... numeric_text
 	@echo ... queue_text
 	@echo ... rb_tree
 	@echo ... set_test
@@ -556,6 +594,9 @@ help:
 	@echo ... src/map_test.obj
 	@echo ... src/map_test.i
 	@echo ... src/map_test.s
+	@echo ... src/numeric_text.obj
+	@echo ... src/numeric_text.i
+	@echo ... src/numeric_text.s
 	@echo ... src/queue_text.obj
 	@echo ... src/queue_text.i
 	@echo ... src/queue_text.s

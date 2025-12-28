@@ -49,6 +49,14 @@ struct negate : public unary_function<T, T> {
     T operator()(const T& x) const { return -x; }
 };
 
+// 证同元素
+template <class T>
+T identity_element(const multiplies<T>&) { return T(1); }
+template <class T>
+T identity_element(const plus<T>&) { return T(0); }
+
+
+
 // 关系运算类仿函数
 template <class T>
 struct equal_to : public binary_function<T, T, bool> {
