@@ -138,6 +138,7 @@ T power(T x, Integer n, MonoidOperation monoid_op) {
     return res;
 }
 
+//版本1
 template<typename T, typename Integer>
 T power(T x, Integer n) {
     return power(x, n, msl::multiplies<T>());
