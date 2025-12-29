@@ -9,6 +9,7 @@ C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/rb_tree.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/set_test.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/sort_heap_test.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/stack_text.dir
+C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/stl_algobase_text.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/vector_test.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/edit_cache.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/rebuild_cache.dir

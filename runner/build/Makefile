@@ -259,6 +259,19 @@ stack_text/fast:
 .PHONY : stack_text/fast
 
 #=============================================================================
+# Target rules for targets named stl_algobase_text
+
+# Build rule for target.
+stl_algobase_text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 stl_algobase_text
+.PHONY : stl_algobase_text
+
+# fast build rule for target.
+stl_algobase_text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algobase_text.dir\build.make CMakeFiles/stl_algobase_text.dir/build
+.PHONY : stl_algobase_text/fast
+
+#=============================================================================
 # Target rules for targets named vector_test
 
 # Build rule for target.
@@ -535,6 +548,30 @@ src/stack_text.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/src/stack_text.cpp.s
 .PHONY : src/stack_text.cpp.s
 
+src/stl_algobase_text.obj: src/stl_algobase_text.cpp.obj
+.PHONY : src/stl_algobase_text.obj
+
+# target to build an object file
+src/stl_algobase_text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algobase_text.dir\build.make CMakeFiles/stl_algobase_text.dir/src/stl_algobase_text.cpp.obj
+.PHONY : src/stl_algobase_text.cpp.obj
+
+src/stl_algobase_text.i: src/stl_algobase_text.cpp.i
+.PHONY : src/stl_algobase_text.i
+
+# target to preprocess a source file
+src/stl_algobase_text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algobase_text.dir\build.make CMakeFiles/stl_algobase_text.dir/src/stl_algobase_text.cpp.i
+.PHONY : src/stl_algobase_text.cpp.i
+
+src/stl_algobase_text.s: src/stl_algobase_text.cpp.s
+.PHONY : src/stl_algobase_text.s
+
+# target to generate assembly for a file
+src/stl_algobase_text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algobase_text.dir\build.make CMakeFiles/stl_algobase_text.dir/src/stl_algobase_text.cpp.s
+.PHONY : src/stl_algobase_text.cpp.s
+
 src/vector_test.obj: src/vector_test.cpp.obj
 .PHONY : src/vector_test.obj
 
@@ -578,6 +615,7 @@ help:
 	@echo ... set_test
 	@echo ... sort_heap_test
 	@echo ... stack_text
+	@echo ... stl_algobase_text
 	@echo ... vector_test
 	@echo ... src/deque_text.obj
 	@echo ... src/deque_text.i
@@ -612,6 +650,9 @@ help:
 	@echo ... src/stack_text.obj
 	@echo ... src/stack_text.i
 	@echo ... src/stack_text.s
+	@echo ... src/stl_algobase_text.obj
+	@echo ... src/stl_algobase_text.i
+	@echo ... src/stl_algobase_text.s
 	@echo ... src/vector_test.obj
 	@echo ... src/vector_test.i
 	@echo ... src/vector_test.s
