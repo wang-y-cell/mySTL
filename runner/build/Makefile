@@ -155,19 +155,6 @@ list_text/fast:
 .PHONY : list_text/fast
 
 #=============================================================================
-# Target rules for targets named main
-
-# Build rule for target.
-main: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 main
-.PHONY : main
-
-# fast build rule for target.
-main/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/build
-.PHONY : main/fast
-
-#=============================================================================
 # Target rules for targets named map_test
 
 # Build rule for target.
@@ -368,30 +355,6 @@ src/list_text.s: src/list_text.cpp.s
 src/list_text.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\list_text.dir\build.make CMakeFiles/list_text.dir/src/list_text.cpp.s
 .PHONY : src/list_text.cpp.s
-
-src/main.obj: src/main.cpp.obj
-.PHONY : src/main.obj
-
-# target to build an object file
-src/main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/src/main.cpp.obj
-.PHONY : src/main.cpp.obj
-
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
-
-# target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
-
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
-
-# target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
 
 src/map_test.obj: src/map_test.cpp.obj
 .PHONY : src/map_test.obj
@@ -644,7 +607,6 @@ help:
 	@echo ... deque_text
 	@echo ... heap_test
 	@echo ... list_text
-	@echo ... main
 	@echo ... map_test
 	@echo ... move_text
 	@echo ... numeric_text
@@ -664,9 +626,6 @@ help:
 	@echo ... src/list_text.obj
 	@echo ... src/list_text.i
 	@echo ... src/list_text.s
-	@echo ... src/main.obj
-	@echo ... src/main.i
-	@echo ... src/main.s
 	@echo ... src/map_test.obj
 	@echo ... src/map_test.i
 	@echo ... src/map_test.s

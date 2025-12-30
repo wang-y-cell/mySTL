@@ -61,7 +61,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/deque_text.dir/DependInfo.cmake"
   "CMakeFiles/heap_test.dir/DependInfo.cmake"
   "CMakeFiles/list_text.dir/DependInfo.cmake"
-  "CMakeFiles/main.dir/DependInfo.cmake"
   "CMakeFiles/map_test.dir/DependInfo.cmake"
   "CMakeFiles/move_text.dir/DependInfo.cmake"
   "CMakeFiles/numeric_text.dir/DependInfo.cmake"
