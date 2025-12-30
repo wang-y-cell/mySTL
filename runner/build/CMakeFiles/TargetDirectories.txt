@@ -3,6 +3,7 @@ C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/heap_test.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/list_text.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/main.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/map_test.dir
+C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/move_text.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/numeric_text.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/queue_text.dir
 C:/Users/30840/OneDrive/Desktop/code/stl/runner/build/CMakeFiles/rb_tree.dir

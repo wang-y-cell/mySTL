@@ -5,10 +5,7 @@
 #include "iterator.h"
 #include "type_traits.h"
 #include "stl_construct.h"
-#include <algorithm> //copy,fill,fill_n 
-#if MYSTL_CPP_VERSION >= 11
-#include <utility>
-#endif
+#include "stl_algobase.h"
 
 namespace msl {
 
@@ -29,7 +26,7 @@ inline Forward_iterator __uninitialized_copy_aux(Input_iterator first,Input_iter
 
 template <typename Input_iterator, typename Forward_iterator>
 inline Forward_iterator __uninitialized_copy_aux(Input_iterator first,Input_iterator last,Forward_iterator result,true_type) {
-    return std::copy(first, last, result);
+    return msl::copy(first, last, result);
 }
 
 template <typename Input_iterator, typename Forward_iterator,typename T >
@@ -62,7 +59,7 @@ inline void _uninitialized_fill_aux(Forward_iterator first,Forward_iterator last
 
 template <typename Forward_iterator,typename T >
 inline void _uninitialized_fill_aux(Forward_iterator first,Forward_iterator last,const T& value,true_type) {
-    std::fill(first, last, value);
+    msl::fill(first, last, value);
 }
 
 template <typename Forward_iterator,typename T >
@@ -82,7 +79,7 @@ inline void uninitialized_fill(Forward_iterator first,Forward_iterator last,cons
 // uninitialized_fill_n()
 template <typename Forward_iterator,typename Size,typename T >
 inline Forward_iterator __uninitialized_fill_n_aux(Forward_iterator first,Size n,const T& value,true_type) {
-    return std::fill_n(first, n, value);
+    return msl::fill_n(first, n, value);
 }
 
 template <typename Forward_iterator,typename Size,typename T >
@@ -114,7 +111,7 @@ inline Forward_iterator uninitialized_fill_n(Forward_iterator first,Size n,const
 #if MYSTL_CPP_VERSION >= 11
 template <typename Input_iterator, typename Forward_iterator>
 inline Forward_iterator __uninitialized_move_aux(Input_iterator first,Input_iterator last,Forward_iterator result,true_type) {
-    return std::move(first, last, result);
+    return msl::move(first, last, result);
 }
 
 template <typename Input_iterator, typename Forward_iterator>
@@ -122,7 +119,7 @@ inline Forward_iterator __uninitialized_move_aux(Input_iterator first,Input_iter
     Forward_iterator cur = result;
     MYSTL_TRY {
         for (; first != last; ++first, ++cur)
-            msl::construct(&*cur, std::move(*first));
+            msl::construct(&*cur, msl::move(*first));
         return cur;
     }
     MYSTL_CATCH_ALL {

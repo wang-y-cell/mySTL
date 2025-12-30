@@ -202,7 +202,7 @@ public:
     const_reference front() const { return *begin(); }
     reference back() { return *--end(); }
     const_reference back() const { return *--end(); }
-    void swap(list& x){std::swap(node_, x.node_);}
+    void swap(list& x){msl::swap(node_, x.node_);}
 
     void insert(iterator pos, const_reference val) {
         link_type p = create_node(val);

@@ -5,6 +5,7 @@
 #include "iterator.h"
 #include "stl_uninitialized.h"
 #include "stl_alloc.h"
+#include "stl_algobase.h"
 #include <cstddef>
 
 namespace msl {
@@ -297,10 +298,10 @@ public:
         ++next;
         difference_type index = pos - start_;
         if (index < size() >> 1) {
-            std::copy_backward(start_, pos, next);
+            msl::copy_backward(start_, pos, next);
             pop_front();
         } else {
-            std::copy(next, finish_, pos);
+            msl::copy(next, finish_, pos);
             pop_back();
         }
         return start_ + index;
@@ -314,7 +315,7 @@ public:
         difference_type n = last - first; // 计算删除的元素个数
         difference_type elems_before = first - start_; // 计算删除区间前的元素个数
         if(elems_before < ((size() - n) >> 1)){
-            std::copy_backward(start_, first, last);
+            msl::copy_backward(start_, first, last);
             iterator new_start = start_ + n;
             destroy(start_,new_start);// 销毁删除区间前的元素
 
@@ -324,7 +325,7 @@ public:
             }
             start_ = new_start;
         }else{
-            std::copy(last, finish_, first);
+            msl::copy(last, finish_, first);
             iterator new_finish = finish_ - n;
             destroy(new_finish, finish_);// 销毁删除区间后的元素
             // 释放删除区间后的缓冲区
@@ -427,16 +428,16 @@ void deque<T, Alloc, BufSiz>::reallocate_map(size_type nodes_to_add,bool add_at_
         new_nstart = map_ + (map_size_ - new_num_nodes) / 2
         + (add_at_front ? nodes_to_add : 0);
         if(new_nstart < start_.node) {
-            std::copy(start_.node, finish_.node + 1, new_nstart);
+            msl::copy(start_.node, finish_.node + 1, new_nstart);
         } else {
-            std::copy_backward(start_.node, finish_.node + 1, new_nstart + old_num_nodes);
+            msl::copy_backward(start_.node, finish_.node + 1, new_nstart + old_num_nodes);
         }
     }else{
-        size_type new_map_size = map_size_ + std::max(map_size_, nodes_to_add) + 2;
+        size_type new_map_size = map_size_ + msl::max(map_size_, nodes_to_add) + 2;
         map_pointer new_map = allocate_map(new_map_size);
         new_nstart = new_map + (new_map_size - new_num_nodes) / 2 
         + (add_at_front ? nodes_to_add : 0);
-        std::copy(start_.node, finish_.node + 1, new_nstart);
+        msl::copy(start_.node, finish_.node + 1, new_nstart);
         deallocate_map(map_, map_size_);
         map_ = new_map;
         map_size_ = new_map_size;
@@ -474,7 +475,7 @@ deque<T, Alloc, BufSiz>::insert_aux(iterator pos, const value_type& value) {
         pos = start_ + index;
         iterator pos1 = pos;
         ++pos1;
-        std::copy(front2, pos1, front1);
+        msl::copy(front2, pos1, front1);
     } else {
         push_back(back());
         iterator back1 = finish_;
@@ -482,7 +483,7 @@ deque<T, Alloc, BufSiz>::insert_aux(iterator pos, const value_type& value) {
         iterator back2 = back1;
         --back2;
         pos = start_ + index;
-        std::copy_backward(pos, back2, back1);
+        msl::copy_backward(pos, back2, back1);
     }
     *pos = value;
     return pos;
@@ -490,12 +491,12 @@ deque<T, Alloc, BufSiz>::insert_aux(iterator pos, const value_type& value) {
 
 template <typename T, typename Alloc, size_t BufSiz>
 bool operator==(const deque<T, Alloc, BufSiz>& x, const deque<T, Alloc, BufSiz>& y) {
-    return x.size() == y.size() && std::equal(x.begin(), x.end(), y.begin());
+    return x.size() == y.size() && msl::equal(x.begin(), x.end(), y.begin());
 }
 
 template <typename T, typename Alloc, size_t BufSiz>
 bool operator<(const deque<T, Alloc, BufSiz>& x, const deque<T, Alloc, BufSiz>& y) {
-    return std::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+    return msl::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
 }
 
 

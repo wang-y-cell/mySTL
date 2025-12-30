@@ -181,6 +181,19 @@ map_test/fast:
 .PHONY : map_test/fast
 
 #=============================================================================
+# Target rules for targets named move_text
+
+# Build rule for target.
+move_text: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 move_text
+.PHONY : move_text
+
+# fast build rule for target.
+move_text/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\move_text.dir\build.make CMakeFiles/move_text.dir/build
+.PHONY : move_text/fast
+
+#=============================================================================
 # Target rules for targets named numeric_text
 
 # Build rule for target.
@@ -404,6 +417,30 @@ src/map_test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\map_test.dir\build.make CMakeFiles/map_test.dir/src/map_test.cpp.s
 .PHONY : src/map_test.cpp.s
 
+src/move_text.obj: src/move_text.cpp.obj
+.PHONY : src/move_text.obj
+
+# target to build an object file
+src/move_text.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\move_text.dir\build.make CMakeFiles/move_text.dir/src/move_text.cpp.obj
+.PHONY : src/move_text.cpp.obj
+
+src/move_text.i: src/move_text.cpp.i
+.PHONY : src/move_text.i
+
+# target to preprocess a source file
+src/move_text.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\move_text.dir\build.make CMakeFiles/move_text.dir/src/move_text.cpp.i
+.PHONY : src/move_text.cpp.i
+
+src/move_text.s: src/move_text.cpp.s
+.PHONY : src/move_text.s
+
+# target to generate assembly for a file
+src/move_text.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\move_text.dir\build.make CMakeFiles/move_text.dir/src/move_text.cpp.s
+.PHONY : src/move_text.cpp.s
+
 src/numeric_text.obj: src/numeric_text.cpp.obj
 .PHONY : src/numeric_text.obj
 
@@ -609,6 +646,7 @@ help:
 	@echo ... list_text
 	@echo ... main
 	@echo ... map_test
+	@echo ... move_text
 	@echo ... numeric_text
 	@echo ... queue_text
 	@echo ... rb_tree
@@ -632,6 +670,9 @@ help:
 	@echo ... src/map_test.obj
 	@echo ... src/map_test.i
 	@echo ... src/map_test.s
+	@echo ... src/move_text.obj
+	@echo ... src/move_text.i
+	@echo ... src/move_text.s
 	@echo ... src/numeric_text.obj
 	@echo ... src/numeric_text.i
 	@echo ... src/numeric_text.s

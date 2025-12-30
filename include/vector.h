@@ -4,11 +4,11 @@
 #include "stl_config.h"
 #include "memory.h"
 #include "iterator.h"
+#include "stl_algobase.h"
 #include <stdexcept>
-#include <algorithm>
 #if MYSTL_CPP_VERSION >= 11
 #include <initializer_list>
-#include <utility>
+#include "move.h"
 #endif
 
 namespace msl {
@@ -273,7 +273,7 @@ public:
     }
 
     iterator erase(iterator first,iterator last){
-        iterator i = std::copy(last,finish_,first);
+        iterator i = msl::copy(last,finish_,first);
         msl::destroy(i,finish_);
         finish_ = finish_ - (last - first);
         return first;
@@ -281,7 +281,7 @@ public:
 
     iterator erase(iterator position){
         if(position + 1 != finish_)
-             std::copy(position + 1,finish_,position);
+             msl::copy(position + 1,finish_,position);
              --finish_;
              msl::destroy(finish_);
              return position;
@@ -314,9 +314,9 @@ public:
     }
 
     void swap(vector& other) {
-        std::swap(start_, other.start_);
-        std::swap(finish_, other.finish_);
-        std::swap(end_of_storage_, other.end_of_storage_);
+        msl::iter_swap(&start_, &other.start_);
+        msl::iter_swap(&finish_, &other.finish_);
+        msl::iter_swap(&end_of_storage_, &other.end_of_storage_);
     }
 
 };
@@ -326,7 +326,7 @@ void vector<T,Alloc>::insert_aux(iterator position, const_reference value) {
     if (finish_ != end_of_storage_) {
         msl::construct(finish_, *(finish_ - 1));
         ++finish_;
-        std::copy_backward(position, finish_ - 2, finish_ - 1);
+        msl::copy_backward(position, finish_ - 2, finish_ - 1);
         *position = value;
     } else {
         realloc_insert(position, value);
@@ -369,8 +369,8 @@ void vector<T,Alloc>::insert(iterator position,size_type n,const_reference value
                 MYSTL_TRY{
                     msl::uninitialized_copy(old_finish - n, old_finish, finish_);
                     finish_ += n;
-                    std::copy_backward(position, old_finish - n, old_finish);
-                    std::fill(position, position + n, value);
+                    msl::copy_backward(position, old_finish - n, old_finish);
+                    msl::fill(position, position + n, value);
                 }
                 MYSTL_CATCH_ALL{
                     msl::destroy(constructed, finish_);
@@ -385,7 +385,7 @@ void vector<T,Alloc>::insert(iterator position,size_type n,const_reference value
                     finish_ += n - elems_after;
                     msl::uninitialized_copy(position,old_finish,finish_);
                     finish_ += elems_after;
-                    std::fill(position,old_finish,value);
+                    msl::fill(position,old_finish,value);
                 }
                 MYSTL_CATCH_ALL{
                     msl::destroy(constructed, finish_);
@@ -396,7 +396,7 @@ void vector<T,Alloc>::insert(iterator position,size_type n,const_reference value
         }
         else {
             const size_type old_size = size();
-            const size_type len = old_size + std::max(old_size,n);
+            const size_type len = old_size + msl::max(old_size,n);
             iterator new_start = data_allocator::allocate(len);
             iterator new_finish = new_start;
             MYSTL_TRY{
@@ -435,8 +435,8 @@ void vector<T,Alloc>::insert(iterator position,const_iterator first,const_iterat
             MYSTL_TRY {
                 msl::uninitialized_copy(old_finish - n, old_finish, finish_);
                 finish_ += n;
-                std::copy_backward(position, old_finish - n, old_finish);
-                std::copy(first, last, position);
+                msl::copy_backward(position, old_finish - n, old_finish);
+                msl::copy(first, last, position);
             }
             MYSTL_CATCH_ALL {
                 msl::destroy(constructed, finish_);
@@ -451,7 +451,7 @@ void vector<T,Alloc>::insert(iterator position,const_iterator first,const_iterat
                 finish_ += n - elems_after;
                 msl::uninitialized_copy(position, old_finish, finish_);
                 finish_ += elems_after;
-                std::copy(first, mid, position);
+                msl::copy(first, mid, position);
             }
             MYSTL_CATCH_ALL {
                 msl::destroy(constructed, finish_);
@@ -461,7 +461,7 @@ void vector<T,Alloc>::insert(iterator position,const_iterator first,const_iterat
         }
     } else {
         size_type old_size = size();
-        size_type new_len = old_size + std::max(old_size, n);
+        size_type new_len = old_size + msl::max(old_size, n);
         iterator new_start = data_allocator::allocate(new_len);
         iterator new_finish = new_start;
         MYSTL_TRY {
@@ -582,7 +582,7 @@ void vector<T,Alloc>::fill_assign(size_type n, const_reference value){
 
 template <typename T, typename Alloc>
 inline bool operator==(const vector<T, Alloc>& x, const vector<T, Alloc>& y) {
-    return x.size() == y.size() && std::equal(x.begin(), x.end(), y.begin());
+    return x.size() == y.size() && msl::equal(x.begin(), x.end(), y.begin());
 }
 
 template <typename T, typename Alloc>
@@ -592,7 +592,7 @@ inline bool operator!=(const vector<T, Alloc>& x, const vector<T, Alloc>& y) {
 
 template <typename T, typename Alloc>
 inline bool operator<(const vector<T, Alloc>& x, const vector<T, Alloc>& y) {
-    return std::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+    return msl::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
 }
 
 template <typename T, typename Alloc>
@@ -648,12 +648,12 @@ vector<T,Alloc>::emplace(iterator position, Args&&... args) {
     if (finish_ != end_of_storage_) {
         msl::construct(finish_, *(finish_ - 1));
         ++finish_;
-        std::copy_backward(position, finish_ - 2, finish_ - 1);
+        msl::copy_backward(position, finish_ - 2, finish_ - 1);
         msl::destroy(position);
-        new (position) T(std::forward<Args>(args)...);
+        new (position) T(msl::forward<Args>(args)...);
         return position;
     } else {
-        return realloc_emplace(position, std::forward<Args>(args)...);
+        return realloc_emplace(position, msl::forward<Args>(args)...);
     }
 }
 
@@ -661,10 +661,10 @@ template<typename T, typename Alloc>
 template<typename... Args>
 void vector<T,Alloc>::emplace_back(Args&&... args) {
     if (finish_ != end_of_storage_) {
-        new (finish_) T(std::forward<Args>(args)...);
+        new (finish_) T(msl::forward<Args>(args)...);
         ++finish_;
     } else {
-        (void)realloc_emplace(end(), std::forward<Args>(args)...);
+        (void)realloc_emplace(end(), msl::forward<Args>(args)...);
     }
 }
 
@@ -678,7 +678,7 @@ vector<T,Alloc>::realloc_emplace(iterator position, Args&&... args) {
     iterator new_finish = new_start;
     size_type pos_index = static_cast<size_type>(position - start_);
     new_finish = msl::uninitialized_move(start_, position, new_start);
-    new (new_finish) T(std::forward<Args>(args)...);
+    new (new_finish) T(msl::forward<Args>(args)...);
     ++new_finish;
     new_finish = msl::uninitialized_move(position, finish_, new_finish);
     msl::destroy(start_, finish_);

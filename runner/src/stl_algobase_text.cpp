@@ -91,6 +91,59 @@ void test_max_min() {
     }
 }
 
+void test_copy() {
+    std::cout << "Test copy: ";
+    int a[] = {1, 2, 3, 4, 5};
+    int b[5];
+    msl::copy(a, a + 5, b);
+    if (msl::equal(a, a + 5, b)) std::cout << "PASS ";
+    else std::cout << "FAIL ";
+
+    char c[] = "hello";
+    char d[6];
+    msl::copy(c, c + 6, d);
+    if (msl::equal(c, c + 6, d)) std::cout << "PASS ";
+    else std::cout << "FAIL ";
+
+    wchar_t wc[] = L"hello";
+    wchar_t wd[6];
+    msl::copy(wc, wc + 6, wd);
+    if (msl::equal(wc, wc + 6, wd)) std::cout << "PASS" << std::endl;
+    else std::cout << "FAIL" << std::endl;
+}
+
+void test_copy_backward() {
+    std::cout << "Test copy_backward: ";
+    int a[] = {1, 2, 3, 4, 5};
+    int b[5];
+    msl::copy_backward(a, a + 5, b + 5);
+    if (msl::equal(a, a + 5, b)) std::cout << "PASS ";
+    else std::cout << "FAIL ";
+
+    // Overlapping test: 1 2 3 4 5 -> 1 1 2 3 4 5 (in c+1 to c+6)
+    int c[] = {1, 2, 3, 4, 5, 0};
+    // Copy [c, c+5) to ending at c+6. i.e. c+1...c+6
+    // Source: 1 2 3 4 5
+    // Dest range end: c+6. Dest range start: c+1.
+    // Result should be 1 1 2 3 4 5
+    msl::copy_backward(c, c + 5, c + 6);
+    int expected[] = {1, 1, 2, 3, 4, 5};
+    if (msl::equal(c, c + 6, expected)) std::cout << "PASS ";
+    else std::cout << "FAIL ";
+
+    char s[] = "hello";
+    char d[6];
+    msl::copy_backward(s, s + 6, d + 6);
+    if (msl::equal(s, s + 6, d)) std::cout << "PASS ";
+    else std::cout << "FAIL ";
+
+    wchar_t ws[] = L"world";
+    wchar_t wd[6];
+    msl::copy_backward(ws, ws + 6, wd + 6);
+    if (msl::equal(ws, ws + 6, wd)) std::cout << "PASS" << std::endl;
+    else std::cout << "FAIL" << std::endl;
+}
+
 int main() {
     test_equal();
     test_fill();
@@ -98,5 +151,7 @@ int main() {
     test_iter_swap();
     test_lexicographical_compare();
     test_max_min();
+    test_copy();
+    test_copy_backward();
     return 0;
 }

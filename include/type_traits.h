@@ -247,15 +247,32 @@ template<> struct is_integer<char16_t>{
 template<> struct is_integer<char32_t>{
     typedef true_type Integral;
 };
-#endif
 
 
+
+
+//用来去除左值和右值引用
 template<typename T>
 struct is_move_constructible {
     typedef typename type_traits<T>::is_pod_type Movable;
 };
 
+template<typename T>
+struct remove_reference {
+    typedef T type;
+};
 
+template<typename T>
+struct remove_reference<T&> {
+    typedef T type;
+};
+
+template<typename T>
+struct remove_reference<T&&> {
+    typedef T type;
+};
+
+#endif // MYSTL_REMOVE_REFERENCE_H
 
 } // namespace msl
 
