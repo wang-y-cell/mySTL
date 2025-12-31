@@ -69,6 +69,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/set_test.dir/DependInfo.cmake"
   "CMakeFiles/sort_heap_test.dir/DependInfo.cmake"
   "CMakeFiles/stack_text.dir/DependInfo.cmake"
+  "CMakeFiles/stl_algo_test.dir/DependInfo.cmake"
   "CMakeFiles/stl_algobase_text.dir/DependInfo.cmake"
   "CMakeFiles/vector_test.dir/DependInfo.cmake"
   )

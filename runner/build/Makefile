@@ -259,6 +259,19 @@ stack_text/fast:
 .PHONY : stack_text/fast
 
 #=============================================================================
+# Target rules for targets named stl_algo_test
+
+# Build rule for target.
+stl_algo_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 stl_algo_test
+.PHONY : stl_algo_test
+
+# fast build rule for target.
+stl_algo_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algo_test.dir\build.make CMakeFiles/stl_algo_test.dir/build
+.PHONY : stl_algo_test/fast
+
+#=============================================================================
 # Target rules for targets named stl_algobase_text
 
 # Build rule for target.
@@ -548,6 +561,30 @@ src/stack_text.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\stack_text.dir\build.make CMakeFiles/stack_text.dir/src/stack_text.cpp.s
 .PHONY : src/stack_text.cpp.s
 
+src/stl_algo_test.obj: src/stl_algo_test.cpp.obj
+.PHONY : src/stl_algo_test.obj
+
+# target to build an object file
+src/stl_algo_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algo_test.dir\build.make CMakeFiles/stl_algo_test.dir/src/stl_algo_test.cpp.obj
+.PHONY : src/stl_algo_test.cpp.obj
+
+src/stl_algo_test.i: src/stl_algo_test.cpp.i
+.PHONY : src/stl_algo_test.i
+
+# target to preprocess a source file
+src/stl_algo_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algo_test.dir\build.make CMakeFiles/stl_algo_test.dir/src/stl_algo_test.cpp.i
+.PHONY : src/stl_algo_test.cpp.i
+
+src/stl_algo_test.s: src/stl_algo_test.cpp.s
+.PHONY : src/stl_algo_test.s
+
+# target to generate assembly for a file
+src/stl_algo_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\stl_algo_test.dir\build.make CMakeFiles/stl_algo_test.dir/src/stl_algo_test.cpp.s
+.PHONY : src/stl_algo_test.cpp.s
+
 src/stl_algobase_text.obj: src/stl_algobase_text.cpp.obj
 .PHONY : src/stl_algobase_text.obj
 
@@ -615,6 +652,7 @@ help:
 	@echo ... set_test
 	@echo ... sort_heap_test
 	@echo ... stack_text
+	@echo ... stl_algo_test
 	@echo ... stl_algobase_text
 	@echo ... vector_test
 	@echo ... src/deque_text.obj
@@ -650,6 +688,9 @@ help:
 	@echo ... src/stack_text.obj
 	@echo ... src/stack_text.i
 	@echo ... src/stack_text.s
+	@echo ... src/stl_algo_test.obj
+	@echo ... src/stl_algo_test.i
+	@echo ... src/stl_algo_test.s
 	@echo ... src/stl_algobase_text.obj
 	@echo ... src/stl_algobase_text.i
 	@echo ... src/stl_algobase_text.s

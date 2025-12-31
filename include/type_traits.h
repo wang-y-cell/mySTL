@@ -250,13 +250,15 @@ template<> struct is_integer<char32_t>{
 
 
 
-
 //用来去除左值和右值引用
 template<typename T>
 struct is_move_constructible {
     typedef typename type_traits<T>::is_pod_type Movable;
 };
 
+
+
+//无论传进去的是左值还是右值引用，都返回它的类型
 template<typename T>
 struct remove_reference {
     typedef T type;
@@ -272,7 +274,7 @@ struct remove_reference<T&&> {
     typedef T type;
 };
 
-#endif // MYSTL_REMOVE_REFERENCE_H
+#endif
 
 } // namespace msl
 
