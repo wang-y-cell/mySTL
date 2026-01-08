@@ -1,22 +1,19 @@
-
 #ifndef MYSTL_ALLOC_H
 #define MYSTL_ALLOC_H
 
 
+
+#include <new>    
 #include <cstddef>
 #include <cstdlib>
-#include <new>
-
-
-#if 1                                                                                                     
-#   include <new>
+#include <cstring>
 #   define __THROW_BAD_ALLOC throw std::bad_alloc()
-#elif !defined(__THROW_BAD_ALLOC)
-#   include<iostream>
-#   define __THROW_BAD_ALLOC std::cerr << "out of memory" << std::endl;exit(1);
-#endif
 
 
+
+
+
+#define USE_DEFAULT_ALLOC
 
 
 namespace msl {
@@ -25,13 +22,12 @@ namespace msl {
 
 
 
-template <int inst> 
 class malloc_alloc_template {
 private:
 
     static void* oom_malloc(size_t);
     static void* oom_realloc(void* p, size_t new_sz);
-    static void (* __malloc_alloc_oom_handler)();
+    static void (*__malloc_alloc_oom_handler)();
 
 public:
 
@@ -51,8 +47,8 @@ public:
         return r;
     }
 
-    static void (* set_malloc_handler(void (*f)()))() {
-        void (* old)() = __malloc_alloc_oom_handler;
+    static void (*set_malloc_handler(void (*f)()))() {
+        void (*old)() = __malloc_alloc_oom_handler;
         __malloc_alloc_oom_handler = f;
         return old;
     }
@@ -60,39 +56,37 @@ public:
 };
 
 
-template <int inst>
-void (*malloc_alloc_template<inst>::__malloc_alloc_oom_handler)() = 0;
+void (*malloc_alloc_template::__malloc_alloc_oom_handler)() = 0;
 
 
-template<int inst>
-void* malloc_alloc_template<inst>::oom_malloc(size_t n) {
-    void (* handler)();
+void* malloc_alloc_template::oom_malloc(size_t n) {
+    void (*handler)();
     void* ret;
 
-    for(;;){
+    for (;;) {
         handler = __malloc_alloc_oom_handler;
-        if(!handler) __THROW_BAD_ALLOC;
+        if (!handler) __THROW_BAD_ALLOC;
         (*handler)();
         ret = malloc(n);
-        if(ret) return ret;
+        if (ret) return ret;
     }
 }
 
-template<int inst>
-void* malloc_alloc_template<inst>::oom_realloc(void*p, size_t new_sz) {
-    void (* handler)();
+void* malloc_alloc_template::oom_realloc(void* p, size_t new_sz) {
+    void (*handler)();
     void* ret;
 
-    for(;;){
+    for (;;) {
         handler = __malloc_alloc_oom_handler;
-        if(!handler) __THROW_BAD_ALLOC;
-        (*handler)(); 
+        if (!handler) __THROW_BAD_ALLOC;
+        (*handler)();
         ret = realloc(p, new_sz);
-        if(ret) return ret;
+        if (ret) return ret;
     }
 }
 
-typedef malloc_alloc_template<0> malloc_alloc;
+
+typedef malloc_alloc_template malloc_alloc;
 
 
 
@@ -101,14 +95,14 @@ enum { MAX_BYTES = 128 };
 enum { NFREELISTS = MAX_BYTES / ALIGN };
 
 
-template <int inst>
+
 class default_alloc_template {
 private:
     union obj {
-        union obj* free_list_link; 
-        char client_data[1]; 
+        union obj* free_list_link;
+        char client_data[1];
     };
-    
+
     static obj* free_list[NFREELISTS];
     static char* start_free;
     static char* end_free;
@@ -129,9 +123,9 @@ public:
     }
     static void deallocate(void* p, size_t n) {
         if (!p || n == 0) return;
-        obj *q = (obj*)p;
-        obj ** my_free_list;
-        if(n > (size_t)MAX_BYTES) {
+        obj* q = (obj*)p;
+        obj** my_free_list;
+        if (n > (size_t)MAX_BYTES) {
             malloc_alloc::deallocate(p, n);
             return;
         }
@@ -152,21 +146,17 @@ public:
     }
 };
 
-template <int inst>
-typename default_alloc_template<inst>::obj*
-default_alloc_template<inst>::free_list[NFREELISTS] = {0};
 
-template <int inst>
-char* default_alloc_template<inst>::start_free = 0;
+typename default_alloc_template::obj*
+    default_alloc_template::free_list[NFREELISTS] = { 0 };
 
-template <int inst>
-char* default_alloc_template<inst>::end_free = 0;
+char* default_alloc_template::start_free = 0;
 
-template <int inst>
-size_t default_alloc_template<inst>::heap_size = 0;
+char* default_alloc_template::end_free = 0;
 
-template <int inst>
-void* default_alloc_template<inst>::refill(size_t n) {
+size_t default_alloc_template::heap_size = 0;
+
+void* default_alloc_template::refill(size_t n) {
     int nobjs = 20;
     char* chunk = chunk_alloc(n, nobjs);
     if (nobjs == 1) return (void*)chunk;
@@ -186,8 +176,7 @@ void* default_alloc_template<inst>::refill(size_t n) {
 }
 
 
-template <int inst>
-char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
+char* default_alloc_template::chunk_alloc(size_t size, int& nobjs) {
     size_t total_bytes = size * nobjs;
     size_t bytes_left = end_free - start_free;
     char* result;
@@ -195,35 +184,37 @@ char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
         result = start_free;
         start_free += total_bytes;
         return result;
-    } else if (bytes_left >= size) {
+    }
+    else if (bytes_left >= size) {
         nobjs = (int)(bytes_left / size);
         total_bytes = size * nobjs;
         result = start_free;
         start_free += total_bytes;
         return result;
-    } else {
+    }
+    else {
         if (bytes_left > 0) {
             size_t index = FREELIST_INDEX(bytes_left);
             obj** my_list = free_list + index;
             ((obj*)start_free)->free_list_link = *my_list;
             *my_list = (obj*)start_free;
         }
-        size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4); 
+        size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
         start_free = (char*)malloc(bytes_to_get);
         if (start_free == 0) {
             int i;
-            obj** me_free_list, *p;
-            for(i = size; i <= MAX_BYTES; i += ALIGN) {
+            obj** me_free_list, * p;
+            for (i = size; i <= MAX_BYTES; i += ALIGN) {
                 me_free_list = free_list + FREELIST_INDEX(i);
                 p = *me_free_list;
-                if(p) {
+                if (p) {
                     *me_free_list = p->free_list_link;
                     start_free = (char*)p;
                     end_free = start_free + i;
-                    return(chunk_alloc(size,nobjs));
+                    return(chunk_alloc(size, nobjs));
                 }
-            }      
-            end_free = 0;    
+            }
+            end_free = 0;
             start_free = (char*)malloc_alloc::allocate(bytes_to_get);
         }
         heap_size += bytes_to_get;
@@ -233,13 +224,16 @@ char* default_alloc_template<inst>::chunk_alloc(size_t size, int& nobjs) {
 }
 
 
-typedef default_alloc_template<0> default_alloc;
+typedef default_alloc_template default_alloc;
 
-#ifdef __NOT_USE_SECOND_ALLOC 
-    typedef malloc_alloc alloc;
+
+
+#ifndef USE_DEFAULT_ALLOC 
+typedef malloc_alloc alloc;
 #else
-    typedef default_alloc alloc;
+typedef default_alloc alloc;
 #endif
+
 
 
 template <typename T, typename Alloc>
