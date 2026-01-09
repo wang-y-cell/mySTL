@@ -4,6 +4,7 @@
 #include "stl_heap.h"
 #include "stl_numeric.h"
 #include "stl_algobase.h"
+#include "iterator.h"
 
 namespace msl {
 
@@ -218,6 +219,195 @@ OutputIterator set_symmetric_difference
   }
   return msl::copy(first2, last2, msl::copy(first1, last1, result));
 }
+
+
+/************************************************************************************* */
+//adjacent_find
+//找到第一个相邻的重复元素
+
+template <class ForwardIterator>
+ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last) {
+  if (first == last) return last;
+  ForwardIterator next = first;
+  while (++next != last) {
+    if (*first == *next) return first;
+    first = next;
+  }
+  return last;
+}
+
+template <class ForwardIterator, class BinaryPredicate>
+ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate pred) {
+  if (first == last) return last;
+  ForwardIterator next = first;
+  while (++next != last) {
+    if (pred(*first, *next)) return first;
+    first = next;
+  }
+  return last;
+}
+
+/*********************************************************************************************************** */
+
+// count
+template <class InputIterator, class T>
+typename iterator_traits<InputIterator>::difference_type
+count(InputIterator first, InputIterator last, const T& value) {
+  typename iterator_traits<InputIterator>::difference_type n = 0;
+  for (; first != last; ++first)
+    if (*first == value)
+      ++n;
+  return n;
+}
+
+// count_if
+template <class InputIterator, class Predicate>
+typename iterator_traits<InputIterator>::difference_type
+count_if(InputIterator first, InputIterator last, Predicate pred) {
+  typename iterator_traits<InputIterator>::difference_type n = 0;
+  for (; first != last; ++first)
+    if (pred(*first))
+      ++n;
+  return n;
+}
+
+/******************************************************************************** */
+// find
+template <class InputIterator, class T>
+InputIterator find(InputIterator first, InputIterator last, const T& value) {
+  while (first != last && *first != value)
+    ++first;
+  return first;
+}
+
+// find_if
+template <class InputIterator, class Predicate>
+InputIterator find_if(InputIterator first, InputIterator last, Predicate pred) {
+  while (first != last && !pred(*first))
+    ++first;
+  return first;
+}
+
+/************************************************************************************ */
+//search
+//可以看出search的效率很慢
+template<typename ForwardIterator1, typename ForwardIterator2,
+         typename Distance1, typename Distance2>
+inline ForwardIterator1 __search(ForwardIterator1 first1,ForwardIterator1 last1,
+                               ForwardIterator2 first2,ForwardIterator2 last2,
+                               Distance1*, Distance2*){
+      Distance1 d1 = distance(first1,last1);
+      Distance2 d2 = distance(first2,last2);
+      if(d2 > d1)return last1; //如果第二个序列大于第一个序列一定找不到
+      ForwardIterator1 i = first1;
+      ForwardIterator2 j = first2;
+      while(j != last2){
+        if(*j == *i){
+          ++i;
+          ++j;
+        }else{
+          if(d1 == d2)return last1; //如果第一个序列和第二个序列长度相等且不匹配，一定找不到
+          i = ++first1;
+          j = first2;
+          --d1;
+        }
+      }
+      return first1;
+}
+
+template<typename ForwardIterator1, typename ForwardIterator2>
+inline ForwardIterator1 search(ForwardIterator1 first1,ForwardIterator1 last1,
+                               ForwardIterator2 first2,ForwardIterator2 last2){
+        return __search(first1,last1,first2,last2,distance_type(first1),distance_type(first2));
+}
+
+template<typename ForwardIterator1, typename ForwardIterator2,
+         typename BinaryPredicate, typename Distance1, typename Distance2>
+inline ForwardIterator1 __search(ForwardIterator1 first1,ForwardIterator1 last1,
+                               ForwardIterator2 first2,ForwardIterator2 last2,
+                               BinaryPredicate pred,
+                               Distance1*, Distance2*){
+      Distance1 d1 = distance(first1,last1);
+      Distance2 d2 = distance(first2,last2);
+      if(d2 > d1)return last1;
+      ForwardIterator1 i = first1;
+      ForwardIterator2 j = first2;
+      while(j != last2){
+        if(pred(*i, *j)){
+          ++i;
+          ++j;
+        }else{
+          if(d1 == d2)return last1;
+          i = ++first1;
+          j = first2;
+          --d1;
+        }
+      }
+      return first1;
+}
+
+template<typename ForwardIterator1, typename ForwardIterator2, typename BinaryPredicate>
+inline ForwardIterator1 search(ForwardIterator1 first1,ForwardIterator1 last1,
+                               ForwardIterator2 first2,ForwardIterator2 last2,
+                               BinaryPredicate pred){
+        return __search(first1,last1,first2,last2,pred,distance_type(first1),distance_type(first2));
+}
+
+/************************************************************************************************** */
+
+// search_n
+template <class ForwardIterator, class Size, class T>
+ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value) {
+    if (count <= 0) return first;
+    while (first != last) {
+        first = msl::find(first, last, value);
+        if (first == last) return last; //没有找到
+        
+        ForwardIterator current = first;
+        Size n = count - 1;  //当前还需要n个相同的数
+        ++current;
+        
+        while (n > 0 && current != last && *current == value) {
+            ++current;
+            --n;
+        }
+        
+        if (n == 0) return first;
+        if (current == last) return last;
+        first = current;
+    }
+    return last;
+}
+
+template <class ForwardIterator, class Size, class T, class BinaryPredicate>
+ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value, BinaryPredicate pred) {
+    if (count <= 0) return first;
+    while (first != last) {
+        while (first != last && !pred(*first, value))
+            ++first;
+        if (first == last) return last;
+        
+        ForwardIterator current = first;
+        Size n = count - 1;
+        ++current;
+        
+        while (n > 0 && current != last && pred(*current, value)) {
+            ++current;
+            --n;
+        }
+        
+        if (n == 0) return first;
+        if (current == last) return last;
+        first = current;
+    }
+    return last;
+}
+
+
+
+
+
+
 
 
 
