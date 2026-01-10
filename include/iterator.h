@@ -81,6 +81,8 @@ value_type(const InputIterator&) {
     return static_cast<typename iterator_traits<InputIterator>::value_type*>(0);
 }
 
+
+//不是stl中的,是我自己定义的,可以不用
 template<typename T> struct is_msl_iterator_tag { static const bool value = false; };
 template<> struct is_msl_iterator_tag<input_iterator_tag> { static const bool value = true; };
 template<> struct is_msl_iterator_tag<output_iterator_tag> { static const bool value = true; };
@@ -187,15 +189,18 @@ inline BidirectionalIterator prev(BidirectionalIterator it, typename iterator_tr
     return it;
 }
 
-template <typename InputIterator>
+
+template <typename Iterator>
 class reverse_iterator {
 public:
-    typedef InputIterator iterator_type;
-    typedef typename iterator_traits<InputIterator>::iterator_category iterator_category;
-    typedef typename iterator_traits<InputIterator>::value_type value_type;
-    typedef typename iterator_traits<InputIterator>::difference_type difference_type;
-    typedef typename iterator_traits<InputIterator>::pointer pointer;
-    typedef typename iterator_traits<InputIterator>::reference reference;
+    //这里需要在类中定义迭代器类型,因为在类中定义的迭代器类型,可以在类中使用
+    typedef Iterator iterator_type;        // 迭代器类型
+    typedef typename iterator_traits<Iterator>::iterator_category iterator_category;
+    typedef typename iterator_traits<Iterator>::value_type value_type;
+    typedef typename iterator_traits<Iterator>::difference_type difference_type;
+    typedef typename iterator_traits<Iterator>::pointer pointer;
+    typedef typename iterator_traits<Iterator>::reference reference;
+    typedef reverse_iterator<iterator_type> self; // 迭代器自身类型
 
 private:
     iterator_type current;
@@ -205,34 +210,40 @@ public:
     explicit reverse_iterator(iterator_type x) : current(x) {}
     
     template <typename U>
-    reverse_iterator(const reverse_iterator<U>& other) : current(other.base()) {}
+    reverse_iterator(const reverse_iterator<U>& other) : 
+    current(other.base()) {}
 
-    iterator_type base() const { return current; }
+    iterator_type base() const 
+    { return current; }
 
-    reference operator*() const { iterator_type tmp = current; return *--tmp; }
+    reference operator*() const
+     { iterator_type tmp = current; return *--tmp; }
 
-    pointer operator->() const { return &**this; }
+    pointer operator->() const 
+    { return &**this; }
 
-    reverse_iterator& operator++() { --current; return *this; }
+    self& operator++() 
+    { --current; return *this; }
 
-    reverse_iterator operator++(int)
-    { reverse_iterator tmp = *this; --current; return tmp; }
+    self operator++(int)
+    { self tmp = *this; --current; return tmp; }
 
-    reverse_iterator& operator--() { ++current; return *this; }
+    self& operator--() 
+    { ++current; return *this; }
 
-    reverse_iterator operator--(int) 
-    { reverse_iterator tmp = *this; ++current; return tmp; }
+    self operator--(int) 
+    { self tmp = *this; ++current; return tmp; }
 
-    reverse_iterator operator+(difference_type n) const 
-    { return reverse_iterator(current - n); }
+    self operator+(difference_type n) const 
+    { return self(current - n); }
 
-    reverse_iterator operator-(difference_type n) const 
-    { return reverse_iterator(current + n); }
+    self operator-(difference_type n) const 
+    { return self(current + n); }
 
-    reverse_iterator& operator+=(difference_type n) 
+    self& operator+=(difference_type n) 
     { current -= n; return *this; }
 
-    reverse_iterator& operator-=(difference_type n) 
+    self& operator-=(difference_type n) 
     { current += n; return *this; }
 
     reference operator[](difference_type n) const 
@@ -278,6 +289,61 @@ template <typename Iter1, typename Iter2>
 inline typename reverse_iterator<Iter1>::difference_type operator-
 (const reverse_iterator<Iter1>& x, const reverse_iterator<Iter2>& y)
  { return y.base() - x.base(); }
+
+//后向插入迭代器
+template <typename Container>
+class back_insert_iterator :
+public iterator<output_iterator_tag, void, void, void, void> {
+protected:
+    Container* container;
+public:
+    typedef Container container_type;
+    typedef back_insert_iterator<Container> self;
+
+    explicit back_insert_iterator(Container& x) : container(&x) {}
+    
+    self& operator=(const typename Container::value_type& value) {
+        container->push_back(value);
+        return *this;
+    }
+
+    self& operator*() { return *this; }
+    self& operator++() { return *this; }
+    self& operator++(int) { return *this; }
+};
+
+template <typename Container>
+inline back_insert_iterator<Container> back_inserter(Container& x) {
+    return back_insert_iterator<Container>(x);
+}
+//前向插入迭代器
+template <typename Container>
+class front_insert_iterator : 
+public iterator<output_iterator_tag, void, void, void, void> {
+protected:
+    Container* container;
+public:
+    typedef Container container_type;
+    typedef front_insert_iterator<Container> self;
+
+    explicit front_insert_iterator(Container& x) : container(&x) {}
+    
+    self& operator=
+    (const typename Container::value_type& value) {
+        container->push_front(value);
+        return *this;
+    }
+
+    self& operator*() { return *this; }
+    self& operator++() { return *this; }
+    self& operator++(int) { return *this; }
+};
+
+template <typename Container>
+inline front_insert_iterator<Container> front_inserter(Container& x) {
+    return front_insert_iterator<Container>(x);
+}
+
 
 
 } // namespace msl

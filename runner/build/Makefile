@@ -142,6 +142,19 @@ heap_test/fast:
 .PHONY : heap_test/fast
 
 #=============================================================================
+# Target rules for targets named iterator_test
+
+# Build rule for target.
+iterator_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 iterator_test
+.PHONY : iterator_test
+
+# fast build rule for target.
+iterator_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\iterator_test.dir\build.make CMakeFiles/iterator_test.dir/build
+.PHONY : iterator_test/fast
+
+#=============================================================================
 # Target rules for targets named list_text
 
 # Build rule for target.
@@ -344,6 +357,30 @@ src/heap_test.s: src/heap_test.cpp.s
 src/heap_test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/src/heap_test.cpp.s
 .PHONY : src/heap_test.cpp.s
+
+src/iterator_test.obj: src/iterator_test.cpp.obj
+.PHONY : src/iterator_test.obj
+
+# target to build an object file
+src/iterator_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\iterator_test.dir\build.make CMakeFiles/iterator_test.dir/src/iterator_test.cpp.obj
+.PHONY : src/iterator_test.cpp.obj
+
+src/iterator_test.i: src/iterator_test.cpp.i
+.PHONY : src/iterator_test.i
+
+# target to preprocess a source file
+src/iterator_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\iterator_test.dir\build.make CMakeFiles/iterator_test.dir/src/iterator_test.cpp.i
+.PHONY : src/iterator_test.cpp.i
+
+src/iterator_test.s: src/iterator_test.cpp.s
+.PHONY : src/iterator_test.s
+
+# target to generate assembly for a file
+src/iterator_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\iterator_test.dir\build.make CMakeFiles/iterator_test.dir/src/iterator_test.cpp.s
+.PHONY : src/iterator_test.cpp.s
 
 src/list_text.obj: src/list_text.cpp.obj
 .PHONY : src/list_text.obj
@@ -643,6 +680,7 @@ help:
 	@echo ... rebuild_cache
 	@echo ... deque_text
 	@echo ... heap_test
+	@echo ... iterator_test
 	@echo ... list_text
 	@echo ... map_test
 	@echo ... move_text
@@ -661,6 +699,9 @@ help:
 	@echo ... src/heap_test.obj
 	@echo ... src/heap_test.i
 	@echo ... src/heap_test.s
+	@echo ... src/iterator_test.obj
+	@echo ... src/iterator_test.i
+	@echo ... src/iterator_test.s
 	@echo ... src/list_text.obj
 	@echo ... src/list_text.i
 	@echo ... src/list_text.s

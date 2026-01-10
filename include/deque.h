@@ -189,6 +189,8 @@ public:
     typedef typename base::allocator_type allocator_type;
     typedef typename base::iterator iterator;
     typedef typename base::const_iterator const_iterator;
+    typedef msl::reverse_iterator<iterator> reverse_iterator;
+    typedef msl::reverse_iterator<const_iterator> const_reverse_iterator;
     allocator_type get_allocator() const { return base::get_allocator(); }
 
 
@@ -211,6 +213,20 @@ public:
 
     iterator end() { return finish_;}
     const_iterator end() const { return finish_;}
+
+    #if MYSTL_CPP_VERSION >= 11
+    const_iterator cbegin() const { return begin(); }
+    const_iterator cend() const { return end(); }
+    #endif
+
+    reverse_iterator rbegin() { return reverse_iterator(end()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+    reverse_iterator rend() { return reverse_iterator(begin()); }
+    const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+    #if MYSTL_CPP_VERSION >= 11
+    const_reverse_iterator crbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator crend() const { return const_reverse_iterator(begin()); }
+    #endif
 
     reference front(){return *start_;}
     const_reference front() const { return *start_;}

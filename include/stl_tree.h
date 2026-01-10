@@ -445,6 +445,8 @@ protected:
 public:
     typedef __rb_tree_iterator<Value, Value&, Value*> iterator;
     typedef __rb_tree_iterator<Value, const Value&, const Value*> const_iterator;
+    typedef msl::reverse_iterator<iterator> reverse_iterator;
+    typedef msl::reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
     void empty_initialize() {
@@ -495,6 +497,21 @@ public:
     const_iterator begin() const { return leftmost(); }
     iterator end() { return header; }
     const_iterator end() const { return header; }
+
+    #if MYSTL_CPP_VERSION >= 11
+    const_iterator cbegin() const { return begin(); }
+    const_iterator cend() const { return end(); }
+    #endif
+
+    reverse_iterator rbegin() { return reverse_iterator(end()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+    reverse_iterator rend() { return reverse_iterator(begin()); }
+    const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+    #if MYSTL_CPP_VERSION >= 11
+    const_reverse_iterator crbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator crend() const { return const_reverse_iterator(begin()); }
+    #endif
+
     bool empty() const { return node_count == 0; }
     size_type size() const { return node_count; }
     size_type max_size() const { return size_type(-1); }

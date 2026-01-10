@@ -350,7 +350,7 @@ template<typename ForwardIterator1, typename ForwardIterator2, typename BinaryPr
 inline ForwardIterator1 search(ForwardIterator1 first1,ForwardIterator1 last1,
                                ForwardIterator2 first2,ForwardIterator2 last2,
                                BinaryPredicate pred){
-        return __search(first1,last1,first2,last2,pred,distance_type(first1),distance_type(first2));
+  return __search(first1,last1,first2,last2,pred,distance_type(first1),distance_type(first2));
 }
 
 /************************************************************************************************** */
@@ -402,6 +402,9 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count
     }
     return last;
 }
+
+/*************************************************************************************** */
+//find_end
 
 
 

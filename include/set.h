@@ -26,6 +26,8 @@ public:
     typedef typename rep_type::const_reference const_reference;
     typedef typename rep_type::const_iterator iterator;
     typedef typename rep_type::const_iterator const_iterator;
+    typedef typename rep_type::const_reverse_iterator reverse_iterator;
+    typedef typename rep_type::const_reverse_iterator const_reverse_iterator;
     typedef typename rep_type::size_type size_type;
     typedef typename rep_type::difference_type difference_type;
 
@@ -52,6 +54,19 @@ public:
     value_compare value_comp() const { return t.key_comp(); }
     iterator begin() const { return t.begin(); }
     iterator end() const { return t.end(); }
+    #if MYSTL_CPP_VERSION >= 11
+    const_iterator cbegin() const { return t.cbegin(); }
+    const_iterator cend() const { return t.cend(); }
+    #endif
+
+    reverse_iterator rbegin() const { return t.rbegin(); }
+    reverse_iterator rend() const { return t.rend(); }
+    
+    #if MYSTL_CPP_VERSION >= 11
+    const_reverse_iterator crbegin() const { return t.crbegin(); }
+    const_reverse_iterator crend() const { return t.crend(); }
+    #endif
+    
     bool empty() const { return t.empty(); }
     size_type size() const { return t.size(); }
     size_type max_size() const { return t.max_size(); }
