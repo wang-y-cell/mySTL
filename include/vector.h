@@ -234,7 +234,7 @@ public:
     void insert(iterator position,std::initializer_list<T> ilist);
     #endif
     
-    void insert(iterator position,const_reference value);
+    iterator insert(iterator position,const_reference value);
 
     reference operator[](size_type n) { return start_[n]; }
     const_reference operator[](size_type n) const { return start_[n]; }
@@ -419,8 +419,16 @@ void vector<T,Alloc>::insert(iterator position,size_type n,const_reference value
 }
 
 template<typename T,typename Alloc>
-void vector<T,Alloc>::insert(iterator position,const_reference value){
-    insert_aux(position, value);
+typename vector<T,Alloc>::iterator
+vector<T,Alloc>::insert(iterator position,const_reference value){
+    size_type n = position - begin();
+    if (finish_ != end_of_storage_ && position == finish_) {
+        msl::construct(finish_, value);
+        ++finish_;
+    } else {
+        insert_aux(position, value);
+    }
+    return begin() + n;
 }
 
 template<typename T,typename Alloc>

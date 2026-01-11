@@ -2,17 +2,16 @@
 #define __ITERATOR_H__
 
 #include <cstddef>
+#include <iostream>
 #include "type_traits.h"
 
 namespace msl {
-
 
 struct input_iterator_tag{};
 struct output_iterator_tag{};
 struct forward_iterator_tag : public input_iterator_tag{};
 struct bidirectional_iterator_tag : public forward_iterator_tag{};
 struct random_access_iterator_tag : public bidirectional_iterator_tag{};
-
 
 template   <typename Category,
             typename T,
@@ -58,7 +57,6 @@ struct iterator_traits<const T*> {
     typedef typename type_traits<T>::is_pod_type is_pod_type;
 };
 
-
 //返回迭代器的类别类型
 template <typename InputIterator>
 inline typename iterator_traits<InputIterator>::iterator_category
@@ -81,7 +79,6 @@ value_type(const InputIterator&) {
     return static_cast<typename iterator_traits<InputIterator>::value_type*>(0);
 }
 
-
 //不是stl中的,是我自己定义的,可以不用
 template<typename T> struct is_msl_iterator_tag { static const bool value = false; };
 template<> struct is_msl_iterator_tag<input_iterator_tag> { static const bool value = true; };
@@ -90,8 +87,6 @@ template<> struct is_msl_iterator_tag<forward_iterator_tag> { static const bool 
 template<> struct is_msl_iterator_tag<bidirectional_iterator_tag> { static const bool value = true; };
 template<> struct is_msl_iterator_tag<random_access_iterator_tag> { static const bool value = true; };
 
-
-
 template<typename InputIterator, typename Distance>
 inline void __distance(InputIterator first, InputIterator last, Distance& n, input_iterator_tag) {
     n = 0;
@@ -99,7 +94,6 @@ inline void __distance(InputIterator first, InputIterator last, Distance& n, inp
         ++first;++n;
     }
 }
-
 
 template<typename RandomAccessIterator, typename Distance>
 inline void __distance(RandomAccessIterator first, RandomAccessIterator last, Distance& n, 
@@ -112,7 +106,6 @@ inline void distance(InputIterator first, InputIterator last, Distance& n) {
     return __distance(first, last,n,iterator_category(first));
 }
 
-
 template<typename InputIterator>
 inline typename iterator_traits<InputIterator>::difference_type
 __distance(InputIterator first, InputIterator last,
@@ -123,7 +116,6 @@ __distance(InputIterator first, InputIterator last,
     }
     return n;
 }
-
 
 template<typename RandomAccessIterator>
 inline typename iterator_traits<RandomAccessIterator>::difference_type
@@ -138,8 +130,6 @@ inline typename iterator_traits<InputIterator>::difference_type
 distance(InputIterator first, InputIterator last) {
     return __distance(first, last, iterator_category(first));
 }
-
-
 
 template<typename InputIterator, typename Distance>
 inline void
@@ -168,8 +158,6 @@ inline void
 __advance(RandomAccessIterator& i, Distance n, random_access_iterator_tag) {
     i += n;
 }
-
-
 
 template<typename InputIterator, typename Distance>
 inline void
@@ -334,7 +322,7 @@ public:
         return *this;
     }
 
-    self& operator*() { return *this; }
+    self& operator*() { return *this; } 
     self& operator++() { return *this; }
     self& operator++(int) { return *this; }
 };
@@ -344,6 +332,114 @@ inline front_insert_iterator<Container> front_inserter(Container& x) {
     return front_insert_iterator<Container>(x);
 }
 
+template<typename Container>
+class insert_iterator :
+public iterator<output_iterator_tag, void, void, void, void> {
+    typedef insert_iterator<Container> self;
+    typedef typename Container::iterator iterator;
+    typedef typename Container::value_type value_type;
+private:
+    Container* container;
+    iterator iter;
+public:
+    insert_iterator(Container& x, iterator it) : container(&x), iter(it) {}
+    self& operator=(const value_type& value) {
+        iter = container->insert(iter, value);
+        ++iter;
+        return *this;
+    }
+
+    self& operator*() { return *this; }
+    self& operator++() { return *this; }
+    self& operator++(int) { return *this; }
+};
+
+template <typename Container,typename Iterator>
+inline insert_iterator<Container> inserter(Container& x, Iterator it) {
+    return insert_iterator<Container>(x, it);
+}
+
+
+
+template<typename T, typename CharT = char, typename Traits = std::char_traits<CharT>, typename Distance = ptrdiff_t>
+class istream_iterator : public iterator<input_iterator_tag, T, Distance, const T*, const T&> {
+    typedef istream_iterator<T, CharT, Traits, Distance> self;
+public:
+    typedef CharT char_type;
+    typedef Traits traits_type;
+    typedef std::basic_istream<CharT, Traits> istream_type;
+
+    typedef input_iterator_tag iterator_category;
+    typedef T value_type;
+    typedef Distance difference_type;
+    typedef const T* pointer;
+    typedef const T& reference;
+
+    friend inline bool operator==(const self& x, const self& y) {
+        return x.equal(y);
+    }
+    friend inline bool operator!=(const self& x, const self& y) {
+        return !x.equal(y);
+    }
+
+private:
+    istream_type* stream;
+    T current;
+    
+    bool equal(const self& y) const 
+    { return stream == y.stream; }
+
+    void read(){
+        if (stream) {
+            if (!(*stream >> current)) {
+                stream = nullptr;
+            }
+        }
+    }
+public:
+    istream_iterator(istream_type& s) : stream(&s) { read(); }
+    istream_iterator() : stream(nullptr) {}
+
+    reference operator*() const { return current; }
+    pointer operator->() const { return &current; }
+
+    self& operator++(){
+        read();
+        return *this;
+    }
+
+    self& operator++(int){
+        self tmp = *this;
+        read();
+        return tmp;
+    }
+};
+
+template <typename T, typename CharT = char, typename Traits = std::char_traits<CharT>>
+class ostream_iterator : public iterator<output_iterator_tag, void, void, void, void> {
+    typedef ostream_iterator<T, CharT, Traits> self;
+public:
+    typedef CharT char_type;
+    typedef Traits traits_type;
+    typedef std::basic_ostream<CharT, Traits> ostream_type;
+
+    ostream_iterator(ostream_type& s) : stream(&s), delimiter(nullptr) {}
+    ostream_iterator(ostream_type& s, const CharT* c) : stream(&s), delimiter(c) {}
+    
+    self& operator=(const T& value) {
+        *stream << value;
+        if (delimiter) *stream << delimiter;
+        return *this;
+    }
+    
+    self& operator*() { return *this; }
+    self& operator++() { return *this; }
+    self& operator++(int) { return *this; }
+
+private:
+    ostream_type* stream;
+    const CharT* delimiter;
+};
 
 
 } // namespace msl

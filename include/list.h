@@ -204,12 +204,13 @@ public:
     const_reference back() const { return *--end(); }
     void swap(list& x){msl::swap(node_, x.node_);}
 
-    void insert(iterator pos, const_reference val) {
+    iterator insert(iterator pos, const_reference val) {
         link_type p = create_node(val);
         p->next = pos.node;
         p->prev = pos.node->prev;
         pos.node->prev->next = p;
         pos.node->prev = p;
+        return iterator(p);
     }
 
     void push_back(const_reference val) {

@@ -142,6 +142,19 @@ heap_test/fast:
 .PHONY : heap_test/fast
 
 #=============================================================================
+# Target rules for targets named insert_iterator_test
+
+# Build rule for target.
+insert_iterator_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 insert_iterator_test
+.PHONY : insert_iterator_test
+
+# fast build rule for target.
+insert_iterator_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\insert_iterator_test.dir\build.make CMakeFiles/insert_iterator_test.dir/build
+.PHONY : insert_iterator_test/fast
+
+#=============================================================================
 # Target rules for targets named iterator_test
 
 # Build rule for target.
@@ -357,6 +370,30 @@ src/heap_test.s: src/heap_test.cpp.s
 src/heap_test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\heap_test.dir\build.make CMakeFiles/heap_test.dir/src/heap_test.cpp.s
 .PHONY : src/heap_test.cpp.s
+
+src/insert_iterator_test.obj: src/insert_iterator_test.cpp.obj
+.PHONY : src/insert_iterator_test.obj
+
+# target to build an object file
+src/insert_iterator_test.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\insert_iterator_test.dir\build.make CMakeFiles/insert_iterator_test.dir/src/insert_iterator_test.cpp.obj
+.PHONY : src/insert_iterator_test.cpp.obj
+
+src/insert_iterator_test.i: src/insert_iterator_test.cpp.i
+.PHONY : src/insert_iterator_test.i
+
+# target to preprocess a source file
+src/insert_iterator_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\insert_iterator_test.dir\build.make CMakeFiles/insert_iterator_test.dir/src/insert_iterator_test.cpp.i
+.PHONY : src/insert_iterator_test.cpp.i
+
+src/insert_iterator_test.s: src/insert_iterator_test.cpp.s
+.PHONY : src/insert_iterator_test.s
+
+# target to generate assembly for a file
+src/insert_iterator_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\insert_iterator_test.dir\build.make CMakeFiles/insert_iterator_test.dir/src/insert_iterator_test.cpp.s
+.PHONY : src/insert_iterator_test.cpp.s
 
 src/iterator_test.obj: src/iterator_test.cpp.obj
 .PHONY : src/iterator_test.obj
@@ -680,6 +717,7 @@ help:
 	@echo ... rebuild_cache
 	@echo ... deque_text
 	@echo ... heap_test
+	@echo ... insert_iterator_test
 	@echo ... iterator_test
 	@echo ... list_text
 	@echo ... map_test
@@ -699,6 +737,9 @@ help:
 	@echo ... src/heap_test.obj
 	@echo ... src/heap_test.i
 	@echo ... src/heap_test.s
+	@echo ... src/insert_iterator_test.obj
+	@echo ... src/insert_iterator_test.i
+	@echo ... src/insert_iterator_test.s
 	@echo ... src/iterator_test.obj
 	@echo ... src/iterator_test.i
 	@echo ... src/iterator_test.s
