@@ -441,6 +441,8 @@ private:
     const CharT* delimiter;
 };
 
+
+
 } // namespace msl
 
 #endif //__ITERATOR_H__
