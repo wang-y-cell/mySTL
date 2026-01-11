@@ -1,7 +1,6 @@
-exe/
 .vscode/
-readme/日志.md
-runner/bin/
-runner/build/
+日志.md
+bin/
+build/
 *.exe
 *.o
