@@ -134,6 +134,43 @@ struct project2nd : public binary_function<Arg1, Arg2, Arg2> {
     Arg2 operator()(const Arg1&, const Arg2& y) const { return y; }
 };
 
+template <class Predicate>
+class unary_negate : 
+public unary_function<typename Predicate::argument_type, bool> {
+protected:
+    Predicate pred;
+public:
+    unary_negate(const Predicate& p) : pred(p) {}
+    bool operator()(const typename Predicate::argument_type& x) const {
+        return !pred(x);
+    }
+};
+
+template <class Predicate>
+inline unary_negate<Predicate> not1(const Predicate& pred) {
+    return unary_negate<Predicate>(pred);
+}
+
+template <class Predicate>
+class binary_negate :
+public binary_function<typename Predicate::first_argument_type,
+                       typename Predicate::second_argument_type, bool> {
+protected:
+    Predicate pred;
+public:
+    binary_negate(const Predicate& p) : pred(p) {}
+    bool operator()(const typename Predicate::first_argument_type& x,
+                    const typename Predicate::second_argument_type& y) const {
+        return !pred(x, y);
+    }
+}; 
+
+template<class Predicate>
+inline binary_negate<Predicate> not2(const Predicate& pred) {
+    return binary_negate<Predicate>(pred);
+}
+
+
 } // namespace msl
 
 #endif // MYSTL_FUNCTIONAL_H
