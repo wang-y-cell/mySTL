@@ -170,6 +170,49 @@ inline binary_negate<Predicate> not2(const Predicate& pred) {
     return binary_negate<Predicate>(pred);
 }
 
+template <class Operation>
+class binder1st :
+public unary_function<typename Operation::second_argument_type,
+                       typename Operation::result_type> {
+protected:
+    Operation op;
+    typename Operation::first_argument_type first;
+public:
+    binder1st(const Operation& o, const typename Operation::first_argument_type& f)
+        : op(o), first(f) {}
+    typename Operation::result_type operator()(const typename Operation::second_argument_type& y) const {
+        return op(first, y);
+    }
+};  
+
+template <class Operation>
+inline binder1st<Operation> bind1st
+(const Operation& o, const typename Operation::first_argument_type& f) {
+    return binder1st<Operation>(o, f);
+}
+
+template <class Operation>
+class binder2nd :
+public unary_function<typename Operation::first_argument_type,
+                      typename Operation::result_type> {
+protected:
+    Operation op;
+    typename Operation::second_argument_type second;
+public:
+    binder2nd(const Operation& o, const typename Operation::second_argument_type& s)
+        : op(o), second(s) {}
+    typename Operation::result_type operator()(const typename Operation::first_argument_type& x) const {
+        return op(x, second);
+    }
+};
+
+template <class Operation>
+inline binder2nd<Operation> bind2nd
+(const Operation& o, const typename Operation::second_argument_type& s) {
+    return binder2nd<Operation>(o, s);
+}
+
+
 
 } // namespace msl
 
