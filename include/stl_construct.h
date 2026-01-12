@@ -13,6 +13,13 @@ inline void construct(T1* ptr, const T2& val) {
     new (ptr) T1(val);  
 }
 
+#if MYSTL_CPP_VERSION >= 11
+template <typename T1, typename T2>
+inline void construct(T1* ptr, T2&& val) {
+    new (ptr) T1(msl::forward<T2>(val));
+}
+#endif
+
 // destroy:
 
 template <typename T>

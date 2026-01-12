@@ -141,6 +141,48 @@ void text_ostream_iterator() {
     std::cout << "ostream_iterator passed." << std::endl;
 }
 
+void text_move_iterator() {
+    std::cout << "Testing move_iterator..." << std::endl;
+    msl::vector<int> v;
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    
+    msl::vector<int> v2;
+    auto mit = msl::make_move_iterator(v.begin());
+    auto mit_end = msl::make_move_iterator(v.end());
+    
+    while(mit != mit_end) {
+        v2.push_back(*mit);
+        ++mit;
+    }
+    
+    assert(v2.size() == 3);
+    assert(v2[0] == 1);
+    assert(v2[1] == 2);
+    assert(v2[2] == 3);
+    
+    std::cout << "move_iterator (int) passed." << std::endl;
+}
+
+void text_global_functions() {
+    std::cout << "Testing global begin/end..." << std::endl;
+    
+    // Array
+    int arr[] = {1, 2, 3};
+    assert(*msl::begin(arr) == 1);
+    assert(*(msl::end(arr) - 1) == 3);
+    assert(msl::end(arr) - msl::begin(arr) == 3);
+    
+    // Container
+    msl::vector<int> v;
+    v.push_back(10);
+    assert(*msl::begin(v) == 10);
+    assert(msl::begin(v) == v.begin());
+    
+    std::cout << "global begin/end passed." << std::endl;
+}
+
 int main() {
     text_back_insert_iterator();
     text_front_insert_iterator();
@@ -148,6 +190,8 @@ int main() {
     text_insert_iterator();
     text_istream_iterator();
     text_ostream_iterator();
+    text_move_iterator();
+    text_global_functions();
     std::cout << "All tests passed!" << std::endl;
 
     return 0;

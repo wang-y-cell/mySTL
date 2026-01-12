@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <iostream>
 #include "type_traits.h"
+#include "move.h"
 
 namespace msl {
 
@@ -441,7 +442,125 @@ private:
     const CharT* delimiter;
 };
 
+#if MYSTL_CPP_VERSION >= 11
 
+
+// Move Iterator
+template <typename Iterator>
+class move_iterator {
+    typedef Iterator iterator_type;
+    typedef typename iterator_traits<Iterator>::iterator_category iterator_category;
+    typedef typename iterator_traits<Iterator>::value_type value_type;
+    typedef typename iterator_traits<Iterator>::difference_type difference_type;
+    typedef Iterator pointer;
+    typedef typename iterator_traits<Iterator>::value_type&& reference;
+    
+    typedef move_iterator<Iterator> self;
+
+protected:
+    Iterator current;
+
+public:
+    move_iterator() : current() {}
+    explicit move_iterator(Iterator i) : current(i) {}
+    
+    template <typename U>
+    move_iterator(const move_iterator<U>& u) : current(u.base()) {}
+    
+    iterator_type base() const { return current; }
+    
+    reference operator*() const { return msl::move(*current); }
+    pointer operator->() const { return current; }
+    
+    self& operator++() { ++current; return *this; }
+    self operator++(int) { self tmp = *this; ++current; return tmp; }
+    self& operator--() { --current; return *this; }
+    self operator--(int) { self tmp = *this; --current; return tmp; }
+    
+    self operator+(difference_type n) const { return self(current + n); }
+    self& operator+=(difference_type n) { current += n; return *this; }
+    self operator-(difference_type n) const { return self(current - n); }
+    self& operator-=(difference_type n) { current -= n; return *this; }
+    reference operator[](difference_type n) const { return msl::move(current[n]); }
+};
+
+template <typename Iterator>
+inline bool operator==(const move_iterator<Iterator>& x, const move_iterator<Iterator>& y) {
+    return x.base() == y.base();
+}
+
+template <typename Iterator>
+inline bool operator!=(const move_iterator<Iterator>& x, const move_iterator<Iterator>& y) {
+    return !(x == y);
+}
+
+template <typename Iterator>
+inline bool operator<(const move_iterator<Iterator>& x, const move_iterator<Iterator>& y) {
+    return x.base() < y.base();
+}
+
+template <typename Iterator>
+inline bool operator>(const move_iterator<Iterator>& x, const move_iterator<Iterator>& y) {
+    return y < x;
+}
+
+template <typename Iterator>
+inline bool operator<=(const move_iterator<Iterator>& x, const move_iterator<Iterator>& y) {
+    return !(y < x);
+}
+
+template <typename Iterator>
+inline bool operator>=(const move_iterator<Iterator>& x, const move_iterator<Iterator>& y) {
+    return !(x < y);
+}
+
+template <typename Iterator>
+inline move_iterator<Iterator> operator+(typename move_iterator<Iterator>::difference_type n, const move_iterator<Iterator>& x) {
+    return x + n;
+}
+
+template <typename Iterator>
+inline typename move_iterator<Iterator>::difference_type operator-(const move_iterator<Iterator>& x, const move_iterator<Iterator>& y) {
+    return x.base() - y.base();
+}
+
+template <typename Iterator>
+inline move_iterator<Iterator> make_move_iterator(Iterator it) {
+    return move_iterator<Iterator>(it);
+}
+
+// Global begin/end
+template <typename Container>
+inline auto begin(Container& c) -> decltype(c.begin()) {
+    return c.begin();
+}
+
+template <typename Container>
+inline auto begin(const Container& c) -> decltype(c.begin()) {
+    return c.begin();
+}
+
+template <typename T, size_t N>
+inline T* begin(T (&array)[N]) { //需要引用,不然就会退化成指针,这样函数就不知道数组的大小N了
+    return array;
+}
+
+template <typename Container>
+inline auto end(Container& c) -> decltype(c.end()) {
+    return c.end();
+}
+
+template <typename Container>
+inline auto end(const Container& c) -> decltype(c.end()) {
+    return c.end();
+}
+
+template <typename T, size_t N>
+inline T* end(T (&array)[N]) {
+    return array + N;
+}
+
+#endif
 
 } // namespace msl
 

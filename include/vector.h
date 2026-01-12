@@ -80,11 +80,15 @@ protected:
     typedef typename base::data_allocator data_allocator;
 
     void insert_aux(iterator position, const_reference value);
+    #if MYSTL_CPP_VERSION >= 11
+    void insert_aux(iterator position, value_type&& value);
+    #endif
     
     #if MYSTL_CPP_VERSION >= 11
     template<typename... Args>
     iterator realloc_emplace(iterator position, Args&&... args);
     void realloc_insert(iterator position, const_reference value);
+    void realloc_insert(iterator position, value_type&& value);
     #else
     void realloc_insert(iterator position, const_reference value);
     #endif
@@ -232,6 +236,7 @@ public:
 
     #if MYSTL_CPP_VERSION >= 11
     void insert(iterator position,std::initializer_list<T> ilist);
+    iterator insert(iterator position, value_type&& value);
     #endif
     
     iterator insert(iterator position,const_reference value);
@@ -266,6 +271,17 @@ public:
             insert_aux(end(), value);
         }
     }
+
+    #if MYSTL_CPP_VERSION >= 11
+    void push_back(value_type&& value) {
+        if(finish_ != end_of_storage_) {
+            msl::construct(finish_, msl::move(value));
+            ++finish_;
+        } else {
+            insert_aux(end(), msl::move(value));
+        }
+    }
+    #endif
 
     void pop_back() {
         --finish_;
@@ -333,6 +349,20 @@ void vector<T,Alloc>::insert_aux(iterator position, const_reference value) {
     }
 }
 
+#if MYSTL_CPP_VERSION >= 11
+template<typename T,typename Alloc>
+void vector<T,Alloc>::insert_aux(iterator position, value_type&& value) {
+    if (finish_ != end_of_storage_) {
+        msl::construct(finish_, msl::move(*(finish_ - 1)));
+        ++finish_;
+        msl::move_backward(position, finish_ - 2, finish_ - 1);
+        *position = msl::move(value);
+    } else {
+        realloc_insert(position, msl::move(value));
+    }
+}
+#endif
+
 template<typename T,typename Alloc>
 void vector<T,Alloc>::realloc_insert(iterator position, const_reference value) {
     const size_type old_size = size();
@@ -357,6 +387,28 @@ void vector<T,Alloc>::realloc_insert(iterator position, const_reference value) {
     finish_ = new_finish;
     end_of_storage_ = start_ + new_capacity;
 }
+
+#if MYSTL_CPP_VERSION >= 11
+template<typename T,typename Alloc>
+void vector<T,Alloc>::realloc_insert(iterator position, value_type&& value) {
+    const size_type old_size = size();
+    const size_type new_capacity = old_size ? old_size * 2 : 1;
+    iterator new_start = data_allocator::allocate(new_capacity);
+    iterator new_finish = new_start;
+    
+    new_finish = msl::uninitialized_move(start_, position, new_start);
+    msl::construct(new_finish, msl::move(value));
+    ++new_finish;
+    new_finish = msl::uninitialized_move(position, finish_, new_finish);
+    
+    msl::destroy(start_, finish_);
+    data_allocator::deallocate(start_, end_of_storage_ - start_);
+    start_ = new_start;
+    finish_ = new_finish;
+    end_of_storage_ = start_ + new_capacity;
+}
+#endif
+
 
 template<typename T,typename Alloc>
 void vector<T,Alloc>::insert(iterator position,size_type n,const_reference value){
@@ -430,6 +482,21 @@ vector<T,Alloc>::insert(iterator position,const_reference value){
     }
     return begin() + n;
 }
+
+#if MYSTL_CPP_VERSION >= 11
+template<typename T,typename Alloc>
+typename vector<T,Alloc>::iterator
+vector<T,Alloc>::insert(iterator position, value_type&& value){
+    size_type n = position - begin();
+    if (finish_ != end_of_storage_ && position == finish_) {
+        msl::construct(finish_, msl::move(value));
+        ++finish_;
+    } else {
+        insert_aux(position, msl::move(value));
+    }
+    return begin() + n;
+}
+#endif
 
 template<typename T,typename Alloc>
 void vector<T,Alloc>::insert(iterator position,const_iterator first,const_iterator last){

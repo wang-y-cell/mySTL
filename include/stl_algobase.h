@@ -148,6 +148,17 @@ inline OutputIt move(InputIt first, InputIt last, OutputIt result)
     }
     return result;
 }
+
+template<class BidirectionalIterator1, class BidirectionalIterator2>
+inline BidirectionalIterator2 move_backward(BidirectionalIterator1 first, 
+                                            BidirectionalIterator1 last, 
+                                            BidirectionalIterator2 result)
+{
+    while (first != last) {
+        *--result = msl::move(*--last);
+    }
+    return result;
+}
 #endif
 
 /*---------------------------------------------------------------------------*/
