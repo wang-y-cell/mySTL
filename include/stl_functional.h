@@ -140,7 +140,7 @@ public unary_function<typename Predicate::argument_type, bool> {
 protected:
     Predicate pred;
 public:
-    unary_negate(const Predicate& p) : pred(p) {}
+    explicit unary_negate(const Predicate& p) : pred(p) {}
     bool operator()(const typename Predicate::argument_type& x) const {
         return !pred(x);
     }
@@ -158,7 +158,7 @@ public binary_function<typename Predicate::first_argument_type,
 protected:
     Predicate pred;
 public:
-    binary_negate(const Predicate& p) : pred(p) {}
+    explicit binary_negate(const Predicate& p) : pred(p) {}
     bool operator()(const typename Predicate::first_argument_type& x,
                     const typename Predicate::second_argument_type& y) const {
         return !pred(x, y);
@@ -212,6 +212,44 @@ inline binder2nd<Operation> bind2nd
     return binder2nd<Operation>(o, s);
 }
 
+template <class Operation1, class Operator2>
+class unary_compose :
+public unary_function<typename Operation2::argument_type,
+                      typename Operation2::result_type>{
+public:
+    unary_compose(const Operation1& p1,const Opertion2& p2) : 
+    op1(p1), op2(p2) { }
+    typename Operation1::result_type operator()
+    (const typename Operation2::argument_type& x) const {
+        return op1(op2(x));
+    }
+};
+
+template<class Operation1,class Operation2>
+inline typename unary_compose<Operation1,Operation2>::result_type 
+compose1(const Operation1& p1,const Operation2& p2) {
+    return unary_compose<Operation1,Operation2>(p1,p2);
+}
+
+template<class Operation1,class Operation2,class Operation3>
+class binary_compose :
+public unary_function<typename Operation2::argument_type,
+                      typename Operation3::result_type>{
+public:
+    binary_compose(const Operation1& p1,const Operation2& p2,const Operation3& p3) : 
+    op1(p1), op2(p2), op3(p3) { }
+    typename Operation1::result_type operator()
+    (const typename Operation2::argument_type& x1) const {
+        return op1(op2(x1),op3(x1));
+    }
+    
+};
+
+template<class Operation1,class Operation2,class Operation3>
+inline typename binary_compose<Operation1,Operation2,Operation3>::result_type 
+compose2(const Operation1& p1,const Operation2& p2,const Operation3& p3) {
+    return binary_compose<Operation1,Operation2,Operation3>(p1,p2,p3);
+}
 
 
 } // namespace msl
