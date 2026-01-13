@@ -195,10 +195,104 @@ void test_ptr_fun() {
     }
 }
 
+class TestClass {
+public:
+    int val;
+    TestClass(int v) : val(v) {}
+
+    // 1. no const, no arg
+    int func() { return val; }
+
+    // 2. const, no arg
+    int const_func() const { return val; }
+
+    // 3. no const, 1 arg
+    int func1(int x) { return val + x; }
+
+    // 4. const, 1 arg
+    int const_func1(int x) const { return val + x; }
+};
+void test_mem_fun() {
+    print();
+    std::cout << "Testing mem_fun..." << std::endl;
+    TestClass obj(10);
+    TestClass* pObj = &obj;
+
+    // 1. mem_fun_t
+    // msl::mem_fun(&TestClass::func) returns mem_fun_t
+    // operator()(TestClass*)
+    if (msl::mem_fun(&TestClass::func)(pObj) == 10) {
+        std::cout << "mem_fun_t passed" << std::endl;
+    } else {
+        std::cout << "mem_fun_t failed" << std::endl;
+    }
+
+    // 2. const_mem_fun_t
+    const TestClass constObj(20);
+    const TestClass* pConstObj = &constObj;
+    if (msl::mem_fun(&TestClass::const_func)(pConstObj) == 20) {
+        std::cout << "const_mem_fun_t passed" << std::endl;
+    } else {
+        std::cout << "const_mem_fun_t failed" << std::endl;
+    }
+
+    // 3. mem_fun1_t
+    if (msl::mem_fun(&TestClass::func1)(pObj, 5) == 15) {
+        std::cout << "mem_fun1_t passed" << std::endl;
+    } else {
+        std::cout << "mem_fun1_t failed" << std::endl;
+    }
+
+    // 4. const_mem_fun1_t
+    if (msl::mem_fun(&TestClass::const_func1)(pConstObj, 5) == 25) {
+        std::cout << "const_mem_fun1_t passed" << std::endl;
+    } else {
+        std::cout << "const_mem_fun1_t failed" << std::endl;
+    }
+}
+void test_mem_fun_ref() {
+    print();
+    std::cout << "Testing mem_fun_ref..." << std::endl;
+    TestClass obj(10);
+
+    // 5. mem_fun_ref_t
+    if (msl::mem_fun_ref(&TestClass::func)(obj) == 10) {
+        std::cout << "mem_fun_ref_t passed" << std::endl;
+    } else {
+        std::cout << "mem_fun_ref_t failed" << std::endl;
+    }
+
+    // 6. const_mem_fun_ref_t
+    const TestClass constObj(20);
+    if (msl::mem_fun_ref(&TestClass::const_func)(constObj) == 20) {
+        std::cout << "const_mem_fun_ref_t passed" << std::endl;
+    } else {
+        std::cout << "const_mem_fun_ref_t failed" << std::endl;
+    }
+
+    // 7. mem_fun1_ref_t
+    if (msl::mem_fun_ref(&TestClass::func1)(obj, 5) == 15) {
+        std::cout << "mem_fun1_ref_t passed" << std::endl;
+    } else {
+        std::cout << "mem_fun1_ref_t failed" << std::endl;
+    }
+
+    // 8. const_mem_fun1_ref_t
+    if (msl::mem_fun_ref(&TestClass::const_func1)(constObj, 5) == 25) {
+        std::cout << "const_mem_fun1_ref_t passed" << std::endl;
+    } else {
+        std::cout << "const_mem_fun1_ref_t failed" << std::endl;
+    }
+}
+
+
+
 int main() {
     test_not();
     test_binders();
     test_compose();
     test_ptr_fun();
+    test_mem_fun();
+    test_mem_fun_ref();
     return 0;
 }

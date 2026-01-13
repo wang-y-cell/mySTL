@@ -296,6 +296,151 @@ ptr_fun(Result (*f)(Arg1,Arg2)) {
     return pointer_to_binary_function<Arg1,Arg2,Result>(f);
 }
 
+//成员函数适配器需要根据成员函数的参数类型和返回值类型定义
+//根据是否为const,有一个或无参数,指针还是引用调用,定义不同的适配器
+//一共有8中情况
+
+
+// 1. no const, no arg, pointer call
+template<class S, class T> //S是返回类型,T是类类型
+class mem_fun_t :public unary_function<T*,S>{
+protected:
+    S (T::*func)();
+public:
+    mem_fun_t(S (T::*f)()) : func(f) { }
+    S operator()(T* p) const {
+        return (p->*func)();
+    }
+};
+
+//2.const, no arg, pointer call
+template<class S, class T> //S是返回类型,T是类类型
+class const_mem_fun_t :public unary_function<const T*,S>{
+protected:
+    S (T::*func)() const;
+public:
+    const_mem_fun_t(S (T::*f)() const) : func(f) { }
+    S operator()(const T* p) const {
+        return (p->*func)();
+    }
+};
+
+// 3. no const, 1 arg, pointer call
+template <class S, class T, class A>
+class mem_fun1_t : public binary_function<T*, A, S> {
+protected:
+    S (T::*func)(A);
+public:
+    mem_fun1_t(S (T::*f)(A)) : func(f) {}
+    S operator()(T* p, A x) const {
+        return (p->*func)(x);
+    }
+};
+
+// 4. const, 1 arg, pointer call
+template <class S, class T, class A>
+class const_mem_fun1_t : public binary_function<const T*, A, S> {
+protected:
+    S (T::*func)(A) const;
+public:
+    const_mem_fun1_t(S (T::*f)(A) const) : func(f) {}
+    S operator()(const T* p, A x) const {
+        return (p->*func)(x);
+    }
+};
+
+// 5. no const, no arg, ref call
+template <class S, class T>
+class mem_fun_ref_t : public unary_function<T, S> {
+protected:
+    S (T::*func)();
+public:
+    mem_fun_ref_t(S (T::*f)()) : func(f) {}
+    S operator()(T& p) const {
+        return (p.*func)();
+    }
+};
+
+// 6. const, no arg, ref call
+template <class S, class T>
+class const_mem_fun_ref_t : public unary_function<T, S> {
+protected:
+    S (T::*func)() const;
+public:
+    const_mem_fun_ref_t(S (T::*f)() const) : func(f) {}
+    S operator()(const T& p) const {
+        return (p.*func)();
+    }
+};
+
+// 7. no const, 1 arg, ref call
+template <class S, class T, class A>
+class mem_fun1_ref_t : public binary_function<T, A, S> {
+protected:
+    S (T::*func)(A);
+public:
+    mem_fun1_ref_t(S (T::*f)(A)) : func(f) {}
+    S operator()(T& p, A x) const {
+        return (p.*func)(x);
+    }
+};
+
+// 8. const, 1 arg, ref call
+template <class S, class T, class A>
+class const_mem_fun1_ref_t : public binary_function<T, A, S> {
+protected:
+    S (T::*func)(A) const;
+public:
+    const_mem_fun1_ref_t(S (T::*f)(A) const) : func(f) {}
+    S operator()(const T& p, A x) const {
+        return (p.*func)(x);
+    }
+};
+
+
+// mem_fun helper functions
+template <class S, class T>
+inline mem_fun_t<S, T> mem_fun(S (T::*f)()) {
+    return mem_fun_t<S, T>(f);
+}
+
+template <class S, class T>
+inline const_mem_fun_t<S, T> mem_fun(S (T::*f)() const) {
+    return const_mem_fun_t<S, T>(f);
+}
+
+template <class S, class T, class A>
+inline mem_fun1_t<S, T, A> mem_fun(S (T::*f)(A)) {
+    return mem_fun1_t<S, T, A>(f);
+}
+
+template <class S, class T, class A>
+inline const_mem_fun1_t<S, T, A> mem_fun(S (T::*f)(A) const) {
+    return const_mem_fun1_t<S, T, A>(f);
+}
+
+// mem_fun_ref helper functions
+template <class S, class T>
+inline mem_fun_ref_t<S, T> mem_fun_ref(S (T::*f)()) {
+    return mem_fun_ref_t<S, T>(f);
+}
+
+template <class S, class T>
+inline const_mem_fun_ref_t<S, T> mem_fun_ref(S (T::*f)() const) {
+    return const_mem_fun_ref_t<S, T>(f);
+}
+
+template <class S, class T, class A>
+inline mem_fun1_ref_t<S, T, A> mem_fun_ref(S (T::*f)(A)) {
+    return mem_fun1_ref_t<S, T, A>(f);
+}
+
+template <class S, class T, class A>
+inline const_mem_fun1_ref_t<S, T, A> mem_fun_ref(S (T::*f)(A) const) {
+    return const_mem_fun1_ref_t<S, T, A>(f);
+}
+
+
 
 } // namespace msl
 
