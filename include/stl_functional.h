@@ -258,6 +258,44 @@ compose2(const Operation1& p1,const Operation2& p2,const Operation3& p3) {
     return binary_compose<Operation1,Operation2,Operation3>(p1,p2,p3);
 }
 
+template<class Arg,class Result>
+class pointer_to_unary_function :
+public unary_function<Arg,Result>{
+protected:
+    Result (*func)(Arg);
+public:
+    pointer_to_unary_function() : func(0) { }
+    pointer_to_unary_function(Result (*f)(Arg)) : func(f) { }
+    Result operator()(Arg x) const {
+        return func(x);
+    }
+};
+
+template<class Arg,class Result>
+inline pointer_to_unary_function<Arg,Result>
+ptr_fun(Result (*f)(Arg)) {
+    return pointer_to_unary_function<Arg,Result>(f);
+}
+
+template<class Arg1,class Arg2,class Result>
+class pointer_to_binary_function :
+public binary_function<Arg1,Arg2,Result>{
+protected:
+    Result (*func)(Arg1,Arg2);
+public:
+    pointer_to_binary_function() : func(0) { }
+    pointer_to_binary_function(Result (*f)(Arg1,Arg2)) : func(f) { }
+    Result operator()(Arg1 x,Arg2 y) const {
+        return func(x,y);
+    }
+};
+
+template<class Arg1,class Arg2,class Result>
+inline pointer_to_binary_function<Arg1,Arg2,Result>
+ptr_fun(Result (*f)(Arg1,Arg2)) {
+    return pointer_to_binary_function<Arg1,Arg2,Result>(f);
+}
+
 
 } // namespace msl
 

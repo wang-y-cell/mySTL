@@ -143,9 +143,62 @@ void test_compose() {
     }
 }
 
+// Global functions for ptr_fun test
+int square(int x) {
+    return x * x;
+}
+
+int sum(int x, int y) {
+    return x + y;
+}
+
+void test_ptr_fun() {
+    print();
+    std::cout << "Testing ptr_fun..." << std::endl;
+
+    // Test unary ptr_fun
+    msl::pointer_to_unary_function<int, int> ptr_square = msl::ptr_fun(square);
+    if (ptr_square(5) == 25) {
+        std::cout << "ptr_fun(square)(5) == 25 (Correct)" << std::endl;
+    } else {
+        std::cout << "ptr_fun(square)(5) failed: " << ptr_square(5) << std::endl;
+    }
+
+    // Test with compose1 to verify adaptability
+    // compose1(negate, ptr_fun(square)) -> -(x*x)
+    msl::unary_compose<msl::negate<int>, msl::pointer_to_unary_function<int, int> > 
+        neg_square = msl::compose1(msl::negate<int>(), msl::ptr_fun(square));
+    
+    if (neg_square(5) == -25) {
+        std::cout << "compose1(negate, ptr_fun(square))(5) == -25 (Correct)" << std::endl;
+    } else {
+        std::cout << "compose1(negate, ptr_fun(square))(5) failed: " << neg_square(5) << std::endl;
+    }
+
+    // Test binary ptr_fun
+    msl::pointer_to_binary_function<int, int, int> ptr_sum = msl::ptr_fun(sum);
+    if (ptr_sum(10, 20) == 30) {
+        std::cout << "ptr_fun(sum)(10, 20) == 30 (Correct)" << std::endl;
+    } else {
+        std::cout << "ptr_fun(sum)(10, 20) failed: " << ptr_sum(10, 20) << std::endl;
+    }
+
+    // Test with bind1st to verify adaptability
+    // bind1st(ptr_fun(sum), 10)(x) -> 10 + x
+    msl::binder1st<msl::pointer_to_binary_function<int, int, int> > 
+        add10 = msl::bind1st(msl::ptr_fun(sum), 10);
+    
+    if (add10(20) == 30) {
+        std::cout << "bind1st(ptr_fun(sum), 10)(20) == 30 (Correct)" << std::endl;
+    } else {
+        std::cout << "bind1st(ptr_fun(sum), 10)(20) failed: " << add10(20) << std::endl;
+    }
+}
+
 int main() {
     test_not();
     test_binders();
     test_compose();
+    test_ptr_fun();
     return 0;
 }
