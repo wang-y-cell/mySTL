@@ -212,12 +212,15 @@ inline binder2nd<Operation> bind2nd
     return binder2nd<Operation>(o, s);
 }
 
-template <class Operation1, class Operator2>
+template <class Operation1, class Operation2>
 class unary_compose :
 public unary_function<typename Operation2::argument_type,
-                      typename Operation2::result_type>{
+                      typename Operation1::result_type>{
+protected:
+    Operation1 op1;
+    Operation2 op2;
 public:
-    unary_compose(const Operation1& p1,const Opertion2& p2) : 
+    unary_compose(const Operation1& p1,const Operation2& p2) : 
     op1(p1), op2(p2) { }
     typename Operation1::result_type operator()
     (const typename Operation2::argument_type& x) const {
@@ -226,7 +229,7 @@ public:
 };
 
 template<class Operation1,class Operation2>
-inline typename unary_compose<Operation1,Operation2>::result_type 
+inline unary_compose<Operation1,Operation2> 
 compose1(const Operation1& p1,const Operation2& p2) {
     return unary_compose<Operation1,Operation2>(p1,p2);
 }
@@ -234,7 +237,11 @@ compose1(const Operation1& p1,const Operation2& p2) {
 template<class Operation1,class Operation2,class Operation3>
 class binary_compose :
 public unary_function<typename Operation2::argument_type,
-                      typename Operation3::result_type>{
+                      typename Operation1::result_type>{
+protected:
+    Operation1 op1;
+    Operation2 op2;
+    Operation3 op3;
 public:
     binary_compose(const Operation1& p1,const Operation2& p2,const Operation3& p3) : 
     op1(p1), op2(p2), op3(p3) { }
@@ -246,7 +253,7 @@ public:
 };
 
 template<class Operation1,class Operation2,class Operation3>
-inline typename binary_compose<Operation1,Operation2,Operation3>::result_type 
+inline binary_compose<Operation1,Operation2,Operation3> 
 compose2(const Operation1& p1,const Operation2& p2,const Operation3& p3) {
     return binary_compose<Operation1,Operation2,Operation3>(p1,p2,p3);
 }

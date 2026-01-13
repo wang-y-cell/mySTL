@@ -108,8 +108,44 @@ void test_binders(){
 
 }
 
+void test_compose() {
+    print();
+    std::cout << "Testing compose1 and compose2..." << std::endl;
+
+    // Test compose1
+    // f(x) = -(x + 10)
+    // op1 = negate<int>, op2 = bind2nd(plus<int>, 10)
+    // compose1(negate, bind2nd(plus, 10))(x) -> negate(plus(x, 10))
+    msl::unary_compose<msl::negate<int>, msl::binder2nd<msl::plus<int> > > 
+        comp1 = msl::compose1(msl::negate<int>(), msl::bind2nd(msl::plus<int>(), 10));
+
+    if (comp1(20) == -30) {
+        std::cout << "compose1(negate, bind2nd(plus, 10))(20) == -30 (Correct)" << std::endl;
+    } else {
+        std::cout << "compose1 failed: " << comp1(20) << std::endl;
+    }
+
+    // Test compose2
+    // f(x) = (x + 10) * (x - 5)
+    // op1 = multiplies<int>
+    // op2 = bind2nd(plus<int>, 10)
+    // op3 = bind2nd(minus<int>, 5)
+    msl::binary_compose<msl::multiplies<int>, msl::binder2nd<msl::plus<int> >, msl::binder2nd<msl::minus<int> > >
+        comp2 = msl::compose2(msl::multiplies<int>(), 
+                              msl::bind2nd(msl::plus<int>(), 10), 
+                              msl::bind2nd(msl::minus<int>(), 5));
+
+    // x = 20 -> (20+10) * (20-5) = 30 * 15 = 450
+    if (comp2(20) == 450) {
+        std::cout << "compose2(mult, plus10, minus5)(20) == 450 (Correct)" << std::endl;
+    } else {
+        std::cout << "compose2 failed: " << comp2(20) << std::endl;
+    }
+}
+
 int main() {
     test_not();
     test_binders();
+    test_compose();
     return 0;
 }
