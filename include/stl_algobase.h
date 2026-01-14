@@ -138,25 +138,166 @@ inline bool lexicographical_compare(const char* first1, const char* last1,
 
 /*---------------------------------------------------------------------------*/
 /*move (range)*/
-
 #if MYSTL_CPP_VERSION >= 11
-template<class InputIt, class OutputIt>
-inline OutputIt move(InputIt first, InputIt last, OutputIt result)
-{
-    for (; first != last; ++result, ++first) {
+
+template<class RandomAccessIterator, class OutputIterator,class Distance>
+inline OutputIterator __move_d
+(RandomAccessIterator first, RandomAccessIterator last, OutputIterator result, Distance*){
+    for(Distance n = last - first; n > 0; --n, ++first, ++result){
         *result = msl::move(*first);
     }
     return result;
 }
 
+template<class RandomAccessIterator, class OutputIterator>
+inline OutputIterator __move
+(RandomAccessIterator first, RandomAccessIterator last, OutputIterator result, 
+ random_access_iterator_tag){
+    return __move_d(first, last, result, distance_type(first));
+}
+
+template<class InputIterator, class OutputIterator>
+inline OutputIterator __move
+(InputIterator first, InputIterator last, OutputIterator result, 
+ input_iterator_tag){
+    for(; first != last; ++first, ++result){
+        *result = msl::move(*first);
+    }
+    return result;
+}
+
+
+
+template< class InputIterator,class OutputIterator>
+struct move_dispatcher{
+    OutputIterator operator()(InputIterator first, InputIterator last, OutputIterator result){
+        return __move(first, last, result, iterator_category(first));
+    }
+};
+
+template<class T>
+inline T* __move_t(const T* first, const T* last, T* result, true_type){
+    memmove(result, first, sizeof(T) * (last - first));
+    return result + (last - first);
+}
+
+template<class InputIterator, class T>
+inline T* __move_t(InputIterator first, InputIterator last, T* result, false_type){
+    return __move_d(first, last, result,(ptrdiff_t*)0);
+}
+
+template<class T>
+struct move_dispatcher<T*, T*>{
+    typedef typename type_traits<T>::is_trivial_assignment_operator movable_type;
+    T* operator()(T* first, T* last, T* result){
+        return __move_t(first, last, result, movable_type());
+    }
+};
+
+template<class T>
+struct move_dispatcher<const T*, T*>{
+    typedef typename type_traits<T>::is_trivial_assignment_operator movable_type;
+    T* operator()(const T* first, const T* last, T* result){
+        return __move_t(first, last, result, movable_type());
+    }
+};
+
+
+template<class InputIt, class OutputIt>
+inline OutputIt move(InputIt first, InputIt last, OutputIt result){
+    return move_dispatcher<InputIt, OutputIt>()(first, last, result);
+}
+
+
+inline char* move(const char* first, const char* last, char* result){
+    memmove(result, first, last - first);
+    return result + (last - first);
+}
+
+inline wchar_t* move(const wchar_t* first, const wchar_t* last, wchar_t* result){
+    memmove(result, first, sizeof(wchar_t) * (last - first));
+    return result + (last - first);
+}
+
+
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+inline BidirectionalIterator2 __move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
+                                              BidirectionalIterator2 result, bidirectional_iterator_tag) {
+  while (first != last)
+    *--result = msl::move(*--last);
+  return result;
+}
+
+template <class RandomAccessIterator, class OutputIterator>
+inline OutputIterator __move_backward_d(RandomAccessIterator first, RandomAccessIterator last,
+                                        OutputIterator result) {
+  typedef typename iterator_traits<RandomAccessIterator>::difference_type Distance;
+  for (Distance n = last - first; n > 0; --n)
+    *--result = msl::move(*--last);
+  return result;
+}
+
+template <class RandomAccessIterator, class OutputIterator>
+inline OutputIterator __move_backward(RandomAccessIterator first, RandomAccessIterator last,
+                                      OutputIterator result, random_access_iterator_tag) {
+  return __move_backward_d(first, last, result);
+}
+
+template <class T>
+inline T* __move_backward_t(const T* first, const T* last, T* result, true_type) {
+  const ptrdiff_t n = last - first;
+  result -= n;
+  memmove(result, first, sizeof(T) * n);
+  return result;
+}
+
+template <class InputIterator, class T>
+inline T* __move_backward_t(InputIterator first, InputIterator last, T* result, false_type) {
+  return __move_backward_d(first, last, result);
+}
+
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+struct move_backward_dispatcher {
+  BidirectionalIterator2 operator()(BidirectionalIterator1 first, BidirectionalIterator1 last,
+                                    BidirectionalIterator2 result) {
+    return __move_backward(first, last, result, iterator_category(first));
+  }
+};
+
+template <class T>
+struct move_backward_dispatcher<T*, T*> {
+  T* operator()(T* first, T* last, T* result) {
+    typedef typename type_traits<T>::is_trivial_assignment_operator Trivial;
+    return __move_backward_t(first, last, result, Trivial());
+  }
+};
+
+template <class T>
+struct move_backward_dispatcher<const T*, T*> {
+  T* operator()(const T* first, const T* last, T* result) {
+    typedef typename type_traits<T>::is_trivial_assignment_operator Trivial;
+    return __move_backward_t(first, last, result, Trivial());
+  }
+};
+
 template<class BidirectionalIterator1, class BidirectionalIterator2>
 inline BidirectionalIterator2 move_backward(BidirectionalIterator1 first, 
                                             BidirectionalIterator1 last, 
-                                            BidirectionalIterator2 result)
-{
-    while (first != last) {
-        *--result = msl::move(*--last);
-    }
+                                            BidirectionalIterator2 result){
+    return move_backward_dispatcher<BidirectionalIterator1, BidirectionalIterator2>()(first, last, result);
+}
+
+inline char* move_backward(const char* first, const char* last, char* result) {
+    const ptrdiff_t n = last - first;
+    result -= n;
+    memmove(result, first, n);
+    return result;
+}
+
+inline wchar_t* move_backward(const wchar_t* first, const wchar_t* last, wchar_t* result) {
+    const ptrdiff_t n = last - first;
+    result -= n;
+    memmove(result, first, sizeof(wchar_t) * n);
     return result;
 }
 #endif
@@ -249,6 +390,15 @@ inline wchar_t* copy(const wchar_t* first, const wchar_t* last, wchar_t* result)
   return result + (last - first);
 }
 
+/*------------------------------------------------------------------------------*/
+//copy_n
+
+template <class InputIterator, class Size, class OutputIterator>
+inline OutputIterator copy_n(InputIterator first, Size n, OutputIterator result) {
+  for (; n > 0; --n, ++result, ++first)
+    *result = *first;
+  return result;
+}
 
 /*---------------------------------------------------------------------------*/
 /*copy_backward */
@@ -358,6 +508,17 @@ inline pair<InputIterator1, InputIterator2>
 mismatch(InputIterator1 first1, InputIterator1 last1,
          InputIterator2 first2) {
   while (first1 != last1 && *first1 == *first2) {
+    ++first1;
+    ++first2;
+  }
+  return pair<InputIterator1, InputIterator2>(first1, first2);
+}
+
+template<class InputIterator1, class InputIterator2, class BinaryPredicate>
+inline pair<InputIterator1, InputIterator2>
+mismatch(InputIterator1 first1, InputIterator1 last1,
+         InputIterator2 first2, BinaryPredicate pred) {
+  while (first1 != last1 && pred(*first1, *first2)) {
     ++first1;
     ++first2;
   }
