@@ -405,6 +405,109 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count
 
 /*************************************************************************************** */
 //find_end
+template <class ForwardIterator1, class ForwardIterator2>
+ForwardIterator1 __find_end(ForwardIterator1 first1, ForwardIterator1 last1,
+                            ForwardIterator2 first2, ForwardIterator2 last2,
+                            forward_iterator_tag, forward_iterator_tag) {
+  if (first2 == last2)
+    return last1;
+  else {
+    ForwardIterator1 result = last1;
+    while (1) {
+      ForwardIterator1 new_result = msl::search(first1, last1, first2, last2);
+      if (new_result == last1)
+        return result;
+      else {
+        result = new_result;
+        first1 = new_result;
+        ++first1;
+      }
+    }
+  }
+}
+
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+BidirectionalIterator1 __find_end(BidirectionalIterator1 first1, BidirectionalIterator1 last1,
+                                  BidirectionalIterator2 first2, BidirectionalIterator2 last2,
+                                  bidirectional_iterator_tag, bidirectional_iterator_tag) {
+  typedef reverse_iterator<BidirectionalIterator1> RevIter1;
+  typedef reverse_iterator<BidirectionalIterator2> RevIter2;
+
+  RevIter1 rlast1(first1);
+  RevIter2 rlast2(first2);
+  RevIter1 rresult = msl::search(RevIter1(last1), rlast1,
+                                 RevIter2(last2), rlast2);
+
+  if (rresult == rlast1)
+    return last1;
+  else {
+    BidirectionalIterator1 result = rresult.base();
+    msl::advance(result, -msl::distance(first2, last2));
+    return result;
+  }
+}
+
+template <class ForwardIterator1, class ForwardIterator2>
+inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1,
+                                 ForwardIterator2 first2, ForwardIterator2 last2) {
+  typedef typename iterator_traits<ForwardIterator1>::iterator_category category1;
+  typedef typename iterator_traits<ForwardIterator2>::iterator_category category2;
+  return __find_end(first1, last1, first2, last2, category1(), category2());
+}
+
+template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+ForwardIterator1 __find_end(ForwardIterator1 first1, ForwardIterator1 last1,
+                            ForwardIterator2 first2, ForwardIterator2 last2,
+                            forward_iterator_tag, forward_iterator_tag,
+                            BinaryPredicate comp) {
+  if (first2 == last2)
+    return last1;
+  else {
+    ForwardIterator1 result = last1;
+    while (1) {
+      ForwardIterator1 new_result = msl::search(first1, last1, first2, last2, comp);
+      if (new_result == last1)
+        return result;
+      else {
+        result = new_result;
+        first1 = new_result;
+        ++first1;
+      }
+    }
+  }
+}
+
+template <class BidirectionalIterator1, class BidirectionalIterator2, class BinaryPredicate>
+BidirectionalIterator1 __find_end(BidirectionalIterator1 first1, BidirectionalIterator1 last1,
+                                  BidirectionalIterator2 first2, BidirectionalIterator2 last2,
+                                  bidirectional_iterator_tag, bidirectional_iterator_tag,
+                                  BinaryPredicate comp) {
+  typedef reverse_iterator<BidirectionalIterator1> RevIter1;
+  typedef reverse_iterator<BidirectionalIterator2> RevIter2;
+
+  RevIter1 rlast1(first1);
+  RevIter2 rlast2(first2);
+  RevIter1 rresult = msl::search(RevIter1(last1), rlast1,
+                                 RevIter2(last2), rlast2,
+                                 comp);
+
+  if (rresult == rlast1)
+    return last1;
+  else {
+    BidirectionalIterator1 result = rresult.base();
+    msl::advance(result, -msl::distance(first2, last2));
+    return result;
+  }
+}
+
+template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1,
+                                 ForwardIterator2 first2, ForwardIterator2 last2,
+                                 BinaryPredicate comp) {
+  typedef typename iterator_traits<ForwardIterator1>::iterator_category category1;
+  typedef typename iterator_traits<ForwardIterator2>::iterator_category category2;
+  return __find_end(first1, last1, first2, last2, category1(), category2(), comp);
+}
 
 
 
