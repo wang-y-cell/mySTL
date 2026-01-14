@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm> // 用于 std::sort
+#include <cmath>
+#include <cctype>
 #include "stl_algo.h"
 #include "vector.h"
 #include "set.h"
@@ -9,11 +11,15 @@ bool compare_desc(int a, int b) {
     return a > b;
 }
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 void test_set_union() {
     // ==========================================
     // 测试 set_union
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing set_union..." << std::endl;
 
     // 测试用例 1: 默认比较
@@ -91,7 +97,7 @@ void test_set_intersection() {
     // ==========================================
     // 测试 set_intersection
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing set_intersection..." << std::endl;
 
     // 测试用例 4: 默认比较
@@ -176,7 +182,7 @@ void test_set_difference() {
     // ==========================================
     // 测试 set_difference
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing set_difference..." << std::endl;
 
     // 测试用例 7: 默认比较
@@ -261,7 +267,7 @@ void test_set_symmetric_difference() {
     // ==========================================
     // 测试 set_symmetric_difference
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing set_symmetric_difference..." << std::endl;
 
     // 测试用例 10: 默认比较
@@ -354,7 +360,7 @@ void test_adjacent_find() {
     // ==========================================
     // 测试 adjacent_find
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing adjacent_find..." << std::endl;
 
     // 测试用例 13: 默认比较
@@ -374,7 +380,7 @@ void test_count() {
     // ==========================================
     // 测试 count 和 count_if
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing count and count_if..." << std::endl;
 
     // 测试 count
@@ -411,7 +417,7 @@ void test_find() {
     // ==========================================
     // 测试 find 和 find_if
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing find and find_if..." << std::endl;
 
     // 测试 find
@@ -462,7 +468,7 @@ void test_search() {
     // ==========================================
     // 测试 search
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing search..." << std::endl;
 
     // Test case 1: Normal match
@@ -572,7 +578,7 @@ void test_search_n() {
     // ==========================================
     // 测试 search_n
     // ==========================================
-    std::cout << "==========================================" << std::endl;
+    print();
     std::cout << "Testing search_n..." << std::endl;
 
     // Test case 1: Normal match
@@ -643,6 +649,112 @@ void test_search_n() {
     }
 }
 
+void test_find_end() {
+    // ==========================================
+    // 测试 find_end
+    // ==========================================
+    print();
+    std::cout << "Testing find_end..." << std::endl;
+
+    // Test case 1: Normal match (ForwardIterator logic mostly, but vector is RandomAccess)
+    {
+        int a[] = {1, 2, 3, 1, 2, 3, 4};
+        int sub[] = {1, 2, 3};
+        msl::vector<int> v(a, a + 7);
+        msl::vector<int> s(sub, sub + 3);
+
+        auto it = msl::find_end(v.begin(), v.end(), s.begin(), s.end());
+        bool pass = (it == v.begin() + 3);
+        std::cout << "Test Case find_end (normal match): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: No match
+    {
+        int a[] = {1, 2, 3, 4};
+        int sub[] = {5, 6};
+        msl::vector<int> v(a, a + 4);
+        msl::vector<int> s(sub, sub + 2);
+
+        auto it = msl::find_end(v.begin(), v.end(), s.begin(), s.end());
+        bool pass = (it == v.end());
+        std::cout << "Test Case find_end (no match): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: Predicate
+    {
+        int a[] = {1, 2, 3, -1, -2, -3, 4};
+        int sub[] = {1, 2, 3};
+        msl::vector<int> v(a, a + 7);
+        msl::vector<int> s(sub, sub + 3);
+
+        struct AbsEqual {
+            bool operator()(int x, int y) const {
+                return std::abs(x) == std::abs(y);
+            }
+        };
+
+        auto it = msl::find_end(v.begin(), v.end(), s.begin(), s.end(), AbsEqual());
+        bool pass = (it == v.begin() + 3); // Should match -1, -2, -3
+        std::cout << "Test Case find_end (predicate): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+void test_find_first_of() {
+    // ==========================================
+    // 测试 find_first_of
+    // ==========================================
+    print();
+    std::cout << "Testing find_first_of..." << std::endl;
+
+    // Test case 1: Normal match
+    {
+        int a[] = {0, 1, 2, 3, 4, 5};
+        int targets[] = {100, 5, 3}; // 3 appears first in 'a' (index 3), 5 appears later (index 5)
+        msl::vector<int> v(a, a + 6);
+        msl::vector<int> t(targets, targets + 3);
+
+        auto it = msl::find_first_of(v.begin(), v.end(), t.begin(), t.end());
+        bool pass = (it != v.end() && *it == 3);
+        std::cout << "Test Case find_first_of (normal match): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: No match
+    {
+        int a[] = {1, 2};
+        int targets[] = {3, 4};
+        msl::vector<int> v(a, a + 2);
+        msl::vector<int> t(targets, targets + 2);
+
+        auto it = msl::find_first_of(v.begin(), v.end(), t.begin(), t.end());
+        bool pass = (it == v.end());
+        std::cout << "Test Case find_first_of (no match): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: Predicate
+    {
+        char text[] = "Hello World";
+        char vowels[] = "aeiou";
+        
+        // 'e' is the first vowel in "Hello World"
+        char* it = msl::find_first_of(text, text + 11, vowels, vowels + 5);
+        bool pass1 = (*it == 'e');
+        
+        char text2[] = "HELLO WORLD";
+        // Case insensitive match for 'E'
+        struct CaseInsensitiveEqual {
+            bool operator()(char a, char b) const {
+                return std::tolower(a) == std::tolower(b);
+            }
+        };
+        
+        char* it2 = msl::find_first_of(text2, text2 + 11, vowels, vowels + 5, CaseInsensitiveEqual());
+        bool pass2 = (*it2 == 'E');
+
+        std::cout << "Test Case find_first_of (predicate): " << ((pass1 && pass2) ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+
 int main() {
     test_set_union();
     std::cout << std::endl;
@@ -661,5 +773,9 @@ int main() {
     test_search();
     std::cout << std::endl;
     test_search_n();
+    std::cout << std::endl;
+    test_find_end();
+    std::cout << std::endl;
+    test_find_first_of();
     return 0;
 }

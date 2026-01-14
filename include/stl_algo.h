@@ -510,10 +510,57 @@ inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1
 }
 
 
+/********************************************************************************** */
+//find_first_of
+template <class InputIterator, class ForwardIterator>
+InputIterator find_first_of(InputIterator first1, InputIterator last1,
+                            ForwardIterator first2, ForwardIterator last2) {
+  for ( ; first1 != last1; ++first1) {
+    for (ForwardIterator iter = first2; iter != last2; ++iter) {
+      if (*first1 == *iter)
+        return first1;
+    }
+  }
+  return last1;
+}
 
+template <class InputIterator, class ForwardIterator, class BinaryPredicate>
+InputIterator find_first_of(InputIterator first1, InputIterator last1,
+                            ForwardIterator first2, ForwardIterator last2,
+                            BinaryPredicate comp) {
+  for ( ; first1 != last1; ++first1) {
+    for (ForwardIterator iter = first2; iter != last2; ++iter) {
+      if (comp(*first1, *iter))
+        return first1;
+    }
+  }
+  return last1;
+}
+/********************************************************************************** */
+//for_each
 
+template<class inputIterator,class function>
+function for_each(inputIterator first, inputIterator last, function func) {
+    for(;first != last; ++first)
+    func(*first);
+  return func;
+}
 
+/************************************************************************************** */
+//generate
+template<class ForwardIterator,class Generator>
+void generate(ForwardIterator first, ForwardIterator last, Generator gen) {
+    for(;first != last; ++first)
+        *first = gen();
+}
 
+/****************************************************************************************** */
+//generate_n
+template<class ForwardIterator,class Size,class Generator>
+void generate_n(ForwardIterator first, Size n, Generator gen) {
+    for(;n > 0; --n, ++first)
+        *first = gen();
+}
 
 
 
