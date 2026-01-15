@@ -963,6 +963,69 @@ void test_merge() {
     }
 }
 
+void test_partition() {
+    print();
+    std::cout << "Testing partition..." << std::endl;
+
+    // Test case 1: Partition even/odd
+    {
+        int a[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        msl::vector<int> v(a, a + 10);
+
+        struct IsEven {
+            bool operator()(int x) const { return x % 2 == 0; }
+        };
+
+        auto it = msl::partition(v.begin(), v.end(), IsEven());
+        
+        // Verify all elements before 'it' are even
+        bool pass = true;
+        for (auto i = v.begin(); i != it; ++i) {
+            if (*i % 2 != 0) {
+                pass = false;
+                break;
+            }
+        }
+        // Verify all elements after 'it' are odd
+        for (auto i = it; i != v.end(); ++i) {
+            if (*i % 2 == 0) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case partition (even/odd): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: All true
+    {
+        int a[] = {2, 4, 6, 8};
+        msl::vector<int> v(a, a + 4);
+        struct IsEven { bool operator()(int x) const { return x % 2 == 0; } };
+        auto it = msl::partition(v.begin(), v.end(), IsEven());
+        bool pass = (it == v.end());
+        std::cout << "Test Case partition (all true): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: All false
+    {
+        int a[] = {1, 3, 5, 7};
+        msl::vector<int> v(a, a + 4);
+        struct IsEven { bool operator()(int x) const { return x % 2 == 0; } };
+        auto it = msl::partition(v.begin(), v.end(), IsEven());
+        bool pass = (it == v.begin());
+        std::cout << "Test Case partition (all false): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 4: Empty
+    {
+        msl::vector<int> v;
+        struct IsEven { bool operator()(int x) const { return x % 2 == 0; } };
+        auto it = msl::partition(v.begin(), v.end(), IsEven());
+        bool pass = (it == v.begin());
+        std::cout << "Test Case partition (empty): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 int main() {
     test_set_union();
     std::cout << std::endl;
@@ -991,5 +1054,7 @@ int main() {
     test_min_max_element();
     std::cout << std::endl;
     test_merge();
+    std::cout << std::endl;
+    test_partition();
     return 0;
 }

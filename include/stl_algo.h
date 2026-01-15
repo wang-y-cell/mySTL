@@ -682,7 +682,53 @@ OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
     }
     ++result;
   }
-  return msl::copy(first2, last2, msl::copy(first1, last1, result));
+  return msl::copy(first2, last2, msl::copy(first1, last1, result));//将另一个剩余的部分添加到result后面
+}
+
+/******************************************************************************************* */
+// partition
+template <class ForwardIterator, class Predicate>
+ForwardIterator __partition(ForwardIterator first, ForwardIterator last,
+                            Predicate pred, forward_iterator_tag) {
+  if (first == last) return first;
+  while (pred(*first))
+    if (++first == last) return first;
+
+  ForwardIterator next = first;
+  while (++next != last)
+    if (pred(*next)) {
+      msl::iter_swap(first, next);
+      ++first;
+    }
+  return first;
+}
+
+template <class BidirectionalIterator, class Predicate>
+BidirectionalIterator __partition(BidirectionalIterator first,
+                                  BidirectionalIterator last,
+                                  Predicate pred,
+                                  bidirectional_iterator_tag) {
+  while (true) {
+    while (true) {
+      if (first == last) return first;
+      if (pred(*first))
+        ++first;
+      else
+        break;
+    }
+    do {
+      if (first == last) return first;
+      --last;
+    } while (!pred(*last));
+    msl::iter_swap(first, last);
+    ++first;
+  }
+}
+
+template <class ForwardIterator, class Predicate>
+ForwardIterator partition(ForwardIterator first, ForwardIterator last,
+                          Predicate pred) {
+  return __partition(first, last, pred, iterator_category(first));
 }
 
 
