@@ -563,6 +563,92 @@ void generate_n(ForwardIterator first, Size n, Generator gen) {
 }
 
 
+/****************************************************************************************** */
+//includes
+template <class InputIterator1, class InputIterator2>
+bool includes(InputIterator1 first1, InputIterator1 last1,
+              InputIterator2 first2, InputIterator2 last2) {
+  while (first1 != last1 && first2 != last2) {
+    if (*first2 < *first1)
+      return false;
+    else if (*first1 < *first2)
+      ++first1;
+    else {
+      ++first1;
+      ++first2;
+    }
+  }
+  return first2 == last2;
+}
+
+template <class InputIterator1, class InputIterator2, class Compare>
+bool includes(InputIterator1 first1, InputIterator1 last1,
+              InputIterator2 first2, InputIterator2 last2, Compare comp) {
+  while (first1 != last1 && first2 != last2) {
+    if (comp(*first2, *first1))
+      return false;
+    else if (comp(*first1, *first2))
+      ++first1;
+    else {
+      ++first1;
+      ++first2;
+    }
+  }
+  return first2 == last2;
+}
+
+
+/****************************************************************************************** */
+//max_element 
+template <class ForwardIterator>
+ForwardIterator max_element(ForwardIterator first, ForwardIterator last) {
+  if (first == last) return first;
+  ForwardIterator result = first;
+  while (++first != last) {
+    if (*result < *first)
+      result = first;
+  }
+  return result;
+}
+
+template <class ForwardIterator, class Compare>
+ForwardIterator max_element(ForwardIterator first, ForwardIterator last,
+                            Compare comp) {
+  if (first == last) return first;
+  ForwardIterator result = first;
+  while (++first != last) {
+    if (comp(*result, *first))
+      result = first;
+  }
+  return result;
+}
+
+/****************************************************************************************** */
+//min_element
+template <class ForwardIterator>
+ForwardIterator min_element(ForwardIterator first, ForwardIterator last) {
+  if (first == last) return first;
+  ForwardIterator result = first;
+  while (++first != last) {
+    if (*first < *result)
+      result = first;
+  }
+  return result;
+}
+
+template <class ForwardIterator, class Compare>
+ForwardIterator min_element(ForwardIterator first, ForwardIterator last,
+                            Compare comp) {
+  if (first == last) return first;
+  ForwardIterator result = first;
+  while (++first != last) {
+    if (comp(*first, *result))
+      result = first;
+  }
+  return result;
+} 
+
+
 
 }// namespace msl
 

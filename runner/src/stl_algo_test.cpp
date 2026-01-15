@@ -755,6 +755,132 @@ void test_find_first_of() {
 }
 
 
+void test_includes() {
+    // ==========================================
+    // 测试 includes
+    // ==========================================
+    print();
+    std::cout << "Testing includes..." << std::endl;
+
+    // Test case 1: Subset (true)
+    {
+        int a1[] = {1, 2, 3, 4, 5};
+        int a2[] = {1, 3, 5};
+        msl::vector<int> v1(a1, a1 + 5);
+        msl::vector<int> v2(a2, a2 + 3);
+
+        bool result = msl::includes(v1.begin(), v1.end(), v2.begin(), v2.end());
+        std::cout << "Test Case includes (subset): " << (result ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: Not a subset (false)
+    {
+        int a1[] = {1, 2, 3, 4, 5};
+        int a2[] = {1, 6};
+        msl::vector<int> v1(a1, a1 + 5);
+        msl::vector<int> v2(a2, a2 + 2);
+
+        bool result = msl::includes(v1.begin(), v1.end(), v2.begin(), v2.end());
+        std::cout << "Test Case includes (not subset): " << (!result ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: Empty subset (true)
+    {
+        int a1[] = {1, 2};
+        msl::vector<int> v1(a1, a1 + 2);
+        msl::vector<int> v2;
+
+        bool result = msl::includes(v1.begin(), v1.end(), v2.begin(), v2.end());
+        std::cout << "Test Case includes (empty subset): " << (result ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 4: Identical sets (true)
+    {
+        int a1[] = {1, 2};
+        msl::vector<int> v1(a1, a1 + 2);
+        msl::vector<int> v2(a1, a1 + 2);
+
+        bool result = msl::includes(v1.begin(), v1.end(), v2.begin(), v2.end());
+        std::cout << "Test Case includes (identical): " << (result ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 5: Superset check (false)
+    // v2 is larger than v1, cannot be included
+    {
+        int a1[] = {1, 2};
+        int a2[] = {1, 2, 3};
+        msl::vector<int> v1(a1, a1 + 2);
+        msl::vector<int> v2(a2, a2 + 3);
+
+        bool result = msl::includes(v1.begin(), v1.end(), v2.begin(), v2.end());
+        std::cout << "Test Case includes (superset): " << (!result ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 6: Predicate check (descending)
+    {
+        int a1[] = {5, 4, 3, 2, 1};
+        int a2[] = {5, 3, 1};
+        msl::vector<int> v1(a1, a1 + 5);
+        msl::vector<int> v2(a2, a2 + 3);
+
+        bool result = msl::includes(v1.begin(), v1.end(), v2.begin(), v2.end(), msl::greater<int>());
+        std::cout << "Test Case includes (predicate): " << (result ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+void test_min_max_element() {
+    // ==========================================
+    // 测试 min_element 和 max_element
+    // ==========================================
+    print();
+    std::cout << "Testing min_element and max_element..." << std::endl;
+
+    // Test case 1: Normal integers
+    {
+        int a[] = {3, 1, 4, 1, 5, 9, 2, 6};
+        msl::vector<int> v(a, a + 8);
+
+        auto min_it = msl::min_element(v.begin(), v.end());
+        auto max_it = msl::max_element(v.begin(), v.end());
+
+        bool pass = (*min_it == 1 && *max_it == 9);
+        // Note: min_element returns the first smallest element, so it should be the first '1' at index 1
+        pass &= (min_it == v.begin() + 1);
+        
+        std::cout << "Test Case min/max (normal): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: Empty range
+    {
+        msl::vector<int> v;
+        auto min_it = msl::min_element(v.begin(), v.end());
+        auto max_it = msl::max_element(v.begin(), v.end());
+
+        bool pass = (min_it == v.end() && max_it == v.end());
+        std::cout << "Test Case min/max (empty): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: Predicate (abs value)
+    {
+        int a[] = {-10, 5, -2, 8};
+        msl::vector<int> v(a, a + 4);
+
+        struct AbsCompare {
+            bool operator()(int x, int y) const {
+                return std::abs(x) < std::abs(y);
+            }
+        };
+
+        auto min_it = msl::min_element(v.begin(), v.end(), AbsCompare());
+        auto max_it = msl::max_element(v.begin(), v.end(), AbsCompare());
+
+        // Min abs: -2 (abs 2)
+        // Max abs: -10 (abs 10)
+        bool pass = (*min_it == -2 && *max_it == -10);
+        std::cout << "Test Case min/max (predicate): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 int main() {
     test_set_union();
     std::cout << std::endl;
@@ -777,5 +903,9 @@ int main() {
     test_find_end();
     std::cout << std::endl;
     test_find_first_of();
+    std::cout << std::endl;
+    test_includes();
+    std::cout << std::endl;
+    test_min_max_element();
     return 0;
 }
