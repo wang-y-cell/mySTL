@@ -754,7 +754,6 @@ void test_find_first_of() {
     }
 }
 
-
 void test_includes() {
     // ==========================================
     // 测试 includes
@@ -1026,6 +1025,100 @@ void test_partition() {
     }
 }
 
+void test_remove() {
+    print();
+    std::cout << "Testing remove and remove_if..." << std::endl;
+
+    // Test case 1: remove
+    {
+        int a[] = {1, 2, 3, 2, 4, 2, 5};
+        msl::vector<int> v(a, a + 7);
+        auto end = msl::remove(v.begin(), v.end(), 2);
+        
+        bool pass = (end - v.begin() == 4); // Should have 4 elements left: 1, 3, 4, 5
+        if (pass) {
+            int expected[] = {1, 3, 4, 5};
+            for (int i = 0; i < 4; ++i) {
+                if (v[i] != expected[i]) {
+                    pass = false;
+                    break;
+                }
+            }
+        }
+        std::cout << "Test Case remove: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: remove_if
+    {
+        int a[] = {1, 2, 3, 4, 5, 6};
+        msl::vector<int> v(a, a + 6);
+        struct IsEven { bool operator()(int x) const { return x % 2 == 0; } };
+        
+        auto end = msl::remove_if(v.begin(), v.end(), IsEven());
+        
+        bool pass = (end - v.begin() == 3); // Should have 3 elements left: 1, 3, 5
+        if (pass) {
+            int expected[] = {1, 3, 5};
+            for (int i = 0; i < 3; ++i) {
+                if (v[i] != expected[i]) {
+                    pass = false;
+                    break;
+                }
+            }
+        }
+        std::cout << "Test Case remove_if: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+void test_remove_copy() {
+    print();
+    std::cout << "Testing remove_copy and remove_copy_if..." << std::endl;
+
+    // Test case 1: remove_copy
+    {
+        int a[] = {1, 2, 3, 2, 4};
+        msl::vector<int> v(a, a + 5);
+        msl::vector<int> res(5);
+        
+        auto end = msl::remove_copy(v.begin(), v.end(), res.begin(), 2);
+        
+        bool pass = (end - res.begin() == 3); // 1, 3, 4
+        if (pass) {
+            int expected[] = {1, 3, 4};
+            for (int i = 0; i < 3; ++i) {
+                if (res[i] != expected[i]) {
+                    pass = false;
+                    break;
+                }
+            }
+        }
+        std::cout << "Test Case remove_copy: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: remove_copy_if
+    {
+        int a[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(a, a + 5);
+        msl::vector<int> res(5);
+        struct IsEven { bool operator()(int x) const { return x % 2 == 0; } };
+        
+        auto end = msl::remove_copy_if(v.begin(), v.end(), res.begin(), IsEven());
+        
+        bool pass = (end - res.begin() == 3); // 1, 3, 5
+        if (pass) {
+            int expected[] = {1, 3, 5};
+            for (int i = 0; i < 3; ++i) {
+                if (res[i] != expected[i]) {
+                    pass = false;
+                    break;
+                }
+            }
+        }
+        std::cout << "Test Case remove_copy_if: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+
 int main() {
     test_set_union();
     std::cout << std::endl;
@@ -1056,5 +1149,9 @@ int main() {
     test_merge();
     std::cout << std::endl;
     test_partition();
+    std::cout << std::endl;
+    test_remove();
+    std::cout << std::endl;
+    test_remove_copy();
     return 0;
 }

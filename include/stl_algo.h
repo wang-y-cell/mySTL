@@ -731,6 +731,50 @@ ForwardIterator partition(ForwardIterator first, ForwardIterator last,
   return __partition(first, last, pred, iterator_category(first));
 }
 
+/********************************************************************************** */
+//remove_copy
+template <class InputIterator, class OutputIterator, class T>
+OutputIterator remove_copy(InputIterator first, InputIterator last,
+                           OutputIterator result, const T& value) {
+  for (; first != last; ++first) {
+    if (*first != value) {
+      *result = *first;
+      ++result;
+    }
+  }
+  return result;
+}
+
+//remove_copy_if
+template <class InputIterator, class OutputIterator, class Predicate>
+OutputIterator remove_copy_if(InputIterator first, InputIterator last,
+                              OutputIterator result, Predicate pred) {
+  for (; first != last; ++first) {
+    if (!pred(*first)) {
+      *result = *first;
+      ++result;
+    }
+  }
+  return result;
+}
+
+//remove
+template <class ForwardIterator, class T>
+ForwardIterator remove(ForwardIterator first, ForwardIterator last,
+                       const T& value) {
+  first = msl::find(first, last, value);
+  ForwardIterator next = first;
+  return first == last ? first : msl::remove_copy(++next, last, first, value);
+}
+
+//remove_if
+template <class ForwardIterator, class Predicate>
+ForwardIterator remove_if(ForwardIterator first, ForwardIterator last,
+                          Predicate pred) {
+  first = msl::find_if(first, last, pred);
+  ForwardIterator next = first;
+  return first == last ? first : msl::remove_copy_if(++next, last, first, pred);
+}
 
 
 }// namespace msl
