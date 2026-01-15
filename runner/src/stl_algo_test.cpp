@@ -881,6 +881,88 @@ void test_min_max_element() {
     }
 }
 
+void test_merge() {
+    print();
+    std::cout << "Testing merge..." << std::endl;
+
+    // Test case 1: Normal merge of two sorted sequences
+    {
+        int a[] = {1, 3, 5, 7};
+        int b[] = {2, 4, 6, 8};
+        msl::vector<int> v1(a, a + 4);
+        msl::vector<int> v2(b, b + 4);
+        msl::vector<int> res(8);
+
+        msl::merge(v1.begin(), v1.end(), v2.begin(), v2.end(), res.begin());
+        
+        int expected[] = {1, 2, 3, 4, 5, 6, 7, 8};
+        bool pass = true;
+        for (int i = 0; i < 8; ++i) {
+            if (res[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case merge (normal): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: One empty sequence
+    {
+        int a[] = {1, 2, 3};
+        msl::vector<int> v1(a, a + 3);
+        msl::vector<int> v2;
+        msl::vector<int> res(3);
+
+        msl::merge(v1.begin(), v1.end(), v2.begin(), v2.end(), res.begin());
+        
+        int expected[] = {1, 2, 3};
+        bool pass = true;
+        for (int i = 0; i < 3; ++i) {
+            if (res[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case merge (one empty): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: Both empty
+    {
+        msl::vector<int> v1;
+        msl::vector<int> v2;
+        msl::vector<int> res;
+
+        msl::merge(v1.begin(), v1.end(), v2.begin(), v2.end(), res.begin());
+        bool pass = res.empty();
+        std::cout << "Test Case merge (both empty): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 4: Predicate (descending order)
+    {
+        int a[] = {7, 5, 3, 1};
+        int b[] = {8, 6, 4, 2};
+        msl::vector<int> v1(a, a + 4);
+        msl::vector<int> v2(b, b + 4);
+        msl::vector<int> res(8);
+
+        struct Greater {
+            bool operator()(int x, int y) const { return x > y; }
+        };
+
+        msl::merge(v1.begin(), v1.end(), v2.begin(), v2.end(), res.begin(), Greater());
+        
+        int expected[] = {8, 7, 6, 5, 4, 3, 2, 1};
+        bool pass = true;
+        for (int i = 0; i < 8; ++i) {
+            if (res[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case merge (predicate): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 int main() {
     test_set_union();
     std::cout << std::endl;
@@ -907,5 +989,7 @@ int main() {
     test_includes();
     std::cout << std::endl;
     test_min_max_element();
+    std::cout << std::endl;
+    test_merge();
     return 0;
 }

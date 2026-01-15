@@ -648,6 +648,43 @@ ForwardIterator min_element(ForwardIterator first, ForwardIterator last,
   return result;
 } 
 
+//****************************************************************************************** */
+//merge
+template <class InputIterator1, class InputIterator2, class OutputIterator>
+OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
+                     InputIterator2 first2, InputIterator2 last2,
+                     OutputIterator result) {
+  while (first1 != last1 && first2 != last2) {
+    if (*first2 < *first1) {
+      *result = *first2;
+      ++first2;
+    } else {
+      *result = *first1;
+      ++first1;
+    }
+    ++result;
+  }
+  return msl::copy(first2, last2, msl::copy(first1, last1, result)); //将另一个剩余的部分添加到result后面
+}
+
+template <class InputIterator1, class InputIterator2, class OutputIterator,
+          class Compare>
+OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
+                     InputIterator2 first2, InputIterator2 last2,
+                     OutputIterator result, Compare comp) {
+  while (first1 != last1 && first2 != last2) {
+    if (comp(*first2, *first1)) {
+      *result = *first2;
+      ++first2;
+    } else {
+      *result = *first1;
+      ++first1;
+    }
+    ++result;
+  }
+  return msl::copy(first2, last2, msl::copy(first1, last1, result));
+}
+
 
 
 }// namespace msl
