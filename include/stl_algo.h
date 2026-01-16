@@ -776,6 +776,46 @@ ForwardIterator remove_if(ForwardIterator first, ForwardIterator last,
   return first == last ? first : msl::remove_copy_if(++next, last, first, pred);
 }
 
+/*****************************************************************************/
+//replace
+template <class ForwardIterator, class T>
+void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
+             const T& new_value) {
+  for (; first != last; ++first) {
+    if (*first == old_value) *first = new_value;
+  }
+}
+
+template <class ForwardIterator, class Predicate, class T>
+void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
+                const T& new_value) {
+  for (; first != last; ++first) {
+    if (pred(*first)) *first = new_value;
+  }
+}
+
+template <class InputIterator, class OutputIterator, class T>
+OutputIterator replace_copy(InputIterator first, InputIterator last,
+                            OutputIterator result, const T& old_value,
+                            const T& new_value) {
+  for (; first != last; ++first, ++result) {
+    *result = *first == old_value ? new_value : *first;
+  }
+  return result;
+}
+
+template <class Iterator, class OutputIterator, class Predicate, class T>
+OutputIterator replace_copy_if(Iterator first, Iterator last,
+                               OutputIterator result, Predicate pred,
+                               const T& new_value) {
+  for (; first != last; ++first, ++result) {
+    *result = pred(*first) ? new_value : *first;
+  }
+  return result;
+}
+
+
+
 
 }// namespace msl
 
