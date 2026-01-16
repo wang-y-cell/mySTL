@@ -95,6 +95,71 @@ void test_set_union() {
     }
 }
 
+bool are_equal(int a, int b) {
+    return a == b;
+}
+
+void test_unique() {
+    print();
+    std::cout << "Testing unique..." << std::endl;
+    // Test Case 1: Standard unique
+    {
+        int a[] = {1, 2, 2, 3, 3, 3, 4, 5, 5};
+        msl::vector<int> v(a, a + 9);
+        msl::vector<int>::iterator it = msl::unique(v.begin(), v.end());
+        
+        int expected[] = {1, 2, 3, 4, 5};
+        bool pass = (it == v.begin() + 5);
+        for (int i = 0; i < 5; ++i) {
+            if (v[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case unique: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+    
+    // Test Case 2: Predicate unique
+    {
+        int a[] = {1, 2, 2, 3, 3, 3, 4, 5, 5};
+        msl::vector<int> v(a, a + 9);
+        msl::vector<int>::iterator it = msl::unique(v.begin(), v.end(), are_equal);
+        
+        int expected[] = {1, 2, 3, 4, 5};
+        bool pass = (it == v.begin() + 5);
+        for (int i = 0; i < 5; ++i) {
+            if (v[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case unique (predicate): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+void test_unique_copy() {
+    print();
+    std::cout << "Testing unique_copy..." << std::endl;
+    // Test Case 1: Standard unique_copy
+    {
+        int a[] = {1, 2, 2, 3, 3, 3, 4, 5, 5};
+        msl::vector<int> v(a, a + 9);
+        msl::vector<int> result(9);
+        
+        msl::vector<int>::iterator it = msl::unique_copy(v.begin(), v.end(), result.begin());
+        
+        int expected[] = {1, 2, 3, 4, 5};
+        bool pass = (it == result.begin() + 5);
+        for (int i = 0; i < 5; ++i) {
+            if (result[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case unique_copy: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 void test_set_intersection() {
     // ==========================================
     // 测试 set_intersection
@@ -1498,5 +1563,9 @@ int main() {
     test_rotate_copy();
     std::cout << std::endl;
     test_transform();
+    std::cout << std::endl;
+    test_unique();
+    std::cout << std::endl;
+    test_unique_copy();
     return 0;
 }

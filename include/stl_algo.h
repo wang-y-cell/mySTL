@@ -967,6 +967,104 @@ OutputIterator transform(InputIterator1 first1, InputIterator1 last1,
 }
 
 
+/******************************************************************************** */
+//unique
+
+//只是多了一个value,其实可以写成一个函数而不需要判断是否是输出迭代器的
+template <class InputIterator, class OutputIterator>
+OutputIterator __unique_copy(InputIterator first, InputIterator last,
+                             OutputIterator result, output_iterator_tag) {
+  typedef typename iterator_traits<InputIterator>::value_type value_type;
+  value_type value = *first;
+  *result = value;
+  while (++first != last) {
+    if (value != *first) {
+      value = *first;
+      *++result = value;
+    }
+  }
+  return ++result;
+}
+
+template <class InputIterator, class ForwardIterator>
+ForwardIterator __unique_copy(InputIterator first, InputIterator last,
+                              ForwardIterator result, forward_iterator_tag) {
+  *result = *first;
+  while (++first != last) {
+    if (*result != *first) {
+      *++result = *first;
+    }
+  }
+  return ++result;
+}
+
+template <class InputIterator, class OutputIterator>
+OutputIterator unique_copy(InputIterator first, InputIterator last,
+                           OutputIterator result) {
+  if (first == last) return result;
+  typedef typename iterator_traits<OutputIterator>::iterator_category Category;
+  static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+  return msl::__unique_copy(first, last, result, Category());
+}
+
+
+//只是多使用一个value
+template <class InputIterator, class OutputIterator, class BinaryPredicate>
+OutputIterator __unique_copy(InputIterator first, InputIterator last,
+                             OutputIterator result, BinaryPredicate pred,
+                             output_iterator_tag) {
+  typedef typename iterator_traits<InputIterator>::value_type value_type;
+  value_type value = *first;
+  *result = value;
+  while (++first != last) {
+    if (!pred(value, *first)) {
+      value = *first;
+      *++result = value;
+    }
+  }
+  return ++result;
+}
+
+template <class InputIterator, class ForwardIterator, class BinaryPredicate>
+ForwardIterator __unique_copy(InputIterator first, InputIterator last,
+                              ForwardIterator result, BinaryPredicate pred,
+                              forward_iterator_tag) {
+  *result = *first;
+  while (++first != last) {
+    if (!pred(*result, *first)) {
+      *++result = *first;
+    }
+  }
+  return ++result;
+}
+
+template <class InputIterator, class OutputIterator, class BinaryPredicate>
+OutputIterator unique_copy(InputIterator first, InputIterator last,
+                           OutputIterator result, BinaryPredicate pred) {
+  if (first == last) return result;
+  typedef typename iterator_traits<OutputIterator>::iterator_category Category;
+  static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+  return msl::__unique_copy(first, last, result, pred, Category());
+}
+
+
+
+template <class ForwardIterator>
+ForwardIterator unique(ForwardIterator first, ForwardIterator last) {
+  first = msl::adjacent_find(first, last);
+  return msl::unique_copy(first, last, first);
+}
+
+template <class ForwardIterator, class BinaryPredicate>
+ForwardIterator unique(ForwardIterator first, ForwardIterator last,
+                       BinaryPredicate pred) {
+  first = msl::adjacent_find(first, last, pred);
+  return msl::unique_copy(first, last, first, pred);
+}
+
+
+
+
 
 
 }// namespace msl
