@@ -731,7 +731,9 @@ BidirectionalIterator __partition(BidirectionalIterator first,
 template <class ForwardIterator, class Predicate>
 ForwardIterator partition(ForwardIterator first, ForwardIterator last,
                           Predicate pred) {
-  return __partition(first, last, pred, iterator_category(first));
+  typedef typename iterator_traits<ForwardIterator>::iterator_category Category;
+  static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+  return __partition(first, last, pred, Category());
 }
 
 /********************************************************************************** */

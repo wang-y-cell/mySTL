@@ -576,8 +576,8 @@ template<typename T, typename Alloc>
 template<typename InputIt>
 void vector<T,Alloc>::assign_dispatch(InputIt first, InputIt last, msl::false_type) {
     typedef typename msl::iterator_traits<InputIt>::iterator_category Cat;
-    static_assert(msl::is_msl_iterator_tag<Cat>::value, "msl::vector::assign forbids std iterators");
-    assign_range(first, last, msl::iterator_category(first));
+    static_assert(msl::is_msl_iterator_tag<Cat>::value, "must use msl iterator");
+    assign_range(first, last, Cat());
 }
 
 template<typename T, typename Alloc>

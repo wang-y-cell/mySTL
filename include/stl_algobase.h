@@ -171,7 +171,9 @@ inline OutputIterator __move
 template< class InputIterator,class OutputIterator>
 struct move_dispatcher{
     OutputIterator operator()(InputIterator first, InputIterator last, OutputIterator result){
-        return __move(first, last, result, iterator_category(first));
+        typedef typename iterator_traits<InputIterator>::iterator_category Category;
+        static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+        return __move(first, last, result, Category());
     }
 };
 
@@ -260,7 +262,9 @@ template <class BidirectionalIterator1, class BidirectionalIterator2>
 struct move_backward_dispatcher {
   BidirectionalIterator2 operator()(BidirectionalIterator1 first, BidirectionalIterator1 last,
                                     BidirectionalIterator2 result) {
-    return __move_backward(first, last, result, iterator_category(first));
+    typedef typename iterator_traits<BidirectionalIterator1>::iterator_category Category;
+    static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+    return __move_backward(first, last, result, Category());
   }
 };
 
@@ -349,7 +353,9 @@ template <class InputIterator, class OutputIterator>
 struct __copy_dispatch {
   OutputIterator operator()(InputIterator first, InputIterator last,
                             OutputIterator result) {
-    return __copy(first, last, result, iterator_category(first));
+    typedef typename iterator_traits<InputIterator>::iterator_category Category;
+    static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+    return __copy(first, last, result, Category());
   }
 };
 
@@ -450,7 +456,9 @@ struct __copy_backward_dispatch {
   BidirectionalIterator2 operator()
   (BidirectionalIterator1 first, BidirectionalIterator1 last,
                                     BidirectionalIterator2 result) {
-    return __copy_backward(first, last, result, iterator_category(first));
+    typedef typename iterator_traits<BidirectionalIterator1>::iterator_category Category;
+    static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+    return __copy_backward(first, last, result, Category());
   }
 };
 
