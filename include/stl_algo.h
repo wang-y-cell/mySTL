@@ -814,7 +814,44 @@ OutputIterator replace_copy_if(Iterator first, Iterator last,
   return result;
 }
 
+/************************************************************************ */
+//reverse
 
+template <class BidirectionalIterator>
+void __reverse(BidirectionalIterator first, BidirectionalIterator last,
+               bidirectional_iterator_tag) {
+  while (true) {
+    if (first == last || first == --last) return;
+    msl::iter_swap(first++, last);
+  }
+}
+
+template <class RandomAccessIterator>
+void __reverse(RandomAccessIterator first, RandomAccessIterator last,
+               random_access_iterator_tag) {
+  while (first < last) {
+    msl::iter_swap(first++, --last);
+  }
+}
+
+template <class BidirectionalIterator>
+void reverse(BidirectionalIterator first, BidirectionalIterator last) {
+  typedef typename iterator_traits<BidirectionalIterator>::iterator_category Category;
+  static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+  msl::__reverse(first, last, iterator_category(first));
+}
+
+//reverse_copy
+template <class BidirectionalIterator, class OutputIterator>
+OutputIterator reverse_copy(BidirectionalIterator first, BidirectionalIterator last,
+                            OutputIterator result) {
+  while (first != last) {
+    --last;
+    *result = *last;
+    ++result;
+  }
+  return result;
+}
 
 
 }// namespace msl

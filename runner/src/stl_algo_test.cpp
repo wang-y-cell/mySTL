@@ -6,6 +6,8 @@
 #include "stl_algo.h"
 #include "vector.h"
 #include "set.h"
+#include "list.h"
+
 
 bool compare_desc(int a, int b) {
     return a > b;
@@ -1203,6 +1205,120 @@ void test_replace_copy() {
     }
 }
 
+void test_reverse() {
+    print();
+    std::cout << "Testing reverse..." << std::endl;
+
+    // Test case 1: Random Access Iterator (vector)
+    {
+        int a[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(a, a + 5);
+        msl::reverse(v.begin(), v.end());
+        
+        int expected[] = {5, 4, 3, 2, 1};
+        bool pass = true;
+        for (int i = 0; i < 5; ++i) {
+            if (v[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case reverse (random access - vector): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: Bidirectional Iterator (list)
+    {
+        msl::list<int> l;
+        l.push_back(1);
+        l.push_back(2);
+        l.push_back(3);
+        l.push_back(4);
+        l.push_back(5);
+
+        msl::reverse(l.begin(), l.end());
+
+        int expected[] = {5, 4, 3, 2, 1};
+        bool pass = true;
+        int i = 0;
+        for (auto it = l.begin(); it != l.end(); ++it, ++i) {
+            if (*it != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case reverse (bidirectional - list): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: Empty range
+    {
+        msl::vector<int> v;
+        msl::reverse(v.begin(), v.end());
+        bool pass = v.empty();
+        std::cout << "Test Case reverse (empty): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 4: Single element
+    {
+        msl::vector<int> v;
+        v.push_back(1);
+        msl::reverse(v.begin(), v.end());
+        bool pass = (v.size() == 1 && v[0] == 1);
+        std::cout << "Test Case reverse (single element): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+void test_reverse_copy() {
+    print();
+    std::cout << "Testing reverse_copy..." << std::endl;
+
+    // Test case 1: Vector copy to another vector
+    {
+        int a[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(a, a + 5);
+        msl::vector<int> res(5);
+        
+        msl::reverse_copy(v.begin(), v.end(), res.begin());
+        
+        int expected[] = {5, 4, 3, 2, 1};
+        bool pass = true;
+        for (int i = 0; i < 5; ++i) {
+            if (res[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        // Verify original is unchanged
+        for (int i = 0; i < 5; ++i) {
+            if (v[i] != a[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case reverse_copy (vector): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: List copy to vector
+    {
+        msl::list<int> l;
+        l.push_back(10);
+        l.push_back(20);
+        l.push_back(30);
+        
+        msl::vector<int> res(3);
+        msl::reverse_copy(l.begin(), l.end(), res.begin());
+        
+        int expected[] = {30, 20, 10};
+        bool pass = true;
+        for (int i = 0; i < 3; ++i) {
+            if (res[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case reverse_copy (list to vector): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 
 int main() {
     test_set_union();
@@ -1242,5 +1358,9 @@ int main() {
     test_replace();
     std::cout << std::endl;
     test_replace_copy();
+    std::cout << std::endl;
+    test_reverse();
+    std::cout << std::endl;
+    test_reverse_copy();
     return 0;
 }
