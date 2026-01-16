@@ -1319,6 +1319,89 @@ void test_reverse_copy() {
     }
 }
 
+void test_rotate() {
+    print();
+    std::cout << "Testing rotate..." << std::endl;
+
+    // Test case 1: Random Access Iterator (vector) - Cycle Algorithm
+    {
+        int a[] = {1, 2, 3, 4, 5, 6};
+        msl::vector<int> v(a, a + 6);
+        // Rotate at index 2 (value 3): {1, 2, [3], 4, 5, 6} -> {3, 4, 5, 6, 1, 2}
+        msl::rotate(v.begin(), v.begin() + 2, v.end());
+        
+        int expected[] = {3, 4, 5, 6, 1, 2};
+        bool pass = true;
+        for (int i = 0; i < 6; ++i) {
+            if (v[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case rotate (random access - vector): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: Bidirectional Iterator (list) - Reverse Algorithm
+    {
+        msl::list<int> l;
+        for (int i = 1; i <= 6; ++i) l.push_back(i);
+        
+        // Rotate at 3rd element: {1, 2, [3], 4, 5, 6} -> {3, 4, 5, 6, 1, 2}
+        auto middle = l.begin();
+        ++middle; ++middle; // Points to 3
+        
+        msl::rotate(l.begin(), middle, l.end());
+        
+        int expected[] = {3, 4, 5, 6, 1, 2};
+        bool pass = true;
+        int i = 0;
+        for (auto it = l.begin(); it != l.end(); ++it, ++i) {
+            if (*it != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case rotate (bidirectional - list): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 3: Empty or single element
+    {
+        msl::vector<int> v;
+        msl::rotate(v.begin(), v.end(), v.end());
+        bool pass = v.empty();
+        
+        v.push_back(1);
+        msl::rotate(v.begin(), v.begin(), v.end());
+        pass = pass && (v[0] == 1);
+        
+        std::cout << "Test Case rotate (trivial): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+void test_rotate_copy() {
+    print();
+    std::cout << "Testing rotate_copy..." << std::endl;
+    // Test case 1: Vector
+    {
+        int a[] = {1, 2, 3, 4, 5, 6};
+        msl::vector<int> v(a, a + 6);
+        msl::vector<int> result(6);
+        
+        // Rotate at 3 (index 2)
+        msl::rotate_copy(v.begin(), v.begin() + 2, v.end(), result.begin());
+        
+        int expected[] = {3, 4, 5, 6, 1, 2};
+        bool pass = true;
+        for (int i = 0; i < 6; ++i) {
+            if (result[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case rotate_copy (vector): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 
 int main() {
     test_set_union();
@@ -1362,5 +1445,9 @@ int main() {
     test_reverse();
     std::cout << std::endl;
     test_reverse_copy();
+    std::cout << std::endl;
+    test_rotate();
+    std::cout << std::endl;
+    test_rotate_copy();
     return 0;
 }

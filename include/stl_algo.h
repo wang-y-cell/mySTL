@@ -853,6 +853,96 @@ OutputIterator reverse_copy(BidirectionalIterator first, BidirectionalIterator l
   return result;
 }
 
+/** *********************************************************************************** */
+//swap_ranges
+
+template <class ForwardIterator1, class ForwardIterator2>
+ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
+                             ForwardIterator2 first2) {
+  for (; first1 != last1; ++first1, ++first2)
+    msl::iter_swap(first1, first2);
+  return first2;
+}
+
+/** *********************************************************************************** */
+//__gcd
+template <class EuclideanRingElement>
+EuclideanRingElement __gcd(EuclideanRingElement m, EuclideanRingElement n) {
+  while (n != 0) {
+    EuclideanRingElement t = m % n;
+    m = n;
+    n = t;
+  }
+  return m;
+}
+
+template <class RandomAccessIterator, class Distance>
+void __rotate_cycle(RandomAccessIterator first, RandomAccessIterator last,
+                    Distance initial, Distance shift) {
+  typedef typename iterator_traits<RandomAccessIterator>::value_type value_type;
+  value_type value = *(first + initial);
+  Distance ptr1 = initial;
+  Distance ptr2 = initial + shift;
+  while (ptr2 != initial) {
+    *(first + ptr1) = *(first + ptr2);
+    ptr1 = ptr2;
+    if (last - first - ptr2 > shift)
+      ptr2 += shift;
+    else
+      ptr2 = shift - (last - first - ptr2);
+  }
+  *(first + ptr1) = value;
+}
+
+template <class BidirectionalIterator>
+void __rotate(BidirectionalIterator first, BidirectionalIterator middle,
+              BidirectionalIterator last, bidirectional_iterator_tag) {
+  msl::reverse(first, middle);
+  msl::reverse(middle, last);
+  msl::reverse(first, last);
+}
+
+template <class RandomAccessIterator>
+void __rotate(RandomAccessIterator first, RandomAccessIterator middle,
+              RandomAccessIterator last, random_access_iterator_tag) {
+  typedef typename iterator_traits<RandomAccessIterator>::difference_type Distance;
+  Distance n = last - first;
+  Distance k = middle - first;
+  Distance l = n - k;
+  
+  if (k == 0) return; 
+
+  if (k == l) {
+    msl::swap_ranges(first, middle, middle);
+    return;
+  }
+
+  Distance d = __gcd(n, k);
+
+  for (Distance i = 0; i < d; i++) {
+   __rotate_cycle(first, last, i, k);
+  }
+}
+
+template <class BidirectionalIterator>
+void rotate(BidirectionalIterator first, BidirectionalIterator middle,
+            BidirectionalIterator last) {
+  if (first == middle || middle == last) return;
+  typedef typename iterator_traits<BidirectionalIterator>::iterator_category Category;
+  static_assert(is_msl_iterator_tag<Category>::value, "must use msl iterator");
+  msl::__rotate(first, middle, last, iterator_category(first));
+}
+
+
+template <class ForwardIterator, class OutputIterator>
+OutputIterator rotate_copy(ForwardIterator first, ForwardIterator middle,
+                           ForwardIterator last, OutputIterator result) {
+  return msl::copy(first, middle, msl::copy(middle, last, result));
+}
+
+
+
+
 
 }// namespace msl
 
