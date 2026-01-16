@@ -380,7 +380,10 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count
 }
 
 template <class ForwardIterator, class Size, class T, class BinaryPredicate>
-ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value, BinaryPredicate pred) {
+ForwardIterator search_n(ForwardIterator first, 
+                         ForwardIterator last, 
+                         Size count, const T& value, 
+                         BinaryPredicate pred) {
     if (count <= 0) return first;
     while (first != last) {
         while (first != last && !pred(*first, value))
@@ -940,6 +943,28 @@ OutputIterator rotate_copy(ForwardIterator first, ForwardIterator middle,
   return msl::copy(first, middle, msl::copy(middle, last, result));
 }
 
+/** *********************************************************************************** */
+//transform
+
+template <class InputIterator, class OutputIterator, class UnaryOperation>
+OutputIterator transform(InputIterator first, InputIterator last,
+                         OutputIterator result, UnaryOperation op) {
+  for (; first != last; ++first, ++result) {
+    *result = op(*first);
+  }
+  return result;
+}
+
+template <class InputIterator1, class InputIterator2, class OutputIterator,
+          class BinaryOperation>
+OutputIterator transform(InputIterator1 first1, InputIterator1 last1,
+                         InputIterator2 first2, OutputIterator result,
+                         BinaryOperation binary_op) {
+  for (; first1 != last1; ++first1, ++first2, ++result) {
+    *result = binary_op(*first1, *first2);
+  }
+  return result;
+}
 
 
 

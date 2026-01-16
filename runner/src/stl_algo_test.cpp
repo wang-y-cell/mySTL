@@ -1402,6 +1402,53 @@ void test_rotate_copy() {
     }
 }
 
+int increment(int i) { return i + 1; }
+int sum(int a, int b) { return a + b; }
+
+void test_transform() {
+    print();
+    std::cout << "Testing transform..." << std::endl;
+    
+    // Test Unary
+    {
+        int a[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(a, a + 5);
+        msl::vector<int> result(5);
+        
+        msl::transform(v.begin(), v.end(), result.begin(), increment);
+        
+        int expected[] = {2, 3, 4, 5, 6};
+        bool pass = true;
+        for (int i = 0; i < 5; ++i) {
+            if (result[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case transform (unary): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+    
+    // Test Binary
+    {
+        int a[] = {1, 2, 3, 4, 5};
+        int b[] = {5, 4, 3, 2, 1};
+        msl::vector<int> v1(a, a + 5);
+        msl::vector<int> v2(b, b + 5);
+        msl::vector<int> result(5);
+        
+        msl::transform(v1.begin(), v1.end(), v2.begin(), result.begin(), sum);
+        
+        bool pass = true;
+        for (int i = 0; i < 5; ++i) {
+            if (result[i] != 6) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case transform (binary): " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 
 int main() {
     test_set_union();
@@ -1449,5 +1496,7 @@ int main() {
     test_rotate();
     std::cout << std::endl;
     test_rotate_copy();
+    std::cout << std::endl;
+    test_transform();
     return 0;
 }
