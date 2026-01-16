@@ -1118,6 +1118,91 @@ void test_remove_copy() {
     }
 }
 
+void test_replace() {
+    print();
+    std::cout << "Testing replace and replace_if..." << std::endl;
+
+    // Test case 1: replace
+    {
+        int a[] = {1, 2, 3, 2, 4, 2, 5};
+        msl::vector<int> v(a, a + 7);
+        msl::replace(v.begin(), v.end(), 2, 0);
+        
+        int expected[] = {1, 0, 3, 0, 4, 0, 5};
+        bool pass = true;
+        for (int i = 0; i < 7; ++i) {
+            if (v[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case replace: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: replace_if
+    {
+        int a[] = {1, 2, 3, 4, 5, 6};
+        msl::vector<int> v(a, a + 6);
+        struct IsEven { bool operator()(int x) const { return x % 2 == 0; } };
+        
+        msl::replace_if(v.begin(), v.end(), IsEven(), 0);
+        
+        int expected[] = {1, 0, 3, 0, 5, 0};
+        bool pass = true;
+        for (int i = 0; i < 6; ++i) {
+            if (v[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case replace_if: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
+void test_replace_copy() {
+    print();
+    std::cout << "Testing replace_copy and replace_copy_if..." << std::endl;
+
+    // Test case 1: replace_copy
+    {
+        int a[] = {1, 2, 3, 2, 4};
+        msl::vector<int> v(a, a + 5);
+        msl::vector<int> res(5);
+        
+        msl::replace_copy(v.begin(), v.end(), res.begin(), 2, 0);
+        
+        int expected[] = {1, 0, 3, 0, 4};
+        bool pass = true;
+        for (int i = 0; i < 5; ++i) {
+            if (res[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case replace_copy: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+
+    // Test case 2: replace_copy_if
+    {
+        int a[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(a, a + 5);
+        msl::vector<int> res(5);
+        struct IsEven { bool operator()(int x) const { return x % 2 == 0; } };
+        
+        msl::replace_copy_if(v.begin(), v.end(), res.begin(), IsEven(), 0);
+        
+        int expected[] = {1, 0, 3, 0, 5};
+        bool pass = true;
+        for (int i = 0; i < 5; ++i) {
+            if (res[i] != expected[i]) {
+                pass = false;
+                break;
+            }
+        }
+        std::cout << "Test Case replace_copy_if: " << (pass ? "PASSED" : "FAILED") << std::endl;
+    }
+}
+
 
 int main() {
     test_set_union();
@@ -1153,5 +1238,9 @@ int main() {
     test_remove();
     std::cout << std::endl;
     test_remove_copy();
+    std::cout << std::endl;
+    test_replace();
+    std::cout << std::endl;
+    test_replace_copy();
     return 0;
 }
