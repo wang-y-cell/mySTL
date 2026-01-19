@@ -1515,7 +1515,84 @@ void test_transform() {
 }
 
 
+void test_upper_bound() {
+    print();
+    std::cout << "Testing upper_bound..." << std::endl;
+
+    // Test with Random Access Iterator (vector)
+    {
+        int arr[] = {1, 2, 4, 4, 5, 6};
+        msl::vector<int> v(arr, arr + 6);
+
+        // upper_bound(4) should return first element > 4, which is 5 (index 4)
+        auto it = msl::upper_bound(v.begin(), v.end(), 4);
+        if (it != v.end() && *it == 5 && (it - v.begin()) == 4) {
+            std::cout << "Vector upper_bound(4) PASSED" << std::endl;
+        } else {
+            std::cout << "Vector upper_bound(4) FAILED" << std::endl;
+            if (it != v.end()) std::cout << "Got: " << *it << " at index " << (it - v.begin()) << std::endl;
+            else std::cout << "Got end()" << std::endl;
+        }
+
+        // upper_bound(3) should return first element > 3, which is 4 (index 2)
+        it = msl::upper_bound(v.begin(), v.end(), 3);
+        if (it != v.end() && *it == 4 && (it - v.begin()) == 2) {
+            std::cout << "Vector upper_bound(3) PASSED" << std::endl;
+        } else {
+            std::cout << "Vector upper_bound(3) FAILED" << std::endl;
+        }
+        
+        // upper_bound(7) should return end()
+        it = msl::upper_bound(v.begin(), v.end(), 7);
+        if (it == v.end()) {
+            std::cout << "Vector upper_bound(7) PASSED" << std::endl;
+        } else {
+            std::cout << "Vector upper_bound(7) FAILED" << std::endl;
+        }
+    }
+
+    // Test with Bidirectional Iterator (list) - falls back to forward_iterator implementation
+    {
+        int arr[] = {1, 2, 4, 4, 5, 6};
+        msl::list<int> l;
+        for(int i : arr) l.push_back(i);
+
+        // upper_bound(4) -> 5
+        auto it = msl::upper_bound(l.begin(), l.end(), 4);
+        if (it != l.end() && *it == 5) {
+             std::cout << "List upper_bound(4) PASSED" << std::endl;
+        } else {
+            std::cout << "List upper_bound(4) FAILED" << std::endl;
+        }
+    }
+
+    // Test with custom comparator
+    {
+        int arr[] = {6, 5, 4, 4, 2, 1};
+        msl::vector<int> v(arr, arr + 6);
+        // upper_bound with greater<int>
+        // comp(val, *it) -> val > *it
+        // upper_bound finds first element where comp(val, *it) is true.
+        // i.e. 4 > *it is true.
+        // 6: 4 > 6 False
+        // 5: 4 > 5 False
+        // 4: 4 > 4 False
+        // 4: 4 > 4 False
+        // 2: 4 > 2 True! -> Returns 2.
+        
+        auto it = msl::upper_bound(v.begin(), v.end(), 4, [](int a, int b){ return a > b; });
+        if (it != v.end() && *it == 2) {
+             std::cout << "Vector custom compare upper_bound(4) PASSED" << std::endl;
+        } else {
+             std::cout << "Vector custom compare upper_bound(4) FAILED" << std::endl;
+             if (it != v.end()) std::cout << "Got: " << *it << std::endl;
+        }
+    }
+}
+
 int main() {
+    test_upper_bound();
+    std::cout << std::endl;
     test_set_union();
     std::cout << std::endl;
     test_set_intersection();
@@ -1568,4 +1645,5 @@ int main() {
     std::cout << std::endl;
     test_unique_copy();
     return 0;
+
 }

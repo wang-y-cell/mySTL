@@ -1065,7 +1065,222 @@ ForwardIterator unique(ForwardIterator first, ForwardIterator last,
 }
 
 
+/*************************************************************************** */
+//lower_bound
+template <class ForwardIterator, class T, class Distance>
+ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
+                              const T& value, Distance*, forward_iterator_tag) {
+  Distance len = 0;
+  msl::distance(first, last, len);
+  Distance half;
+  ForwardIterator middle;
 
+  while (len > 0) {
+    half = len >> 1;
+    middle = first;
+    msl::advance(middle, half);
+    if (*middle < value) {
+      first = middle;
+      ++first;
+      len = len - half - 1;
+    } else {
+      len = half;
+    }
+  }
+  return first;
+}
+
+template <class RandomAccessIterator, class T, class Distance>
+RandomAccessIterator __lower_bound(RandomAccessIterator first, RandomAccessIterator last,
+                                   const T& value, Distance*, random_access_iterator_tag) {
+  Distance len = last - first;
+  Distance half;
+  RandomAccessIterator middle;
+
+  while (len > 0) {
+    half = len >> 1;
+    middle = first + half;
+    if (*middle < value) {
+      first = middle + 1;
+      len = len - half - 1;
+    } else {
+      len = half;
+    }
+  }
+  return first;
+}
+
+template <class ForwardIterator, class T>
+inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
+                                   const T& value) {
+  typedef typename iterator_traits<ForwardIterator>::iterator_category category;
+  static_assert(is_msl_iterator_tag<category>::value,"must use msl iterator");
+  return __lower_bound(first, last, value, distance_type(first),
+                       category());
+}
+
+template <class ForwardIterator, class T, class Distance, class Compare>
+ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
+                              const T& value, Compare comp, Distance*, forward_iterator_tag) {
+  Distance len = 0;
+  msl::distance(first, last, len);
+  Distance half;
+  ForwardIterator middle;
+
+  while (len > 0) {
+    half = len >> 1;
+    middle = first;
+    msl::advance(middle, half);
+    if (comp(*middle, value)) {
+      first = middle;
+      ++first;
+      len = len - half - 1;
+    } else {
+      len = half;
+    }
+  }
+  return first;
+}
+
+template <class RandomAccessIterator, class T, class Distance, class Compare>
+RandomAccessIterator __lower_bound(RandomAccessIterator first, RandomAccessIterator last,
+                                   const T& value, Compare comp, Distance*, random_access_iterator_tag) {
+  Distance len = last - first;
+  Distance half;
+  RandomAccessIterator middle;
+
+  while (len > 0) {
+    half = len >> 1;
+    middle = first + half;
+    if (comp(*middle, value)) {
+      first = middle + 1;
+      len = len - half - 1;
+    } else {
+      len = half;
+    }
+  }
+  return first;
+}
+
+template <class ForwardIterator, class T, class Compare>
+inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
+                                   const T& value, Compare comp) {
+  typedef typename iterator_traits<ForwardIterator>::iterator_category category;
+  static_assert(is_msl_iterator_tag<category>::value, "must use msl iterator");
+  return __lower_bound(first, last, value, comp, distance_type(first),
+                       category());
+}
+
+
+//========================================================================
+// upper_bound
+
+template <class ForwardIterator, class T, class Distance>
+ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
+                              const T& value, Distance*, forward_iterator_tag) {
+  Distance len = 0;
+  msl::distance(first, last, len);
+  Distance half;
+  ForwardIterator middle;
+
+  while (len > 0) {
+    half = len >> 1;
+    middle = first;
+    msl::advance(middle, half);
+    if (value < *middle) {
+      len = half;
+    } else {
+      first = middle;
+      ++first;
+      len = len - half - 1;
+    }
+  }
+  return first;
+}
+
+template <class RandomAccessIterator, class T, class Distance>
+RandomAccessIterator __upper_bound(RandomAccessIterator first, RandomAccessIterator last,
+                                   const T& value, Distance*, random_access_iterator_tag) {
+  Distance len = last - first;
+  Distance half;
+  RandomAccessIterator middle;
+
+  while (len > 0) {
+    half = len >> 1;
+    middle = first + half;
+    if (value < *middle) {
+      len = half;
+    } else {
+      first = middle + 1;
+      len = len - half - 1;
+    }
+  }
+  return first;
+}
+
+template <class ForwardIterator, class T>
+inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
+                                   const T& value) {
+  typedef typename iterator_traits<ForwardIterator>::iterator_category category;
+  static_assert(is_msl_iterator_tag<category>::value, "must use msl iterator");
+  return __upper_bound(first, last, value, distance_type(first),
+                       category());
+}
+
+template <class ForwardIterator, class T, class Distance, class Compare>
+ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
+                              const T& value, Compare comp, Distance*, forward_iterator_tag) {
+  Distance len = 0;
+  msl::distance(first, last, len);
+  Distance half;
+  ForwardIterator middle;
+
+  while (len > 0) {
+    half = len >> 1;
+    middle = first;
+    msl::advance(middle, half);
+    if (comp(value, *middle)) {
+      len = half;
+    } else {
+      first = middle;
+      ++first;
+      len = len - half - 1;
+    }
+  }
+  return first;
+}
+
+template <class RandomAccessIterator, class T, class Distance, class Compare>
+RandomAccessIterator __upper_bound(RandomAccessIterator first, RandomAccessIterator last,
+                                   const T& value, Compare comp, Distance*, random_access_iterator_tag) {
+  Distance len = last - first;
+  Distance half;
+  RandomAccessIterator middle;
+
+  while (len > 0) {
+    half = len >> 1;
+    middle = first + half;
+    if (comp(value, *middle)) {
+      len = half;
+    } else {
+      first = middle + 1;
+      len = len - half - 1;
+    }
+  }
+  return first;
+}
+
+template <class ForwardIterator, class T, class Compare>
+inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
+                                   const T& value, Compare comp) {
+  typedef typename iterator_traits<ForwardIterator>::iterator_category category;
+  static_assert(is_msl_iterator_tag<category>::value, "must use msl iterator");
+  return __upper_bound(first, last, value, comp, distance_type(first),
+                       category());
+}
+
+/**************************************************************************** */
+//upper_bound
 
 
 
