@@ -163,17 +163,24 @@ __advance(RandomAccessIterator& i, Distance n, random_access_iterator_tag) {
 template<typename InputIterator, typename Distance>
 inline void
 advance(InputIterator& i, Distance n) {
-    __advance(i, n, iterator_category(i));
+    typedef typename iterator_traits<InputIterator>::iterator_category category;
+    static_assert(is_msl_iterator_tag<category>::value,
+                  "iterator_category must be a msl iterator tag");
+    __advance(i, n, category());
 }
 
 template <typename ForwardIterator>
-inline ForwardIterator next(ForwardIterator it, typename iterator_traits<ForwardIterator>::difference_type n = 1) {
+inline ForwardIterator next
+(ForwardIterator it, 
+ typename iterator_traits<ForwardIterator>::difference_type n = 1) {
     advance(it, n);
     return it;
 }
 
 template <typename BidirectionalIterator>
-inline BidirectionalIterator prev(BidirectionalIterator it, typename iterator_traits<BidirectionalIterator>::difference_type n = 1) {
+inline BidirectionalIterator prev
+(BidirectionalIterator it, 
+ typename iterator_traits<BidirectionalIterator>::difference_type n = 1) {
     advance(it, -n);
     return it;
 }
