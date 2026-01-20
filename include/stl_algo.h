@@ -1280,7 +1280,18 @@ inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
 }
 
 /**************************************************************************** */
-//upper_bound
+//binary_search
+template<class ForwardIterator, class T >
+bool binary_search(ForwardIterator first, ForwardIterator last, const T& value){
+  ForwardIterator it = msl::lower_bound(first, last, value);
+  return (it != last && !(value < *it));
+}
+
+template<class ForwardIterator, class T, class Compare >
+bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, Compare comp){
+  ForwardIterator it = msl::lower_bound(first, last, value, comp);
+  return (it != last && !(comp(value, *it)));
+}
 
 
 

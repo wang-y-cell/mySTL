@@ -1590,7 +1590,73 @@ void test_upper_bound() {
     }
 }
 
+
+
+void test_binary_search() {
+    print();
+    std::cout << "Testing binary_search..." << std::endl;
+
+    // Test with vector (Random Access Iterator)
+    {
+        int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        msl::vector<int> v(arr, arr + 9);
+
+        if (msl::binary_search(v.begin(), v.end(), 5)) {
+            std::cout << "Vector binary_search(5) PASSED" << std::endl;
+        } else {
+            std::cout << "Vector binary_search(5) FAILED" << std::endl;
+        }
+
+        if (!msl::binary_search(v.begin(), v.end(), 10)) {
+            std::cout << "Vector binary_search(10) PASSED" << std::endl;
+        } else {
+            std::cout << "Vector binary_search(10) FAILED" << std::endl;
+        }
+    }
+
+    // Test with list (Forward Iterator)
+    {
+        int arr[] = {1, 3, 5, 7, 9};
+        msl::list<int> l;
+        for(int i : arr) l.push_back(i);
+
+        if (msl::binary_search(l.begin(), l.end(), 3)) {
+            std::cout << "List binary_search(3) PASSED" << std::endl;
+        } else {
+            std::cout << "List binary_search(3) FAILED" << std::endl;
+        }
+
+        if (!msl::binary_search(l.begin(), l.end(), 4)) {
+            std::cout << "List binary_search(4) PASSED" << std::endl;
+        } else {
+            std::cout << "List binary_search(4) FAILED" << std::endl;
+        }
+    }
+
+    // Test with custom comparator
+    {
+        int arr[] = {9, 7, 5, 3, 1};
+        msl::vector<int> v(arr, arr + 5);
+        // Descending order, use greater<int> like comparator
+        auto comp = [](int a, int b) { return a > b; };
+
+        if (msl::binary_search(v.begin(), v.end(), 5, comp)) {
+            std::cout << "Custom comparator binary_search(5) PASSED" << std::endl;
+        } else {
+            std::cout << "Custom comparator binary_search(5) FAILED" << std::endl;
+        }
+
+        if (!msl::binary_search(v.begin(), v.end(), 6, comp)) {
+            std::cout << "Custom comparator binary_search(6) PASSED" << std::endl;
+        } else {
+            std::cout << "Custom comparator binary_search(6) FAILED" << std::endl;
+        }
+    }
+}
+
 int main() {
+    test_binary_search();
+    std::cout << std::endl;
     test_upper_bound();
     std::cout << std::endl;
     test_set_union();
