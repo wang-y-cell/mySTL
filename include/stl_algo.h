@@ -5,6 +5,7 @@
 #include "stl_numeric.h"
 #include "stl_algobase.h"
 #include "iterator.h"
+#include <cstdlib>
 
 namespace msl {
 
@@ -1391,6 +1392,30 @@ bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last, C
     }
   }
 }
+
+//========================================================================
+// random_shuffle
+
+template <class RandomAccessIterator>
+inline void random_shuffle(RandomAccessIterator first, RandomAccessIterator last) {
+  if (first == last) return;
+  for (RandomAccessIterator i = first + 1; i != last; ++i) {
+    msl::iter_swap(i, first + (std::rand() % ((i - first) + 1)));
+  }
+}
+
+template <class RandomAccessIterator, class RandomNumberGenerator>
+void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
+                    RandomNumberGenerator& rand) {
+  if (first == last) return;
+  for (RandomAccessIterator i = first + 1; i != last; ++i) {
+    msl::iter_swap(i, first + rand((i - first) + 1));
+  }
+}
+
+
+
+
 
 }// namespace msl
 

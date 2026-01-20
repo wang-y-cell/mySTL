@@ -1798,7 +1798,59 @@ void test_prev_permutation() {
     }
 }
 
+void test_random_shuffle() {
+    print();
+    std::cout << "Testing random_shuffle..." << std::endl;
+    
+    // Test 1: Vector shuffle
+    {
+        int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        msl::vector<int> v(arr, arr + 10);
+        // Seed random for reproducibility in tests if needed, but here just run it
+        std::srand(0); 
+        msl::random_shuffle(v.begin(), v.end());
+        
+        bool changed = false;
+        for(int i=0; i<10; ++i) {
+            if(v[i] != arr[i]) changed = true;
+        }
+        
+        // Verify checksum
+        int sum = 0;
+        for(int x : v) sum += x;
+        
+        if (sum == 55) {
+             std::cout << "Vector random_shuffle PASSED" << std::endl;
+        } else {
+             std::cout << "Vector random_shuffle FAILED (Sum mismatch)" << std::endl;
+        }
+    }
+    
+    // Test 2: With custom generator
+    {
+        struct MyRand {
+            int operator()(int n) {
+                return std::rand() % n;
+            }
+        } my_rand;
+        
+        int arr[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(arr, arr + 5);
+        msl::random_shuffle(v.begin(), v.end(), my_rand);
+        
+        int sum = 0;
+        for(int x : v) sum += x;
+         if (sum == 15) {
+             std::cout << "Custom generator random_shuffle PASSED" << std::endl;
+        } else {
+             std::cout << "Custom generator random_shuffle FAILED" << std::endl;
+        }
+    }
+}
+
 int main() {
+    test_random_shuffle();
+    std::cout << std::endl;
     test_prev_permutation();
     std::cout << std::endl;
     test_next_permutation();
