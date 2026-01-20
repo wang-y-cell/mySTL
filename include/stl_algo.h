@@ -18,6 +18,19 @@ namespace msl {
 //========================================================================
 // set_union
 
+/**
+ * @brief 计算两个有序集合的并集
+ * 
+ * 构建一个有序序列，包含在 [first1, last1) 或 [first2, last2) 中出现的所有元素。
+ * 如果一个元素在两个范围内都出现，则结果中包含较大数量的该元素。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向构建的并集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2,
           class OutputIterator>
 OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
@@ -42,6 +55,19 @@ OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
   return msl::copy(first2, last2, msl::copy(first1, last1, result));
 }
 
+/**
+ * @brief 计算两个有序集合的并集（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param comp 比较函数对象
+ * @return OutputIterator 指向构建的并集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, 
           class OutputIterator, class Compare>
 OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
@@ -74,6 +100,18 @@ OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
 //========================================================================
 // set_intersection
 
+/**
+ * @brief 计算两个有序集合的交集
+ * 
+ * 构建一个有序序列，仅包含同时出现在 [first1, last1) 和 [first2, last2) 中的元素。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向构建的交集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, 
         class OutputIterator>
 OutputIterator set_intersection
@@ -95,6 +133,19 @@ OutputIterator set_intersection
   return result;
 }
 
+/**
+ * @brief 计算两个有序集合的交集（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param comp 比较函数对象
+ * @return OutputIterator 指向构建的交集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, 
           class OutputIterator, class Compare>
 OutputIterator set_intersection
@@ -124,6 +175,18 @@ OutputIterator set_intersection
 //========================================================================
 // set_difference
 
+/**
+ * @brief 计算两个有序集合的差集
+ * 
+ * 构建一个有序序列，包含在 [first1, last1) 中但不在 [first2, last2) 中的元素。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向构建的差集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, 
           class OutputIterator>
 OutputIterator set_difference
@@ -147,6 +210,19 @@ OutputIterator set_difference
   return msl::copy(first1, last1, result);
 }
 
+/**
+ * @brief 计算两个有序集合的差集（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param comp 比较函数对象
+ * @return OutputIterator 指向构建的差集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, 
           class OutputIterator, class Compare>
 OutputIterator set_difference
@@ -176,6 +252,19 @@ OutputIterator set_difference
 //========================================================================
 // set_symmetric_difference
 
+/**
+ * @brief 计算两个有序集合的对称差集
+ * 
+ * 构建一个有序序列，包含出现在 [first1, last1) 但不出现在 [first2, last2) 中的元素，
+ * 以及出现在 [first2, last2) 但不出现在 [first1, last1) 中的元素。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向构建的对称差集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, 
           class OutputIterator>
 OutputIterator set_symmetric_difference
@@ -200,6 +289,19 @@ OutputIterator set_symmetric_difference
 }
 
 
+/**
+ * @brief 计算两个有序集合的对称差集（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param comp 比较函数对象
+ * @return OutputIterator 指向构建的对称差集序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, 
           class OutputIterator, class Compare>
 OutputIterator set_symmetric_difference
@@ -226,8 +328,16 @@ OutputIterator set_symmetric_difference
 
 /************************************************************************************* */
 //adjacent_find
-//找到第一个相邻的重复元素
 
+/**
+ * @brief 查找相邻的重复元素
+ * 
+ * 在范围 [first, last) 中查找第一对相邻且相等的元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @return ForwardIterator 指向第一对相等元素中第一个元素的迭代器。如果未找到，返回 last。
+ */
 template <class ForwardIterator>
 ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last) {
   if (first == last) return last;
@@ -239,6 +349,16 @@ ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last) {
   return last;
 }
 
+/**
+ * @brief 查找相邻的重复元素（自定义比较器）
+ * 
+ * 在范围 [first, last) 中查找第一对满足 pred(*it, *(it+1)) 为真的相邻元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 二元谓词函数对象
+ * @return ForwardIterator 指向第一对满足条件的元素中第一个元素的迭代器。如果未找到，返回 last。
+ */
 template <class ForwardIterator, class BinaryPredicate>
 ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate pred) {
   if (first == last) return last;
@@ -253,6 +373,15 @@ ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last, Binar
 /*********************************************************************************************************** */
 
 // count
+
+/**
+ * @brief 统计等于给定值的元素个数
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要统计的值
+ * @return difference_type 等于 value 的元素个数
+ */
 template <class InputIterator, class T>
 typename iterator_traits<InputIterator>::difference_type
 count(InputIterator first, InputIterator last, const T& value) {
@@ -264,6 +393,15 @@ count(InputIterator first, InputIterator last, const T& value) {
 }
 
 // count_if
+
+/**
+ * @brief 统计满足条件的元素个数
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 一元谓词函数对象
+ * @return difference_type 满足 pred(*it) 为真的元素个数
+ */
 template <class InputIterator, class Predicate>
 typename iterator_traits<InputIterator>::difference_type
 count_if(InputIterator first, InputIterator last, Predicate pred) {
@@ -276,6 +414,15 @@ count_if(InputIterator first, InputIterator last, Predicate pred) {
 
 /******************************************************************************** */
 // find
+
+/**
+ * @brief 查找等于给定值的第一个元素
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @return InputIterator 指向第一个等于 value 的元素的迭代器。如果未找到，返回 last。
+ */
 template <class InputIterator, class T>
 InputIterator find(InputIterator first, InputIterator last, const T& value) {
   while (first != last && *first != value)
@@ -284,6 +431,15 @@ InputIterator find(InputIterator first, InputIterator last, const T& value) {
 }
 
 // find_if
+
+/**
+ * @brief 查找满足条件的第一个元素
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 一元谓词函数对象
+ * @return InputIterator 指向第一个满足 pred(*it) 为真的元素的迭代器。如果未找到，返回 last。
+ */
 template <class InputIterator, class Predicate>
 InputIterator find_if(InputIterator first, InputIterator last, Predicate pred) {
   while (first != last && !pred(*first))
@@ -293,7 +449,20 @@ InputIterator find_if(InputIterator first, InputIterator last, Predicate pred) {
 
 /************************************************************************************ */
 //search
-//可以看出search的效率很慢
+
+/**
+ * @brief 查找子序列
+ * 
+ * 在范围 [first1, last1) 中查找第一个与范围 [first2, last2) 匹配的子序列。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param Distance1* 主序列距离类型指针（用于优化）
+ * @param Distance2* 子序列距离类型指针（用于优化）
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template<typename ForwardIterator1, typename ForwardIterator2,
          typename Distance1, typename Distance2>
 inline ForwardIterator1 __search(ForwardIterator1 first1,ForwardIterator1 last1,
@@ -318,12 +487,38 @@ inline ForwardIterator1 __search(ForwardIterator1 first1,ForwardIterator1 last1,
       return first1;
 }
 
+/**
+ * @brief 查找子序列
+ * 
+ * 在范围 [first1, last1) 中查找第一个与范围 [first2, last2) 匹配的子序列。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template<typename ForwardIterator1, typename ForwardIterator2>
 inline ForwardIterator1 search(ForwardIterator1 first1,ForwardIterator1 last1,
                                ForwardIterator2 first2,ForwardIterator2 last2){
         return __search(first1,last1,first2,last2,distance_type(first1),distance_type(first2));
 }
 
+/**
+ * @brief 查找子序列（自定义比较器）
+ * 
+ * 在范围 [first1, last1) 中查找第一个与范围 [first2, last2) 匹配的子序列。
+ * 使用 pred(*i, *j) 进行元素比较。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param pred 二元谓词函数对象
+ * @param Distance1* 主序列距离类型指针
+ * @param Distance2* 子序列距离类型指针
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template<typename ForwardIterator1, typename ForwardIterator2,
          typename BinaryPredicate, typename Distance1, typename Distance2>
 inline ForwardIterator1 __search(ForwardIterator1 first1,ForwardIterator1 last1,
@@ -349,6 +544,19 @@ inline ForwardIterator1 __search(ForwardIterator1 first1,ForwardIterator1 last1,
       return first1;
 }
 
+/**
+ * @brief 查找子序列（自定义比较器）
+ * 
+ * 在范围 [first1, last1) 中查找第一个与范围 [first2, last2) 匹配的子序列。
+ * 使用 pred(*i, *j) 进行元素比较。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param pred 二元谓词函数对象
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template<typename ForwardIterator1, typename ForwardIterator2, typename BinaryPredicate>
 inline ForwardIterator1 search(ForwardIterator1 first1,ForwardIterator1 last1,
                                ForwardIterator2 first2,ForwardIterator2 last2,
@@ -359,6 +567,18 @@ inline ForwardIterator1 search(ForwardIterator1 first1,ForwardIterator1 last1,
 /************************************************************************************************** */
 
 // search_n
+
+/**
+ * @brief 查找连续重复元素
+ * 
+ * 在范围 [first, last) 中查找连续 count 个等于 value 的元素序列。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param count 重复次数
+ * @param value 要查找的值
+ * @return ForwardIterator 指向找到的序列的第一个元素的迭代器。如果未找到，返回 last。
+ */
 template <class ForwardIterator, class Size, class T>
 ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value) {
     if (count <= 0) return first;
@@ -382,6 +602,18 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count
     return last;
 }
 
+/**
+ * @brief 查找连续重复元素（自定义比较器）
+ * 
+ * 在范围 [first, last) 中查找连续 count 个满足 pred(*it, value) 为真的元素序列。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param count 重复次数
+ * @param value 要查找的值
+ * @param pred 二元谓词函数对象
+ * @return ForwardIterator 指向找到的序列的第一个元素的迭代器。如果未找到，返回 last。
+ */
 template <class ForwardIterator, class Size, class T, class BinaryPredicate>
 ForwardIterator search_n(ForwardIterator first, 
                          ForwardIterator last, 
@@ -411,6 +643,19 @@ ForwardIterator search_n(ForwardIterator first,
 
 /*************************************************************************************** */
 //find_end
+
+/**
+ * @brief 查找最后一次出现的子序列
+ * 
+ * 在范围 [first1, last1) 中查找最后一次出现的范围 [first2, last2) 匹配的子序列。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param forward_iterator_tag 前向迭代器标签
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template <class ForwardIterator1, class ForwardIterator2>
 ForwardIterator1 __find_end(ForwardIterator1 first1, ForwardIterator1 last1,
                             ForwardIterator2 first2, ForwardIterator2 last2,
@@ -432,6 +677,18 @@ ForwardIterator1 __find_end(ForwardIterator1 first1, ForwardIterator1 last1,
   }
 }
 
+/**
+ * @brief 查找最后一次出现的子序列（双向迭代器优化）
+ * 
+ * 使用反向迭代器从后向前查找。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param bidirectional_iterator_tag 双向迭代器标签
+ * @return BidirectionalIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template <class BidirectionalIterator1, class BidirectionalIterator2>
 BidirectionalIterator1 __find_end(BidirectionalIterator1 first1, BidirectionalIterator1 last1,
                                   BidirectionalIterator2 first2, BidirectionalIterator2 last2,
@@ -453,6 +710,17 @@ BidirectionalIterator1 __find_end(BidirectionalIterator1 first1, BidirectionalIt
   }
 }
 
+/**
+ * @brief 查找最后一次出现的子序列
+ * 
+ * 在范围 [first1, last1) 中查找最后一次出现的范围 [first2, last2) 匹配的子序列。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template <class ForwardIterator1, class ForwardIterator2>
 inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1,
                                  ForwardIterator2 first2, ForwardIterator2 last2) {
@@ -461,6 +729,19 @@ inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1
   return __find_end(first1, last1, first2, last2, category1(), category2());
 }
 
+/**
+ * @brief 查找最后一次出现的子序列（自定义比较器）
+ * 
+ * 在范围 [first1, last1) 中查找最后一次出现的范围 [first2, last2) 匹配的子序列。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param forward_iterator_tag 前向迭代器标签
+ * @param comp 二元谓词函数对象
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
 ForwardIterator1 __find_end(ForwardIterator1 first1, ForwardIterator1 last1,
                             ForwardIterator2 first2, ForwardIterator2 last2,
@@ -483,6 +764,19 @@ ForwardIterator1 __find_end(ForwardIterator1 first1, ForwardIterator1 last1,
   }
 }
 
+/**
+ * @brief 查找最后一次出现的子序列（自定义比较器，双向迭代器优化）
+ * 
+ * 使用反向迭代器从后向前查找。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param bidirectional_iterator_tag 双向迭代器标签
+ * @param comp 二元谓词函数对象
+ * @return BidirectionalIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template <class BidirectionalIterator1, class BidirectionalIterator2, class BinaryPredicate>
 BidirectionalIterator1 __find_end(BidirectionalIterator1 first1, BidirectionalIterator1 last1,
                                   BidirectionalIterator2 first2, BidirectionalIterator2 last2,
@@ -506,6 +800,18 @@ BidirectionalIterator1 __find_end(BidirectionalIterator1 first1, BidirectionalIt
   }
 }
 
+/**
+ * @brief 查找最后一次出现的子序列（自定义比较器）
+ * 
+ * 在范围 [first1, last1) 中查找最后一次出现的范围 [first2, last2) 匹配的子序列。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 子序列的起始迭代器
+ * @param last2 子序列的结束迭代器
+ * @param comp 二元谓词函数对象
+ * @return ForwardIterator1 指向找到的子序列的起始迭代器。如果未找到，返回 last1。
+ */
 template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
 inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1,
                                  ForwardIterator2 first2, ForwardIterator2 last2,
@@ -518,6 +824,18 @@ inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1
 
 /********************************************************************************** */
 //find_first_of
+
+/**
+ * @brief 查找第一个匹配元素
+ * 
+ * 在范围 [first1, last1) 中查找第一个在范围 [first2, last2) 中出现的元素。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 匹配值集合的起始迭代器
+ * @param last2 匹配值集合的结束迭代器
+ * @return InputIterator 指向找到的第一个匹配元素的迭代器。如果未找到，返回 last1。
+ */
 template <class InputIterator, class ForwardIterator>
 InputIterator find_first_of(InputIterator first1, InputIterator last1,
                             ForwardIterator first2, ForwardIterator last2) {
@@ -530,6 +848,18 @@ InputIterator find_first_of(InputIterator first1, InputIterator last1,
   return last1;
 }
 
+/**
+ * @brief 查找第一个匹配元素（自定义比较器）
+ * 
+ * 在范围 [first1, last1) 中查找第一个在范围 [first2, last2) 中满足 comp(*it1, *it2) 为真的元素。
+ * 
+ * @param first1 主序列的起始迭代器
+ * @param last1 主序列的结束迭代器
+ * @param first2 匹配值集合的起始迭代器
+ * @param last2 匹配值集合的结束迭代器
+ * @param comp 二元谓词函数对象
+ * @return InputIterator 指向找到的第一个匹配元素的迭代器。如果未找到，返回 last1。
+ */
 template <class InputIterator, class ForwardIterator, class BinaryPredicate>
 InputIterator find_first_of(InputIterator first1, InputIterator last1,
                             ForwardIterator first2, ForwardIterator last2,
@@ -545,6 +875,16 @@ InputIterator find_first_of(InputIterator first1, InputIterator last1,
 /********************************************************************************** */
 //for_each
 
+/**
+ * @brief 对序列中的每个元素执行操作
+ * 
+ * 对范围 [first, last) 中的每个元素应用函数 func。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param func 要应用的函数对象或函数指针
+ * @return function 返回传入的函数对象 func
+ */
 template<class inputIterator,class function>
 function for_each(inputIterator first, inputIterator last, function func) {
     for(;first != last; ++first)
@@ -554,6 +894,16 @@ function for_each(inputIterator first, inputIterator last, function func) {
 
 /************************************************************************************** */
 //generate
+
+/**
+ * @brief 用生成器的结果填充序列
+ * 
+ * 用 gen() 的返回值赋值给范围 [first, last) 中的每个元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param gen 生成器函数对象
+ */
 template<class ForwardIterator,class Generator>
 void generate(ForwardIterator first, ForwardIterator last, Generator gen) {
     for(;first != last; ++first)
@@ -562,6 +912,16 @@ void generate(ForwardIterator first, ForwardIterator last, Generator gen) {
 
 /****************************************************************************************** */
 //generate_n
+
+/**
+ * @brief 用生成器的结果填充序列的前 n 个元素
+ * 
+ * 用 gen() 的返回值赋值给从 first 开始的 n 个元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param n 要填充的元素个数
+ * @param gen 生成器函数对象
+ */
 template<class ForwardIterator,class Size,class Generator>
 void generate_n(ForwardIterator first, Size n, Generator gen) {
     for(;n > 0; --n, ++first)
@@ -571,6 +931,20 @@ void generate_n(ForwardIterator first, Size n, Generator gen) {
 
 /****************************************************************************************** */
 //includes
+
+/**
+ * @brief 检查一个有序序列是否包含另一个有序序列
+ * 
+ * 检查范围 [first2, last2) 中的所有元素是否都包含在范围 [first1, last1) 中。
+ * 两个序列必须已排序。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @return true 如果第二个序列的所有元素都在第一个序列中
+ * @return false 否则
+ */
 template <class InputIterator1, class InputIterator2>
 bool includes(InputIterator1 first1, InputIterator1 last1,
               InputIterator2 first2, InputIterator2 last2) {
@@ -587,6 +961,20 @@ bool includes(InputIterator1 first1, InputIterator1 last1,
   return first2 == last2;
 }
 
+/**
+ * @brief 检查一个有序序列是否包含另一个有序序列（自定义比较器）
+ * 
+ * 检查范围 [first2, last2) 中的所有元素是否都包含在范围 [first1, last1) 中。
+ * 两个序列必须根据 comp 已排序。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param comp 二元谓词函数对象
+ * @return true 如果第二个序列的所有元素都在第一个序列中
+ * @return false 否则
+ */
 template <class InputIterator1, class InputIterator2, class Compare>
 bool includes(InputIterator1 first1, InputIterator1 last1,
               InputIterator2 first2, InputIterator2 last2, Compare comp) {
@@ -606,6 +994,16 @@ bool includes(InputIterator1 first1, InputIterator1 last1,
 
 /****************************************************************************************** */
 //max_element 
+
+/**
+ * @brief 查找最大元素
+ * 
+ * 在范围 [first, last) 中查找最大元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @return ForwardIterator 指向最大元素的迭代器。如果序列为空，返回 first。
+ */
 template <class ForwardIterator>
 ForwardIterator max_element(ForwardIterator first, ForwardIterator last) {
   if (first == last) return first;
@@ -617,6 +1015,17 @@ ForwardIterator max_element(ForwardIterator first, ForwardIterator last) {
   return result;
 }
 
+/**
+ * @brief 查找最大元素（自定义比较器）
+ * 
+ * 在范围 [first, last) 中查找最大元素。
+ * 使用 comp(*i, *j) 进行元素比较。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 二元谓词函数对象
+ * @return ForwardIterator 指向最大元素的迭代器。如果序列为空，返回 first。
+ */
 template <class ForwardIterator, class Compare>
 ForwardIterator max_element(ForwardIterator first, ForwardIterator last,
                             Compare comp) {
@@ -631,6 +1040,16 @@ ForwardIterator max_element(ForwardIterator first, ForwardIterator last,
 
 /****************************************************************************************** */
 //min_element
+
+/**
+ * @brief 查找最小元素
+ * 
+ * 在范围 [first, last) 中查找最小元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @return ForwardIterator 指向最小元素的迭代器。如果序列为空，返回 first。
+ */
 template <class ForwardIterator>
 ForwardIterator min_element(ForwardIterator first, ForwardIterator last) {
   if (first == last) return first;
@@ -642,6 +1061,17 @@ ForwardIterator min_element(ForwardIterator first, ForwardIterator last) {
   return result;
 }
 
+/**
+ * @brief 查找最小元素（自定义比较器）
+ * 
+ * 在范围 [first, last) 中查找最小元素。
+ * 使用 comp(*i, *j) 进行元素比较。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 二元谓词函数对象
+ * @return ForwardIterator 指向最小元素的迭代器。如果序列为空，返回 first。
+ */
 template <class ForwardIterator, class Compare>
 ForwardIterator min_element(ForwardIterator first, ForwardIterator last,
                             Compare comp) {
@@ -656,6 +1086,19 @@ ForwardIterator min_element(ForwardIterator first, ForwardIterator last,
 
 //****************************************************************************************** */
 //merge
+
+/**
+ * @brief 合并两个有序序列
+ * 
+ * 将两个有序序列 [first1, last1) 和 [first2, last2) 合并到一个有序序列中，结果存储在 result 开始的位置。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向合并后序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, class OutputIterator>
 OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
                      InputIterator2 first2, InputIterator2 last2,
@@ -673,6 +1116,20 @@ OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
   return msl::copy(first2, last2, msl::copy(first1, last1, result)); //将另一个剩余的部分添加到result后面
 }
 
+/**
+ * @brief 合并两个有序序列（自定义比较器）
+ * 
+ * 将两个有序序列 [first1, last1) 和 [first2, last2) 合并到一个有序序列中，结果存储在 result 开始的位置。
+ * 使用 comp(*i, *j) 进行元素比较。
+ * 
+ * @param first1 第一个有序序列的起始迭代器
+ * @param last1 第一个有序序列的结束迭代器
+ * @param first2 第二个有序序列的起始迭代器
+ * @param last2 第二个有序序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param comp 二元谓词函数对象
+ * @return OutputIterator 指向合并后序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, class OutputIterator,
           class Compare>
 OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
@@ -693,6 +1150,18 @@ OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
 
 /******************************************************************************************* */
 // partition
+
+/**
+ * @brief 划分序列
+ * 
+ * 重新排列范围 [first, last) 中的元素，使得所有满足 pred(*it) 为真的元素排在不满足的元素之前。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 一元谓词函数对象
+ * @param forward_iterator_tag 前向迭代器标签
+ * @return ForwardIterator 指向第二组元素（不满足 pred 的元素）的第一个元素的迭代器
+ */
 template <class ForwardIterator, class Predicate>
 ForwardIterator __partition(ForwardIterator first, ForwardIterator last,
                             Predicate pred, forward_iterator_tag) {
@@ -709,6 +1178,17 @@ ForwardIterator __partition(ForwardIterator first, ForwardIterator last,
   return first;
 }
 
+/**
+ * @brief 划分序列（双向迭代器优化）
+ * 
+ * 重新排列范围 [first, last) 中的元素，使得所有满足 pred(*it) 为真的元素排在不满足的元素之前。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 一元谓词函数对象
+ * @param bidirectional_iterator_tag 双向迭代器标签
+ * @return BidirectionalIterator 指向第二组元素（不满足 pred 的元素）的第一个元素的迭代器
+ */
 template <class BidirectionalIterator, class Predicate>
 BidirectionalIterator __partition(BidirectionalIterator first,
                                   BidirectionalIterator last,
@@ -731,6 +1211,16 @@ BidirectionalIterator __partition(BidirectionalIterator first,
   }
 }
 
+/**
+ * @brief 划分序列
+ * 
+ * 重新排列范围 [first, last) 中的元素，使得所有满足 pred(*it) 为真的元素排在不满足的元素之前。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 一元谓词函数对象
+ * @return ForwardIterator 指向第二组元素（不满足 pred 的元素）的第一个元素的迭代器
+ */
 template <class ForwardIterator, class Predicate>
 ForwardIterator partition(ForwardIterator first, ForwardIterator last,
                           Predicate pred) {
@@ -741,6 +1231,18 @@ ForwardIterator partition(ForwardIterator first, ForwardIterator last,
 
 /********************************************************************************** */
 //remove_copy
+
+/**
+ * @brief 移除元素并复制
+ * 
+ * 将范围 [first, last) 中不等于 value 的元素复制到 result 开始的序列中。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param value 要移除的值
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class InputIterator, class OutputIterator, class T>
 OutputIterator remove_copy(InputIterator first, InputIterator last,
                            OutputIterator result, const T& value) {
@@ -754,6 +1256,18 @@ OutputIterator remove_copy(InputIterator first, InputIterator last,
 }
 
 //remove_copy_if
+
+/**
+ * @brief 移除满足条件的元素并复制
+ * 
+ * 将范围 [first, last) 中满足 pred(*it) 为假的元素复制到 result 开始的序列中。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param pred 一元谓词函数对象
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class InputIterator, class OutputIterator, class Predicate>
 OutputIterator remove_copy_if(InputIterator first, InputIterator last,
                               OutputIterator result, Predicate pred) {
@@ -767,6 +1281,18 @@ OutputIterator remove_copy_if(InputIterator first, InputIterator last,
 }
 
 //remove
+
+/**
+ * @brief 移除元素
+ * 
+ * 移除范围 [first, last) 中等于 value 的元素。
+ * 剩余元素保持原有相对顺序，返回新的逻辑末尾迭代器。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要移除的值
+ * @return ForwardIterator 指向新的逻辑末尾的迭代器
+ */
 template <class ForwardIterator, class T>
 ForwardIterator remove(ForwardIterator first, ForwardIterator last,
                        const T& value) {
@@ -776,6 +1302,18 @@ ForwardIterator remove(ForwardIterator first, ForwardIterator last,
 }
 
 //remove_if
+
+/**
+ * @brief 移除满足条件的元素
+ * 
+ * 移除范围 [first, last) 中满足 pred(*it) 为真的元素。
+ * 剩余元素保持原有相对顺序，返回新的逻辑末尾迭代器。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 一元谓词函数对象
+ * @return ForwardIterator 指向新的逻辑末尾的迭代器
+ */
 template <class ForwardIterator, class Predicate>
 ForwardIterator remove_if(ForwardIterator first, ForwardIterator last,
                           Predicate pred) {
@@ -786,6 +1324,17 @@ ForwardIterator remove_if(ForwardIterator first, ForwardIterator last,
 
 /*****************************************************************************/
 //replace
+
+/**
+ * @brief 替换元素
+ * 
+ * 将范围 [first, last) 中所有等于 old_value 的元素替换为 new_value。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param old_value 要被替换的值
+ * @param new_value 新值
+ */
 template <class ForwardIterator, class T>
 void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
              const T& new_value) {
@@ -794,6 +1343,16 @@ void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
   }
 }
 
+/**
+ * @brief 替换满足条件的元素
+ * 
+ * 将范围 [first, last) 中所有满足 pred(*it) 为真的元素替换为 new_value。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 一元谓词函数对象
+ * @param new_value 新值
+ */
 template <class ForwardIterator, class Predicate, class T>
 void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
                 const T& new_value) {
@@ -802,6 +1361,19 @@ void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
   }
 }
 
+/**
+ * @brief 替换元素并复制
+ * 
+ * 将范围 [first, last) 中的元素复制到 result 开始的序列中，
+ * 其中等于 old_value 的元素替换为 new_value。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param old_value 要被替换的值
+ * @param new_value 新值
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class InputIterator, class OutputIterator, class T>
 OutputIterator replace_copy(InputIterator first, InputIterator last,
                             OutputIterator result, const T& old_value,
@@ -812,6 +1384,19 @@ OutputIterator replace_copy(InputIterator first, InputIterator last,
   return result;
 }
 
+/**
+ * @brief 替换满足条件的元素并复制
+ * 
+ * 将范围 [first, last) 中的元素复制到 result 开始的序列中，
+ * 其中满足 pred(*it) 为真的元素替换为 new_value。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param pred 一元谓词函数对象
+ * @param new_value 新值
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class Iterator, class OutputIterator, class Predicate, class T>
 OutputIterator replace_copy_if(Iterator first, Iterator last,
                                OutputIterator result, Predicate pred,
@@ -842,6 +1427,14 @@ void __reverse(RandomAccessIterator first, RandomAccessIterator last,
   }
 }
 
+/**
+ * @brief 反转序列中的元素顺序
+ * 
+ * 反转范围 [first, last) 中元素的顺序。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ */
 template <class BidirectionalIterator>
 void reverse(BidirectionalIterator first, BidirectionalIterator last) {
   typedef typename iterator_traits<BidirectionalIterator>::iterator_category Category;
@@ -850,6 +1443,16 @@ void reverse(BidirectionalIterator first, BidirectionalIterator last) {
 }
 
 //reverse_copy
+/**
+ * @brief 反转序列并复制
+ * 
+ * 将范围 [first, last) 中的元素逆序复制到 result 开始的序列中。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class BidirectionalIterator, class OutputIterator>
 OutputIterator reverse_copy(BidirectionalIterator first, BidirectionalIterator last,
                             OutputIterator result) {
@@ -864,6 +1467,16 @@ OutputIterator reverse_copy(BidirectionalIterator first, BidirectionalIterator l
 /** *********************************************************************************** */
 //swap_ranges
 
+/**
+ * @brief 交换两个序列的元素
+ * 
+ * 交换范围 [first1, last1) 和从 first2 开始的相同长度范围内的元素。
+ * 
+ * @param first1 第一个序列的起始迭代器
+ * @param last1 第一个序列的结束迭代器
+ * @param first2 第二个序列的起始迭代器
+ * @return ForwardIterator2 指向第二个序列中最后一个被交换元素之后的位置
+ */
 template <class ForwardIterator1, class ForwardIterator2>
 ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
                              ForwardIterator2 first2) {
@@ -874,6 +1487,15 @@ ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
 
 /** *********************************************************************************** */
 //__gcd
+/**
+ * @brief 计算最大公约数
+ * 
+ * 计算两个数的最大公约数（Greatest Common Divisor）。
+ * 
+ * @param m 第一个数
+ * @param n 第二个数
+ * @return EuclideanRingElement 最大公约数
+ */
 template <class EuclideanRingElement>
 EuclideanRingElement __gcd(EuclideanRingElement m, EuclideanRingElement n) {
   while (n != 0) {
@@ -932,6 +1554,15 @@ void __rotate(RandomAccessIterator first, RandomAccessIterator middle,
   }
 }
 
+/**
+ * @brief 旋转序列
+ * 
+ * 将范围 [first, last) 中的元素进行旋转，使得 middle 指向的元素成为新的第一个元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 指向新的第一个元素的迭代器
+ * @param last 序列的结束迭代器
+ */
 template <class BidirectionalIterator>
 void rotate(BidirectionalIterator first, BidirectionalIterator middle,
             BidirectionalIterator last) {
@@ -942,6 +1573,18 @@ void rotate(BidirectionalIterator first, BidirectionalIterator middle,
 }
 
 
+/**
+ * @brief 旋转序列并复制
+ * 
+ * 将范围 [first, last) 中的元素旋转并复制到 result 开始的序列中，
+ * 使得 middle 指向的元素成为结果序列的第一个元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 指向新的第一个元素的迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class ForwardIterator, class OutputIterator>
 OutputIterator rotate_copy(ForwardIterator first, ForwardIterator middle,
                            ForwardIterator last, OutputIterator result) {
@@ -951,6 +1594,17 @@ OutputIterator rotate_copy(ForwardIterator first, ForwardIterator middle,
 /** *********************************************************************************** */
 //transform
 
+/**
+ * @brief 对序列中的每个元素执行操作并存储结果
+ * 
+ * 对范围 [first, last) 中的每个元素应用一元操作 op，并将结果存储到 result 开始的序列中。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param op 一元操作函数对象
+ * @return OutputIterator 指向输出序列末尾的迭代器
+ */
 template <class InputIterator, class OutputIterator, class UnaryOperation>
 OutputIterator transform(InputIterator first, InputIterator last,
                          OutputIterator result, UnaryOperation op) {
@@ -960,6 +1614,19 @@ OutputIterator transform(InputIterator first, InputIterator last,
   return result;
 }
 
+/**
+ * @brief 对两个序列中的对应元素执行操作并存储结果
+ * 
+ * 对范围 [first1, last1) 和从 first2 开始的序列中的对应元素应用二元操作 binary_op，
+ * 并将结果存储到 result 开始的序列中。
+ * 
+ * @param first1 第一个序列的起始迭代器
+ * @param last1 第一个序列的结束迭代器
+ * @param first2 第二个序列的起始迭代器
+ * @param result 输出序列的起始迭代器
+ * @param binary_op 二元操作函数对象
+ * @return OutputIterator 指向输出序列末尾的迭代器
+ */
 template <class InputIterator1, class InputIterator2, class OutputIterator,
           class BinaryOperation>
 OutputIterator transform(InputIterator1 first1, InputIterator1 last1,
@@ -1003,6 +1670,17 @@ ForwardIterator __unique_copy(InputIterator first, InputIterator last,
   return ++result;
 }
 
+/**
+ * @brief 移除连续重复元素并复制
+ * 
+ * 将范围 [first, last) 中的元素复制到 result 开始的序列中，
+ * 并且移除连续的重复元素（只保留第一个）。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class InputIterator, class OutputIterator>
 OutputIterator unique_copy(InputIterator first, InputIterator last,
                            OutputIterator result) {
@@ -1043,6 +1721,18 @@ ForwardIterator __unique_copy(InputIterator first, InputIterator last,
   return ++result;
 }
 
+/**
+ * @brief 移除满足条件的连续重复元素并复制
+ * 
+ * 将范围 [first, last) 中的元素复制到 result 开始的序列中，
+ * 并且移除连续的满足 pred(prev, current) 为真的元素（只保留第一个）。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param result 输出序列的起始迭代器
+ * @param pred 二元谓词函数对象
+ * @return OutputIterator 指向复制后序列末尾的迭代器
+ */
 template <class InputIterator, class OutputIterator, class BinaryPredicate>
 OutputIterator unique_copy(InputIterator first, InputIterator last,
                            OutputIterator result, BinaryPredicate pred) {
@@ -1054,12 +1744,33 @@ OutputIterator unique_copy(InputIterator first, InputIterator last,
 
 
 
+/**
+ * @brief 移除连续重复元素
+ * 
+ * 移除范围 [first, last) 中连续的重复元素（只保留第一个）。
+ * 剩余元素保持原有相对顺序，返回新的逻辑末尾迭代器。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @return ForwardIterator 指向新的逻辑末尾的迭代器
+ */
 template <class ForwardIterator>
 ForwardIterator unique(ForwardIterator first, ForwardIterator last) {
   first = msl::adjacent_find(first, last);
   return msl::unique_copy(first, last, first);
 }
 
+/**
+ * @brief 移除满足条件的连续重复元素
+ * 
+ * 移除范围 [first, last) 中连续的满足 pred(prev, current) 为真的元素（只保留第一个）。
+ * 剩余元素保持原有相对顺序，返回新的逻辑末尾迭代器。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pred 二元谓词函数对象
+ * @return ForwardIterator 指向新的逻辑末尾的迭代器
+ */
 template <class ForwardIterator, class BinaryPredicate>
 ForwardIterator unique(ForwardIterator first, ForwardIterator last,
                        BinaryPredicate pred) {
@@ -1070,6 +1781,17 @@ ForwardIterator unique(ForwardIterator first, ForwardIterator last,
 
 /*************************************************************************** */
 //lower_bound
+
+/**
+ * @brief 在有序序列中查找第一个大于或等于给定值的元素
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param forward_iterator_tag 前向迭代器标签
+ * @return ForwardIterator 指向第一个大于或等于 value 的元素的迭代器
+ */
 template <class ForwardIterator, class T, class Distance>
 ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
                               const T& value, Distance*, forward_iterator_tag) {
@@ -1093,6 +1815,16 @@ ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个大于或等于给定值的元素（随机访问迭代器优化版本）
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param random_access_iterator_tag 随机访问迭代器标签
+ * @return RandomAccessIterator 指向第一个大于或等于 value 的元素的迭代器
+ */
 template <class RandomAccessIterator, class T, class Distance>
 RandomAccessIterator __lower_bound(RandomAccessIterator first, RandomAccessIterator last,
                                    const T& value, Distance*, random_access_iterator_tag) {
@@ -1113,6 +1845,17 @@ RandomAccessIterator __lower_bound(RandomAccessIterator first, RandomAccessItera
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个大于或等于给定值的元素
+ * 
+ * 返回指向范围 [first, last) 中第一个不小于（即大于或等于）value 的元素的迭代器。
+ * 如果所有元素都小于 value，则返回 last。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @return ForwardIterator 指向第一个大于或等于 value 的元素的迭代器
+ */
 template <class ForwardIterator, class T>
 inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
                                    const T& value) {
@@ -1122,6 +1865,17 @@ inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
                        category());
 }
 
+/**
+ * @brief 在有序序列中查找第一个不满足 comp(*it, value) 为真的元素
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param forward_iterator_tag 前向迭代器标签
+ * @return ForwardIterator 指向第一个不满足 comp(*it, value) 的元素的迭代器
+ */
 template <class ForwardIterator, class T, class Distance, class Compare>
 ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
                               const T& value, Compare comp, Distance*, forward_iterator_tag) {
@@ -1145,6 +1899,17 @@ ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个不满足 comp(*it, value) 为真的元素（随机访问迭代器优化版本）
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param random_access_iterator_tag 随机访问迭代器标签
+ * @return RandomAccessIterator 指向第一个不满足 comp(*it, value) 的元素的迭代器
+ */
 template <class RandomAccessIterator, class T, class Distance, class Compare>
 RandomAccessIterator __lower_bound(RandomAccessIterator first, RandomAccessIterator last,
                                    const T& value, Compare comp, Distance*, random_access_iterator_tag) {
@@ -1165,6 +1930,18 @@ RandomAccessIterator __lower_bound(RandomAccessIterator first, RandomAccessItera
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个不满足 comp(*it, value) 为真的元素
+ * 
+ * 使用自定义比较函数 comp。返回指向范围 [first, last) 中第一个
+ * 使得 comp(*it, value) 为假的元素的迭代器。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @return ForwardIterator 指向第一个符合条件的元素的迭代器
+ */
 template <class ForwardIterator, class T, class Compare>
 inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
                                    const T& value, Compare comp) {
@@ -1178,6 +1955,16 @@ inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
 //========================================================================
 // upper_bound
 
+/**
+ * @brief 在有序序列中查找第一个大于给定值的元素
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param forward_iterator_tag 前向迭代器标签
+ * @return ForwardIterator 指向第一个大于 value 的元素的迭代器
+ */
 template <class ForwardIterator, class T, class Distance>
 ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
                               const T& value, Distance*, forward_iterator_tag) {
@@ -1201,6 +1988,16 @@ ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个大于给定值的元素（随机访问迭代器优化版本）
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param random_access_iterator_tag 随机访问迭代器标签
+ * @return RandomAccessIterator 指向第一个大于 value 的元素的迭代器
+ */
 template <class RandomAccessIterator, class T, class Distance>
 RandomAccessIterator __upper_bound(RandomAccessIterator first, RandomAccessIterator last,
                                    const T& value, Distance*, random_access_iterator_tag) {
@@ -1221,6 +2018,17 @@ RandomAccessIterator __upper_bound(RandomAccessIterator first, RandomAccessItera
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个大于给定值的元素
+ * 
+ * 返回指向范围 [first, last) 中第一个大于 value 的元素的迭代器。
+ * 如果没有元素大于 value，则返回 last。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @return ForwardIterator 指向第一个大于 value 的元素的迭代器
+ */
 template <class ForwardIterator, class T>
 inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
                                    const T& value) {
@@ -1230,6 +2038,17 @@ inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
                        category());
 }
 
+/**
+ * @brief 在有序序列中查找第一个满足 comp(value, *it) 为真的元素
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param forward_iterator_tag 前向迭代器标签
+ * @return ForwardIterator 指向第一个满足 comp(value, *it) 的元素的迭代器
+ */
 template <class ForwardIterator, class T, class Distance, class Compare>
 ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
                               const T& value, Compare comp, Distance*, forward_iterator_tag) {
@@ -1253,6 +2072,17 @@ ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个满足 comp(value, *it) 为真的元素（随机访问迭代器优化版本）
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @param Distance* 距离类型指针（用于标签分发）
+ * @param random_access_iterator_tag 随机访问迭代器标签
+ * @return RandomAccessIterator 指向第一个满足 comp(value, *it) 的元素的迭代器
+ */
 template <class RandomAccessIterator, class T, class Distance, class Compare>
 RandomAccessIterator __upper_bound(RandomAccessIterator first, RandomAccessIterator last,
                                    const T& value, Compare comp, Distance*, random_access_iterator_tag) {
@@ -1273,6 +2103,18 @@ RandomAccessIterator __upper_bound(RandomAccessIterator first, RandomAccessItera
   return first;
 }
 
+/**
+ * @brief 在有序序列中查找第一个大于给定值的元素
+ * 
+ * 使用自定义比较函数 comp。返回指向范围 [first, last) 中第一个
+ * 使得 comp(value, *it) 为真的元素的迭代器。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @return ForwardIterator 指向第一个符合条件的元素的迭代器
+ */
 template <class ForwardIterator, class T, class Compare>
 inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
                                    const T& value, Compare comp) {
@@ -1284,12 +2126,36 @@ inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
 
 /**************************************************************************** */
 //binary_search
+
+/**
+ * @brief 二分查找
+ * 
+ * 在有序序列中检查是否存在等于 value 的元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @return true 如果找到等于 value 的元素
+ * @return false 如果未找到
+ */
 template<class ForwardIterator, class T >
 bool binary_search(ForwardIterator first, ForwardIterator last, const T& value){
   ForwardIterator it = msl::lower_bound(first, last, value);
   return (it != last && !(value < *it));
 }
 
+/**
+ * @brief 二分查找（自定义比较器）
+ * 
+ * 在有序序列中检查是否存在与 value 等价的元素（根据 comp）。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @return true 如果找到等价元素
+ * @return false 如果未找到
+ */
 template<class ForwardIterator, class T, class Compare >
 bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, Compare comp){
   ForwardIterator it = msl::lower_bound(first, last, value, comp);
@@ -1298,6 +2164,19 @@ bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, 
 
 /************************************************************************* */
 //next_permutation
+
+/**
+ * @brief 生成下一个字典序排列
+ * 
+ * 将范围 [first, last) 中的元素重新排列为下一个字典序更大的排列。
+ * 如果当前排列已经是最大的，则将其重排为最小排列（升序），并返回 false。
+ * 否则返回 true。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @return true 如果成功生成下一个排列
+ * @return false 如果当前已经是最大排列
+ */
 template <class BidirectionalIterator>
 bool next_permutation(BidirectionalIterator first, BidirectionalIterator last) {
   if (first == last) return false;
@@ -1321,6 +2200,17 @@ bool next_permutation(BidirectionalIterator first, BidirectionalIterator last) {
   }
 }
 
+/**
+ * @brief 生成下一个字典序排列（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+ * @return true 如果成功生成下一个排列
+ * @return false 如果当前已经是最大排列
+ */
 template <class BidirectionalIterator, class Compare>
 bool next_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp) {
   if (first == last) return false;
@@ -1345,6 +2235,18 @@ bool next_permutation(BidirectionalIterator first, BidirectionalIterator last, C
 }
 
 
+/**
+ * @brief 生成上一个字典序排列
+ * 
+ * 将范围 [first, last) 中的元素重新排列为上一个字典序更小的排列。
+ * 如果当前排列已经是最小的，则将其重排为最大排列（降序），并返回 false。
+ * 否则返回 true。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @return true 如果成功生成上一个排列
+ * @return false 如果当前已经是最小排列
+ */
 template <class BidirectionalIterator>
 bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last) {
   if (first == last) return false;
@@ -1372,6 +2274,17 @@ bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last) {
 /*************************************************************** */
 //prev_permutation
 
+/**
+ * @brief 生成上一个字典序排列（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+ * @return true 如果成功生成上一个排列
+ * @return false 如果当前已经是最小排列
+ */
 template <class BidirectionalIterator, class Compare>
 bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp) {
   if (first == last) return false;
@@ -1398,6 +2311,15 @@ bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last, C
 //========================================================================
 // random_shuffle
 
+/**
+ * @brief 随机打乱序列中的元素
+ * 
+ * 使用内置的随机数生成器 (std::rand) 随机重排范围 [first, last) 中的元素。
+ * 时间复杂度为 O(N)。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ */
 template <class RandomAccessIterator>
 inline void random_shuffle(RandomAccessIterator first, RandomAccessIterator last) {
   if (first == last) return;
@@ -1406,6 +2328,15 @@ inline void random_shuffle(RandomAccessIterator first, RandomAccessIterator last
   }
 }
 
+/**
+ * @brief 随机打乱序列中的元素（自定义随机生成器）
+ * 
+ * 使用提供的随机数生成器 rand 随机重排范围 [first, last) 中的元素。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param rand 随机数生成器函数对象
+ */
 template <class RandomAccessIterator, class RandomNumberGenerator>
 void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
                     RandomNumberGenerator& rand) {
@@ -1419,6 +2350,17 @@ void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
 //partial_sort
 
 
+/**
+ * @brief 部分排序
+ * 
+ * 重排范围 [first, last) 中的元素，使得范围 [first, middle) 包含最小的 (middle - first) 个元素，
+ * 并且这些元素按升序排列。范围 [middle, last) 中的其余元素不保证顺序。
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 排序结束位置的迭代器（包含前 N 个最小元素）
+ * @param last 序列的结束迭代器
+ * @param T* 值类型指针（用于推导类型）
+ */
 template<class RandomAccessIterator, class T>
 inline void __partial_sort(RandomAccessIterator first,
                            RandomAccessIterator middle,
@@ -1431,6 +2373,16 @@ inline void __partial_sort(RandomAccessIterator first,
   msl::sort_heap(first, middle);
 }
 
+/**
+ * @brief 部分排序
+ * 
+ * 对范围 [first, last) 进行部分排序，使得前 (middle - first) 个最小元素
+ * 被放置在 [first, middle) 中并有序。
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 排序结束位置的迭代器
+ * @param last 序列的结束迭代器
+ */
 template<class RandomAccessIterator>
 inline void partial_sort(RandomAccessIterator first, 
                          RandomAccessIterator middle, 
@@ -1439,6 +2391,19 @@ inline void partial_sort(RandomAccessIterator first,
 }
 
 
+/**
+ * @brief 部分排序（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 重排范围 [first, last) 中的元素，使得范围 [first, middle) 包含根据 comp 定义的最小的 (middle - first) 个元素，
+ * 并且这些元素按顺序排列。
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 排序结束位置的迭代器
+ * @param last 序列的结束迭代器
+ * @param T* 值类型指针
+ * @param comp 比较函数对象
+ */
 template<class RandomAccessIterator, class T,class Compare>
 inline void __partial_sort(RandomAccessIterator first,
                            RandomAccessIterator middle,
@@ -1451,6 +2416,17 @@ inline void __partial_sort(RandomAccessIterator first,
   msl::sort_heap(first, middle, comp);
 }
 
+/**
+ * @brief 部分排序（自定义比较器）
+ * 
+ * 对范围 [first, last) 进行部分排序，使得前 (middle - first) 个最小元素
+ * （根据 comp 比较）被放置在 [first, middle) 中并有序。
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 排序结束位置的迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+ */
 template<class RandomAccessIterator, class Compare>
 inline void partial_sort(RandomAccessIterator first,
                          RandomAccessIterator middle,
