@@ -6,6 +6,8 @@
 #include "stl_algobase.h"
 #include "iterator.h"
 #include <cstdlib>
+#include "stl_heap.h"
+
 
 namespace msl {
 
@@ -1413,9 +1415,48 @@ void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
   }
 }
 
+/********************************************************************** */
+//partial_sort
 
 
+template<class RandomAccessIterator, class T>
+inline void __partial_sort(RandomAccessIterator first,
+                           RandomAccessIterator middle,
+                           RandomAccessIterator last,T*) {
+  msl::make_heap(first, middle);
+  for (RandomAccessIterator i = middle; i != last; ++i) {
+    if(*i < *first)
+       msl::__pop_heap(first, middle, i, T(*i), distance_type(first));    
+  }
+  msl::sort_heap(first, middle);
+}
 
+template<class RandomAccessIterator>
+inline void partial_sort(RandomAccessIterator first, 
+                         RandomAccessIterator middle, 
+                         RandomAccessIterator last){
+  __partial_sort(first, middle, last, value_type(first));
+}
+
+
+template<class RandomAccessIterator, class T,class Compare>
+inline void __partial_sort(RandomAccessIterator first,
+                           RandomAccessIterator middle,
+                           RandomAccessIterator last,T*,Compare comp) {
+  msl::make_heap(first, middle, comp);
+  for (RandomAccessIterator i = middle; i != last; ++i) {
+    if(comp(*i, *first))
+       msl::__pop_heap(first, middle, i, T(*i), distance_type(first), comp);    
+  }
+  msl::sort_heap(first, middle, comp);
+}
+
+template<class RandomAccessIterator, class Compare>
+inline void partial_sort(RandomAccessIterator first,
+                         RandomAccessIterator middle,
+                         RandomAccessIterator last, Compare comp) {
+  __partial_sort(first, middle, last, value_type(first), comp);
+}
 
 }// namespace msl
 

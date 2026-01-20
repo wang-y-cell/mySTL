@@ -1848,7 +1848,60 @@ void test_random_shuffle() {
     }
 }
 
+void test_partial_sort() {
+    print();
+    std::cout << "Testing partial_sort..." << std::endl;
+    
+    // Test 1: Simple vector
+    {
+        int arr[] = {9, 2, 7, 4, 5, 6, 3, 8, 1};
+        // Sorted: 1, 2, 3, 4, 5, 6, 7, 8, 9
+        // Partial sort top 3: 1, 2, 3 should be at begin
+        msl::vector<int> v(arr, arr + 9);
+        msl::partial_sort(v.begin(), v.begin() + 3, v.end());
+        
+        bool passed = true;
+        if (v[0] != 1 || v[1] != 2 || v[2] != 3) passed = false;
+        
+        // The rest are undefined order but must be >= 3
+        for(int i=3; i<9; ++i) {
+            if(v[i] < 3) passed = false;
+        }
+        
+        if (passed) {
+             std::cout << "Vector partial_sort (top 3) PASSED" << std::endl;
+        } else {
+             std::cout << "Vector partial_sort (top 3) FAILED" << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+    
+    // Test 2: Custom comparator (descending)
+    {
+        int arr[] = {1, 5, 2, 8, 3, 9, 4, 7, 6};
+        // Descending: 9, 8, 7, 6, 5, 4, 3, 2, 1
+        // Top 4: 9, 8, 7, 6
+        msl::vector<int> v(arr, arr + 9);
+        msl::partial_sort(v.begin(), v.begin() + 4, v.end(), [](int a, int b){ return a > b; });
+        
+        bool passed = true;
+        int expected[] = {9, 8, 7, 6};
+        for(int i=0; i<4; ++i) {
+            if(v[i] != expected[i]) passed = false;
+        }
+        
+        if (passed) {
+             std::cout << "Custom comparator partial_sort PASSED" << std::endl;
+        } else {
+             std::cout << "Custom comparator partial_sort FAILED" << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+}
+
 int main() {
+    test_partial_sort();
+    std::cout << std::endl;
     test_random_shuffle();
     std::cout << std::endl;
     test_prev_permutation();
