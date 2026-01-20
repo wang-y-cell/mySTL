@@ -1654,7 +1654,155 @@ void test_binary_search() {
     }
 }
 
+void test_next_permutation() {
+    print();
+    std::cout << "Testing next_permutation..." << std::endl;
+
+    // Test 1: Simple permutation {1, 2, 3}
+    {
+        int arr[] = {1, 2, 3};
+        msl::vector<int> v(arr, arr + 3);
+        
+        // 1 2 3 -> 1 3 2
+        bool has_next = msl::next_permutation(v.begin(), v.end());
+        if (has_next && v[0] == 1 && v[1] == 3 && v[2] == 2) {
+            std::cout << "next_permutation {1,2,3}->{1,3,2} PASSED" << std::endl;
+        } else {
+            std::cout << "next_permutation {1,2,3}->{1,3,2} FAILED" << std::endl;
+            for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+
+        // Cycle through all
+        int count = 1; // already did one
+        while (msl::next_permutation(v.begin(), v.end())) {
+            count++;
+        }
+        // Total permutations of 3 elements is 3! = 6. 
+        // Since we started at 1,2,3 and did one step to 1,3,2, we expect 5 more steps to return true?
+        // No, loop runs until it returns false (back to 1,2,3).
+        // Sequence: 123 -> 132 -> 213 -> 231 -> 312 -> 321 -> 123(false)
+        // count should be 6? Wait.
+        // 1. (start) 123
+        // 2. 132 (count=1, has_next=true)
+        // loop:
+        // 3. 213 (count=2)
+        // 4. 231 (count=3)
+        // 5. 312 (count=4)
+        // 6. 321 (count=5)
+        // 7. 123 (returns false, loop terminates)
+        
+        if (count == 5 && v[0] == 1 && v[1] == 2 && v[2] == 3) {
+             std::cout << "next_permutation cycle PASSED" << std::endl;
+        } else {
+             std::cout << "next_permutation cycle FAILED, count=" << count << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 2: Custom comparator (descending)
+    {
+        // For descending order, "next" permutation means "next lexicographically smaller" if we use > as comparator?
+        // Actually, next_permutation with comp uses comp(a, b) to check if a < b.
+        // If we use greater<int>, we are defining an order where 3 < 2 (3 comes before 2).
+        // So sorted sequence is 3, 2, 1.
+        // If we start with 3, 2, 1, next_permutation should return false.
+        // If we start with 1, 2, 3 (which is "last" in descending order), it should go to... wait.
+        
+        // Let's stick to simple logic:
+        // Comparator defines "less than".
+        // Sequence: 3, 2, 1. comp(3, 2) is true (3 > 2). So 3 < 2 in this ordering.
+        // Wait, greater(a,b) returns a > b.
+        // greater(3, 2) -> true. So 3 is "before" 2? No, STL comparators usually define "strict weak ordering".
+        // sort(v, greater) -> 3, 2, 1.
+        // So 3 is the "smallest" element, 1 is the "largest".
+        // So 3, 2, 1 is the sorted sequence (first permutation).
+        // 1, 2, 3 is the last permutation.
+        
+        int arr[] = {3, 2, 1};
+        msl::vector<int> v(arr, arr + 3);
+        // comp: a > b. 
+        // 3, 2, 1 is sorted.
+        // next should be 3, 1, 2.
+        
+        bool has_next = msl::next_permutation(v.begin(), v.end(), [](int a, int b){ return a > b; });
+        if (has_next && v[0] == 3 && v[1] == 1 && v[2] == 2) {
+             std::cout << "Custom comparator next_permutation {3,2,1}->{3,1,2} PASSED" << std::endl;
+        } else {
+             std::cout << "Custom comparator next_permutation {3,2,1}->{3,1,2} FAILED" << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+}
+
+void test_prev_permutation() {
+    print();
+    std::cout << "Testing prev_permutation..." << std::endl;
+
+    // Test 1: Simple permutation {3, 2, 1}
+    {
+        int arr[] = {3, 2, 1};
+        msl::vector<int> v(arr, arr + 3);
+        
+        // 3 2 1 -> 3 1 2
+        bool has_prev = msl::prev_permutation(v.begin(), v.end());
+        if (has_prev && v[0] == 3 && v[1] == 1 && v[2] == 2) {
+            std::cout << "prev_permutation {3,2,1}->{3,1,2} PASSED" << std::endl;
+        } else {
+            std::cout << "prev_permutation {3,2,1}->{3,1,2} FAILED" << std::endl;
+            for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+
+        // Cycle through all
+        int count = 1; 
+        while (msl::prev_permutation(v.begin(), v.end())) {
+            count++;
+        }
+        // Sequence: 321 -> 312 -> 231 -> 213 -> 132 -> 123 -> 321(false)
+        
+        if (count == 5 && v[0] == 3 && v[1] == 2 && v[2] == 1) {
+             std::cout << "prev_permutation cycle PASSED" << std::endl;
+        } else {
+             std::cout << "prev_permutation cycle FAILED, count=" << count << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 2: Custom comparator (descending logic inverted)
+    {
+        // comp: a > b. 
+        // Logic: "prev" permutation based on ordering >.
+        // Sorted: 3, 2, 1 (first).
+        // Reverse sorted: 1, 2, 3 (last).
+        
+        // Start with 1, 2, 3.
+        int arr[] = {1, 2, 3};
+        msl::vector<int> v(arr, arr + 3);
+        
+        // prev of {1, 2, 3} with > should be {1, 3, 2} ?
+        // Let's trace:
+        // comp(i1, --i) => *i1 > *i.
+        // 1 2 3: 3 > 2 (true). i=1 (val 2).
+        // i2=last. Find comp(i2, i) => *i2 > 2.
+        // 3 > 2. i2=2 (val 3).
+        // Swap 2 and 3 -> 1 3 2.
+        // Reverse after i -> 1 3 2.
+        // Yes.
+        
+        bool has_prev = msl::prev_permutation(v.begin(), v.end(), [](int a, int b){ return a > b; });
+        if (has_prev && v[0] == 1 && v[1] == 3 && v[2] == 2) {
+             std::cout << "Custom comparator prev_permutation {1,2,3}->{1,3,2} PASSED" << std::endl;
+        } else {
+             std::cout << "Custom comparator prev_permutation {1,2,3}->{1,3,2} FAILED" << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+}
+
 int main() {
+    test_prev_permutation();
+    std::cout << std::endl;
+    test_next_permutation();
+    std::cout << std::endl;
     test_binary_search();
     std::cout << std::endl;
     test_upper_bound();

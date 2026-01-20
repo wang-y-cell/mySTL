@@ -1293,9 +1293,108 @@ bool binary_search(ForwardIterator first, ForwardIterator last, const T& value, 
   return (it != last && !(comp(value, *it)));
 }
 
+/************************************************************************* */
+//next_permutation
+template <class BidirectionalIterator>
+bool next_permutation(BidirectionalIterator first, BidirectionalIterator last) {
+  if (first == last) return false;
+  BidirectionalIterator i = last;
+  if (first == --i) return false;
 
+  while (true) {
+    BidirectionalIterator i1, i2;
+    i1 = i;
+    if (*--i < *i1) {
+      i2 = last;
+      while (!(*i < *--i2));
+      msl::iter_swap(i, i2);
+      msl::reverse(i1, last);
+      return true;
+    }
+    if (i == first) {
+      msl::reverse(first, last);
+      return false;
+    }
+  }
+}
+
+template <class BidirectionalIterator, class Compare>
+bool next_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp) {
+  if (first == last) return false;
+  BidirectionalIterator i = last;
+  if (first == --i) return false;
+
+  while (true) {
+    BidirectionalIterator i1, i2;
+    i1 = i;
+    if (comp(*--i, *i1)) {
+      i2 = last;
+      while (!comp(*i, *--i2));
+      msl::iter_swap(i, i2);
+      msl::reverse(i1, last);
+      return true;
+    }
+    if (i == first) {
+      msl::reverse(first, last);
+      return false;
+    }
+  }
+}
+
+
+template <class BidirectionalIterator>
+bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last) {
+  if (first == last) return false;
+  BidirectionalIterator i = last;
+  if (first == --i) return false;
+
+  while (true) {
+    BidirectionalIterator i1, i2;
+    i1 = i;
+    if (*i1 < *--i) {
+      i2 = last;
+      while (!(*--i2 < *i));
+      msl::iter_swap(i, i2);
+      msl::reverse(i1, last);
+      return true;
+    }
+    if (i == first) {
+      msl::reverse(first, last);
+      return false;
+    }
+  }
+}
+
+
+/*************************************************************** */
+//prev_permutation
+
+template <class BidirectionalIterator, class Compare>
+bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last, Compare comp) {
+  if (first == last) return false;
+  BidirectionalIterator i = last;
+  if (first == --i) return false;
+
+  while (true) {
+    BidirectionalIterator i1, i2;
+    i1 = i;
+    if (comp(*i1, *--i)) {
+      i2 = last;
+      while (!comp(*--i2, *i));
+      msl::iter_swap(i, i2);
+      msl::reverse(i1, last);
+      return true;
+    }
+    if (i == first) {
+      msl::reverse(first, last);
+      return false;
+    }
+  }
+}
 
 }// namespace msl
+
+
 
 
 #endif // STL_ALGO_H
