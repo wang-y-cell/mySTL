@@ -109,6 +109,19 @@ void __adjust_heap(RandomAccessIterator first, Distance holeIndex, Distance len,
     msl::__push_heap(first, holeIndex, topIndex, value);
 }
 
+/**
+ * @brief 调整堆（下沉操作）
+ * 
+ * 从 holeIndex 开始，将较大的子节点提升，填补空洞，直到到达叶子节点或合适的位置。
+ * 最后调用 __push_heap 将原始的 value 值插入到调整后的位置。
+ * 
+ * @param first 堆的起始迭代器
+ * @param holeIndex 需要调整的空洞位置
+ * @param len 堆的长度
+ * @param value 原始需要重新放置的值（通常是原堆尾元素）
+ * @param comp 比较函数对象，用于判断元素大小
+ */
+
 template <typename RandomAccessIterator, typename Distance, typename T, typename Compare>
 void __adjust_heap(RandomAccessIterator first, Distance holeIndex, Distance len, T value, Compare comp) {
     Distance topIndex = holeIndex;

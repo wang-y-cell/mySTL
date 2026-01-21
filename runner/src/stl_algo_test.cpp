@@ -1899,7 +1899,78 @@ void test_partial_sort() {
     }
 }
 
+void test_partial_sort_copy() {
+    print();
+    std::cout << "Testing partial_sort_copy..." << std::endl;
+
+    // Test 1: Result smaller than Input
+    {
+        int arr[] = {9, 2, 7, 4, 5, 6, 3, 8, 1};
+        msl::vector<int> v(arr, arr + 9);
+        msl::vector<int> result(3); // Capacity 3
+
+        // Copy top 3 smallest: 1, 2, 3
+        msl::partial_sort_copy(v.begin(), v.end(), result.begin(), result.end());
+
+        bool passed = true;
+        if (result[0] != 1 || result[1] != 2 || result[2] != 3) passed = false;
+
+        if (passed) {
+             std::cout << "Vector partial_sort_copy (result < input) PASSED" << std::endl;
+        } else {
+             std::cout << "Vector partial_sort_copy (result < input) FAILED" << std::endl;
+             for(int x : result) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 2: Result larger than Input
+    {
+        int arr[] = {3, 1, 2};
+        msl::vector<int> v(arr, arr + 3);
+        msl::vector<int> result(5); // Capacity 5
+
+        // Copy all 3 and sort them: 1, 2, 3
+        auto it = msl::partial_sort_copy(v.begin(), v.end(), result.begin(), result.end());
+
+        bool passed = true;
+        if (it != result.begin() + 3) passed = false;
+        if (result[0] != 1 || result[1] != 2 || result[2] != 3) passed = false;
+
+        if (passed) {
+             std::cout << "Vector partial_sort_copy (result > input) PASSED" << std::endl;
+        } else {
+             std::cout << "Vector partial_sort_copy (result > input) FAILED" << std::endl;
+             for(int x : result) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 3: Custom comparator (descending)
+    {
+        int arr[] = {1, 5, 2, 8, 3, 9, 4, 7, 6};
+        msl::vector<int> v(arr, arr + 9);
+        msl::vector<int> result(4);
+
+        // Top 4 largest: 9, 8, 7, 6
+        msl::partial_sort_copy(v.begin(), v.end(), result.begin(), result.end(), [](int a, int b){ return a > b; });
+
+        bool passed = true;
+        int expected[] = {9, 8, 7, 6};
+        for(int i=0; i<4; ++i) {
+            if(result[i] != expected[i]) passed = false;
+        }
+
+        if (passed) {
+             std::cout << "Custom comparator partial_sort_copy PASSED" << std::endl;
+        } else {
+             std::cout << "Custom comparator partial_sort_copy FAILED" << std::endl;
+             for(int x : result) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+}
+
 int main() {
+    test_partial_sort_copy();
+    std::cout << std::endl;
     test_partial_sort();
     std::cout << std::endl;
     test_random_shuffle();

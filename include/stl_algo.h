@@ -2434,6 +2434,133 @@ inline void partial_sort(RandomAccessIterator first,
   __partial_sort(first, middle, last, value_type(first), comp);
 }
 
+
+/******************************************************************************** */
+//partial_sort_copy
+
+/**
+ * @brief 部分排序并复制
+ * 
+ * 将范围 [first, last) 中最小的 N 个元素复制到范围 [result_first, result_last) 中，
+ * 其中 N = min(last - first, result_last - result_first)。
+ * 复制后的元素在结果范围中按升序排列。
+ * 
+ * @param first 输入序列的起始迭代器
+ * @param last 输入序列的结束迭代器
+ * @param result_first 输出序列的起始迭代器
+ * @param result_last 输出序列的结束迭代器
+ * @param Distance* 距离类型指针（用于推导类型）
+ * @param T* 值类型指针（用于推导类型）
+ * @return RandomAccessIterator 指向输出序列中已复制元素的末尾的迭代器
+ */
+template <class InputIterator, class RandomAccessIterator, class Distance, class T>
+RandomAccessIterator __partial_sort_copy(InputIterator first, InputIterator last,
+                                         RandomAccessIterator result_first,
+                                         RandomAccessIterator result_last, 
+                                         Distance*, T*) {
+    if (result_first == result_last) return result_last;
+    RandomAccessIterator result_real_last = result_first;
+    while(first != last && result_real_last != result_last) {
+        *result_real_last = *first;
+        ++result_real_last;
+        ++first;
+    }
+    msl::make_heap(result_first, result_real_last);
+    while (first != last) {
+        if (*first < *result_first) {
+            msl::__adjust_heap(result_first, Distance(0), Distance(result_real_last - result_first), T(*first));
+        }
+        ++first;
+    }
+    msl::sort_heap(result_first, result_real_last);
+    return result_real_last;
+}
+
+/**
+ * @brief 部分排序并复制
+ * 
+ * 复制并排序最小的 N 个元素。
+ * 
+ * @param first 输入序列的起始迭代器
+ * @param last 输入序列的结束迭代器
+ * @param result_first 输出序列的起始迭代器
+ * @param result_last 输出序列的结束迭代器
+ * @return RandomAccessIterator 指向输出序列末尾的迭代器
+ */
+template <class InputIterator, class RandomAccessIterator>
+inline RandomAccessIterator partial_sort_copy(InputIterator first, InputIterator last,
+                                              RandomAccessIterator result_first,
+                                              RandomAccessIterator result_last) {
+    return __partial_sort_copy(first, last, result_first, result_last, 
+                               distance_type(result_first), value_type(first));
+}
+
+/**
+ * @brief 部分排序并复制（自定义比较器）
+ * 
+ * 使用自定义比较函数 comp。
+ * 
+ * @param first 输入序列的起始迭代器
+ * @param last 输入序列的结束迭代器
+ * @param result_first 输出序列的起始迭代器
+ * @param result_last 输出序列的结束迭代器
+ * @param Distance* 距离类型指针
+ * @param T* 值类型指针
+ * @param comp 比较函数对象
+ * @return RandomAccessIterator 指向输出序列末尾的迭代器
+ */
+template <class InputIterator, class RandomAccessIterator, class Distance, class T, class Compare>
+RandomAccessIterator __partial_sort_copy(InputIterator first, InputIterator last,
+                                         RandomAccessIterator result_first,
+                                         RandomAccessIterator result_last, 
+                                         Distance*, T*, Compare comp) {
+    if (result_first == result_last) return result_last;
+    RandomAccessIterator result_real_last = result_first;
+    while(first != last && result_real_last != result_last) {
+        *result_real_last = *first;
+        ++result_real_last;
+        ++first;
+    }
+    msl::make_heap(result_first, result_real_last, comp);
+    while (first != last) {
+        if (comp(*first, *result_first)) {
+            msl::__adjust_heap(result_first, Distance(0), Distance(result_real_last - result_first), T(*first), comp);
+        }
+        ++first;
+    }
+    msl::sort_heap(result_first, result_real_last, comp);
+    return result_real_last;
+}
+
+/**
+ * @brief 部分排序并复制（自定义比较器）
+ * 
+ * 复制并排序最小的 N 个元素（根据 comp）。
+ * 
+ * @param first 输入序列的起始迭代器
+ * @param last 输入序列的结束迭代器
+ * @param result_first 输出序列的起始迭代器
+ * @param result_last 输出序列的结束迭代器
+ * @param comp 比较函数对象
+ * @return RandomAccessIterator 指向输出序列末尾的迭代器
+ */
+template <class InputIterator, class RandomAccessIterator, class Compare>
+inline RandomAccessIterator partial_sort_copy(InputIterator first, InputIterator last,
+                                              RandomAccessIterator result_first,
+                                              RandomAccessIterator result_last,
+                                              Compare comp) {
+    return __partial_sort_copy(first, last, result_first, result_last, 
+                               distance_type(result_first), value_type(first), comp);
+}
+
+
+
+
+
+
+
+
+
 }// namespace msl
 
 
