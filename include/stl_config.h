@@ -153,10 +153,13 @@
 
 
 namespace msl {
-    
-    using size_t = std::size_t;
-    using ptrdiff_t = std::ptrdiff_t;
-
+    #ifdef MYSTL_HAS_RTTI
+    using std::size_t;
+    using std::ptrdiff_t;
+    #else
+    using std::size_t;
+    using std::ptrdiff_t;
+    #endif
     
     #if MYSTL_CPP_VERSION < 11 && !defined(nullptr)
         const class {

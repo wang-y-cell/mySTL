@@ -1,12 +1,11 @@
 //简单实现move语义
-
-
 #ifndef MYSTL_MOVE_H
 #define MYSTL_MOVE_H
 
 #include "type_traits.h"
 
 namespace msl {
+
 
 //处理左值
 template<typename _Tp>
@@ -29,7 +28,8 @@ move(T&& t) noexcept {
     return static_cast<typename msl::remove_reference<T>::type&&>(t);
 }
 
-}
+
+} // namespace msl
 
 
 
