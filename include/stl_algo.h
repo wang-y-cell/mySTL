@@ -2554,9 +2554,56 @@ inline RandomAccessIterator partial_sort_copy(InputIterator first, InputIterator
 }
 
 
+/****************************************************************************** */
+//__insertion_sort
+
+template<class RandomAccessIterator,class T>
+void __unguarder_linear_insert(RandomAccessIterator last, T value){
+    RandomAccessIterator next = last;
+    --next;
+    while(value < *next) {
+      *last = *next;
+      last = next;
+      --next;
+    }
+    *last = value;
+}
+
+/**
+ * @brief 无哨兵的线性插入排序
+ * 
+ * 对序列 [first, last) 进行插入排序。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param T 序列中元素的类型
+ */
+
+template<class RandomAccessIterator, class T>
+void __liner_insert(RandomAccessIterator first, RandomAccessIterator last, T*) {
+    T value = *last;
+    if(value < *first) {
+        msl::copy_backward(first, last, last + 1);
+        *first = value;
+    }else{
+        __unguarder_linear_insert(last, value);       
+    }
+}
 
 
-
+/** 
+ * 对序列 [first, last) 进行插入排序。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+*/
+template<class RandomAccessIterator>
+void __insert_sort(RandomAccessIterator first, RandomAccessIterator last) {
+    if(first == last) return;
+    for(RandomAccessIterator i = first + 1; i != last; ++i) {
+        __liner_insert(first,i,value_type(first));
+    }
+}
 
 
 

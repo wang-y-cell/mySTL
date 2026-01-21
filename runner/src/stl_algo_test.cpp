@@ -1968,7 +1968,62 @@ void test_partial_sort_copy() {
     }
 }
 
+void test_insert_sort() {
+    print();
+    std::cout << "Testing insert_sort..." << std::endl;
+
+    // Test 1: Random elements
+    {
+        int arr[] = {5, 2, 9, 1, 5, 6};
+        msl::vector<int> v(arr, arr + 6);
+        msl::__insert_sort(v.begin(), v.end());
+
+        int expected[] = {1, 2, 5, 5, 6, 9};
+        bool passed = true;
+        for(int i=0; i<6; ++i) {
+            if(v[i] != expected[i]) passed = false;
+        }
+        
+        if (passed) {
+             std::cout << "Vector insert_sort (random) PASSED" << std::endl;
+        } else {
+             std::cout << "Vector insert_sort (random) FAILED" << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 2: Already sorted
+    {
+        int arr[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(arr, arr + 5);
+        msl::__insert_sort(v.begin(), v.end());
+        
+        bool passed = true;
+        for(int i=0; i<5; ++i) {
+            if(v[i] != i+1) passed = false;
+        }
+        if (passed) std::cout << "Vector insert_sort (sorted) PASSED" << std::endl;
+        else std::cout << "Vector insert_sort (sorted) FAILED" << std::endl;
+    }
+
+    // Test 3: Reverse sorted
+    {
+        int arr[] = {5, 4, 3, 2, 1};
+        msl::vector<int> v(arr, arr + 5);
+        msl::__insert_sort(v.begin(), v.end());
+        
+        bool passed = true;
+        for(int i=0; i<5; ++i) {
+            if(v[i] != i+1) passed = false;
+        }
+        if (passed) std::cout << "Vector insert_sort (reverse) PASSED" << std::endl;
+        else std::cout << "Vector insert_sort (reverse) FAILED" << std::endl;
+    }
+}
+
 int main() {
+    test_insert_sort();
+    std::cout << std::endl;
     test_partial_sort_copy();
     std::cout << std::endl;
     test_partial_sort();
