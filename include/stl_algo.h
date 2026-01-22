@@ -2924,6 +2924,7 @@ __equal_range(RandomAccessIterator first, RandomAccessIterator last, const T& va
             return pair<RandomAccessIterator, RandomAccessIterator>(left, right);
         }
     }
+    return pair<RandomAccessIterator, RandomAccessIterator>(first, first);
 }
 
 
