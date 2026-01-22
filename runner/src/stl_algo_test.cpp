@@ -2021,7 +2021,76 @@ void test_insert_sort() {
     }
 }
 
+void test_sort() {
+    print();
+    std::cout << "Testing sort..." << std::endl;
+
+    // Test 1: Random elements
+    {
+        int arr[] = {10, 5, 2, 9, 1, 5, 6, 8, 3, 4, 7};
+        msl::vector<int> v(arr, arr + 11);
+        msl::sort(v.begin(), v.end());
+
+        bool passed = true;
+        for(size_t i=0; i<v.size()-1; ++i) {
+            if(v[i] > v[i+1]) passed = false;
+        }
+        
+        if (passed) {
+             std::cout << "Vector sort (random) PASSED" << std::endl;
+        } else {
+             std::cout << "Vector sort (random) FAILED" << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 2: Already sorted
+    {
+        int arr[] = {1, 2, 3, 4, 5};
+        msl::vector<int> v(arr, arr + 5);
+        msl::sort(v.begin(), v.end());
+        
+        bool passed = true;
+        for(int i=0; i<5; ++i) {
+            if(v[i] != i+1) passed = false;
+        }
+        if (passed) std::cout << "Vector sort (sorted) PASSED" << std::endl;
+        else std::cout << "Vector sort (sorted) FAILED" << std::endl;
+    }
+
+    // Test 3: Reverse sorted
+    {
+        int arr[] = {5, 4, 3, 2, 1};
+        msl::vector<int> v(arr, arr + 5);
+        msl::sort(v.begin(), v.end());
+        
+        bool passed = true;
+        for(int i=0; i<5; ++i) {
+            if(v[i] != i+1) passed = false;
+        }
+        if (passed) std::cout << "Vector sort (reverse) PASSED" << std::endl;
+        else std::cout << "Vector sort (reverse) FAILED" << std::endl;
+    }
+    
+    // Test 4: Duplicates
+    {
+        int arr[] = {3, 1, 2, 3, 1, 2};
+        msl::vector<int> v(arr, arr + 6);
+        msl::sort(v.begin(), v.end());
+        
+        int expected[] = {1, 1, 2, 2, 3, 3};
+        bool passed = true;
+        for(int i=0; i<6; ++i) {
+            if(v[i] != expected[i]) passed = false;
+        }
+        if (passed) std::cout << "Vector sort (duplicates) PASSED" << std::endl;
+        else std::cout << "Vector sort (duplicates) FAILED" << std::endl;
+    }
+}
+
 int main() {
+    test_sort();
+    std::cout << std::endl;
     test_insert_sort();
     std::cout << std::endl;
     test_partial_sort_copy();

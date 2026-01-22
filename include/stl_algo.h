@@ -2592,7 +2592,7 @@ void __liner_insert(RandomAccessIterator first, RandomAccessIterator last, T*) {
 
 
 /** 
- * 对序列 [first, last) 进行插入排序。
+ * @brief 对序列 [first, last) 进行插入排序
  * 
  * @param first 序列的起始迭代器
  * @param last 序列的结束迭代器
@@ -2604,6 +2604,111 @@ void __insert_sort(RandomAccessIterator first, RandomAccessIterator last) {
         __liner_insert(first,i,value_type(first));
     }
 }
+
+/****************************************************************** */
+//quick_sort
+
+const int __stl_threshold = 16;
+/**
+ * @brief 找出序列中的中位数
+ * 
+ * @param a 序列中的第一个元素
+ * @param b 序列中的第二个元素
+ * @param c 序列中的第三个元素
+ * @return const T& 序列中的中位数
+ */
+template<class T>
+inline const T& __median(const T& a, const T& b, const T& c) {
+    if(a < b) {
+        if(b < c) return b;
+        else if(a < c) return c;
+        else return a;
+    }else{
+        if(a < c) return a;
+        else if(b < c) return c;
+        else return b;
+    }
+}
+
+template<class RandomAccessIterator, class T>
+RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
+                                           RandomAccessIterator last, 
+                                           const T& pivot) {
+    while(true) {
+        while(*first < pivot) ++first;
+        --last;
+        while(pivot < *last) --last;
+        if(!(first < last)) return first;
+        msl::iter_swap(first, last);
+        ++first;
+    }
+}
+
+
+template<class Size>
+inline Size __lg(Size n) { //找到  2 ^ k <= n 的最大 k
+    Size k = 0;
+    for(; n > 1; n >>= 1) ++k;
+    return k;
+}
+ 
+template<class RandomAccessIterator, class T>
+void __unguarded_insert_sort_aux(RandomAccessIterator first, RandomAccessIterator last, T*) {
+    for(RandomAccessIterator i = first; i != last; ++i) {
+        __unguarder_linear_insert(i, T(*i));
+    }
+}
+
+
+template<class RandomAccessIterator>
+void __unguarded_insert_sort(RandomAccessIterator first, RandomAccessIterator last) {
+    __unguarded_insert_sort_aux(first, last, value_type(first));
+}
+
+
+
+template<class RandomAccessIterator, class T>
+void __final_insert_sort(RandomAccessIterator first, RandomAccessIterator last, T*) {
+    if(last - first > __stl_threshold) {
+        __insert_sort(first, first + __stl_threshold);
+        __unguarded_insert_sort(first + __stl_threshold, last);
+    }else{
+        __insert_sort(first, last);
+    }
+}
+
+template<class RandomAccessIterator, class T, class Size>
+void __introsort_loop(RandomAccessIterator first, RandomAccessIterator last, T*, Size depth_limit) {
+    while(last - first > __stl_threshold) {
+        if(depth_limit == 0) {
+            msl::partial_sort(first, last, last);
+            return;
+        }
+        --depth_limit;
+        RandomAccessIterator cut = __unguarded_partition(first, last, __median(*first, *(first + (last - first) / 2), *(last - 1)));
+        __introsort_loop(cut, last, value_type(first), depth_limit);
+        last = cut; //一直递归右边,直到递归到depth_limit,或者到达阈值
+        //可以减少递归的次数,防止栈溢出
+        //但是已经设置了depth_limit,其实已经可以避免栈溢出了
+    }
+}
+
+/**
+ * @brief 对序列 [first, last) 进行排序
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ */
+template<class RandomAccessIterator>
+inline void sort(RandomAccessIterator first, RandomAccessIterator last) {
+    if(first != last) {
+        __introsort_loop(first, last, value_type(first), __lg(last - first) * 2);
+        __final_insert_sort(first, last, value_type(first));
+    }
+}
+
+
+
 
 
 
