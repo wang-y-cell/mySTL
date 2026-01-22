@@ -2105,8 +2105,72 @@ void test_sort() {
     }
 }
 
+void test_equal_range() {
+    print();
+    std::cout << "Testing equal_range..." << std::endl;
+
+    // Test 1: Vector (Random Access)
+    {
+        int arr[] = {1, 2, 3, 3, 3, 4, 5};
+        msl::vector<int> v(arr, arr + 7);
+        // Range for 3
+        msl::pair<msl::vector<int>::iterator, msl::vector<int>::iterator> p = msl::equal_range(v.begin(), v.end(), 3);
+        if (p.first == v.begin() + 2 && p.second == v.begin() + 5)
+            std::cout << "Vector equal_range(3) PASSED" << std::endl;
+        else
+            std::cout << "Vector equal_range(3) FAILED" << std::endl;
+
+        // Range for 1
+        p = msl::equal_range(v.begin(), v.end(), 1);
+        if (p.first == v.begin() && p.second == v.begin() + 1)
+            std::cout << "Vector equal_range(1) PASSED" << std::endl;
+        else
+            std::cout << "Vector equal_range(1) FAILED" << std::endl;
+            
+        // Range for 6 (not found)
+        p = msl::equal_range(v.begin(), v.end(), 6);
+        if (p.first == v.end() && p.second == v.end())
+            std::cout << "Vector equal_range(6) PASSED" << std::endl;
+        else
+            std::cout << "Vector equal_range(6) FAILED" << std::endl;
+    }
+
+    // Test 2: List (Forward/Bidirectional)
+    {
+        int arr[] = {1, 2, 3, 3, 4};
+        msl::list<int> l;
+        for(int x : arr) l.push_back(x);
+        
+        msl::pair<msl::list<int>::iterator, msl::list<int>::iterator> p = msl::equal_range(l.begin(), l.end(), 3);
+        
+        int count = 0;
+        for(auto it = p.first; it != p.second; ++it) {
+            if(*it == 3) count++;
+            else count = -999;
+        }
+        
+        if (count == 2) std::cout << "List equal_range(3) PASSED" << std::endl;
+        else std::cout << "List equal_range(3) FAILED" << std::endl;
+    }
+
+    // Test 3: Custom Comparator
+    {
+        int arr[] = {5, 4, 3, 3, 2, 1}; // Descending
+        msl::vector<int> v(arr, arr + 6);
+        auto comp = [](int a, int b){ return a > b; };
+        
+        auto p = msl::equal_range(v.begin(), v.end(), 3, comp);
+        if (p.first == v.begin() + 2 && p.second == v.begin() + 4)
+             std::cout << "Custom Comparator equal_range(3) PASSED" << std::endl;
+        else
+             std::cout << "Custom Comparator equal_range(3) FAILED" << std::endl;
+    }
+}
+
 int main() {
     test_sort();
+    std::cout << std::endl;
+    test_equal_range();
     std::cout << std::endl;
     test_insert_sort();
     std::cout << std::endl;

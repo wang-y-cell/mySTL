@@ -2916,7 +2916,7 @@ __equal_range(RandomAccessIterator first, RandomAccessIterator last, const T& va
         if(*middle < value) {
             first = middle + 1;
             len = len - half - 1;
-        }else if(*middle > value){
+        }else if(value < *middle){
             len = half;
         }else{
             left = lower_bound(first, middle, value);
@@ -2927,6 +2927,85 @@ __equal_range(RandomAccessIterator first, RandomAccessIterator last, const T& va
     return pair<RandomAccessIterator, RandomAccessIterator>(first, first);
 }
 
+template<class RandomAccessIterator, class T, class Distance, class Compare>
+pair<RandomAccessIterator, RandomAccessIterator>
+__equal_range(RandomAccessIterator first, RandomAccessIterator last, const T& value,
+              Distance*, random_access_iterator_tag, Compare comp){
+    Distance len = last - first;
+    Distance half;
+    RandomAccessIterator middle,left,right;
+    while(len > 0) {
+        half = len >> 1;
+        middle = first + half;
+        if(comp(*middle, value)) {
+            first = middle + 1;
+            len = len - half - 1;
+        }else if(comp(value, *middle)){
+            len = half;
+        }else{
+            left = lower_bound(first, middle, value, comp);
+            right = upper_bound(++middle, first + len, value, comp);
+            return pair<RandomAccessIterator, RandomAccessIterator>(left, right);
+        }
+    }
+    return pair<RandomAccessIterator, RandomAccessIterator>(first, first);
+}
+
+template<class ForwardIterator, class T, class Distance>
+pair<ForwardIterator, ForwardIterator>
+__equal_range(ForwardIterator first, ForwardIterator last, const T& value,
+              Distance*, forward_iterator_tag){
+    Distance len = 0;
+    distance(first, last, len);
+    Distance half;
+    ForwardIterator middle,left,right;
+    while(len > 0) {
+        half = len >> 1;
+        middle = first;
+        advance(middle, half);
+        if(*middle < value) {
+            first = middle;
+            ++first;
+            len = len - half - 1;
+        }else if(value < *middle){
+            len = half;
+        }else{
+            left = lower_bound(first, middle, value);
+            advance(first, len);
+            right = upper_bound(++middle, first, value);
+            return pair<ForwardIterator, ForwardIterator>(left, right);
+        }
+    }
+    return pair<ForwardIterator, ForwardIterator>(first, first);
+}
+
+template<class ForwardIterator, class T, class Distance, class Compare>
+pair<ForwardIterator, ForwardIterator>
+__equal_range(ForwardIterator first, ForwardIterator last, const T& value,
+              Distance*, forward_iterator_tag, Compare comp){
+    Distance len = 0;
+    distance(first, last, len);
+    Distance half;
+    ForwardIterator middle,left,right;
+    while(len > 0) {
+        half = len >> 1;
+        middle = first;
+        advance(middle, half);
+        if(comp(*middle, value)) {
+            first = middle;
+            ++first;
+            len = len - half - 1;
+        }else if(comp(value, *middle)){
+            len = half;
+        }else{
+            left = lower_bound(first, middle, value, comp);
+            advance(first, len);
+            right = upper_bound(++middle, first, value, comp);
+            return pair<ForwardIterator, ForwardIterator>(left, right);
+        }
+    }
+    return pair<ForwardIterator, ForwardIterator>(first, first);
+}
 
 /**
  * @brief 查找序列 [first, last) 中等于 value 的元素范围
@@ -2942,6 +3021,23 @@ equal_range(ForwardIterator first, ForwardIterator last, const T& value) {
     typedef typename iterator_traits<ForwardIterator>::iterator_category category;
     static_assert(is_msl_iterator_tag<category>::value, "iterator must be msl iterator");
     return __equal_range(first, last, value, distance_type(first), category());
+}
+
+/**
+ * @brief 查找序列 [first, last) 中等于 value 的元素范围（自定义比较器）
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @param comp 比较函数对象
+ * @return pair<ForwardIterator, ForwardIterator> 等于 value 的元素范围
+ */
+template<class ForwardIterator, class T, class Compare>
+pair<ForwardIterator, ForwardIterator>
+equal_range(ForwardIterator first, ForwardIterator last, const T& value, Compare comp) {
+    typedef typename iterator_traits<ForwardIterator>::iterator_category category;
+    static_assert(is_msl_iterator_tag<category>::value, "iterator must be msl iterator");
+    return __equal_range(first, last, value, distance_type(first), category(), comp);
 }
 
 
