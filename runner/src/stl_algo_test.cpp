@@ -2086,6 +2086,23 @@ void test_sort() {
         if (passed) std::cout << "Vector sort (duplicates) PASSED" << std::endl;
         else std::cout << "Vector sort (duplicates) FAILED" << std::endl;
     }
+
+    // Test 5: Custom Comparator (Descending)
+    {
+        int arr[] = {1, 5, 2, 4, 3};
+        msl::vector<int> v(arr, arr + 5);
+        msl::sort(v.begin(), v.end(), [](int a, int b){ return a > b; });
+        
+        bool passed = true;
+        for(int i=0; i<5; ++i) {
+            if(v[i] != 5-i) passed = false;
+        }
+        if (passed) std::cout << "Vector sort (custom comparator) PASSED" << std::endl;
+        else {
+            std::cout << "Vector sort (custom comparator) FAILED" << std::endl;
+             for(int x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
 }
 
 int main() {

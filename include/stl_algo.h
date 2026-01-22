@@ -2569,6 +2569,18 @@ void __unguarder_linear_insert(RandomAccessIterator last, T value){
     *last = value;
 }
 
+template<class RandomAccessIterator,class T, class Compare>
+void __unguarder_linear_insert(RandomAccessIterator last, T value, Compare comp){
+    RandomAccessIterator next = last;
+    --next;
+    while(comp(value, *next)) {
+      *last = *next;
+      last = next;
+      --next;
+    }
+    *last = value;
+}
+
 /**
  * @brief 无哨兵的线性插入排序
  * 
@@ -2590,6 +2602,16 @@ void __liner_insert(RandomAccessIterator first, RandomAccessIterator last, T*) {
     }
 }
 
+template<class RandomAccessIterator, class T, class Compare>
+void __liner_insert(RandomAccessIterator first, RandomAccessIterator last, T*, Compare comp) {
+    T value = *last;
+    if(comp(value, *first)) {
+        msl::copy_backward(first, last, last + 1);
+        *first = value;
+    }else{
+        __unguarder_linear_insert(last, value, comp);       
+    }
+}
 
 /** 
  * @brief 对序列 [first, last) 进行插入排序
@@ -2602,6 +2624,21 @@ void __insert_sort(RandomAccessIterator first, RandomAccessIterator last) {
     if(first == last) return;
     for(RandomAccessIterator i = first + 1; i != last; ++i) {
         __liner_insert(first,i,value_type(first));
+    }
+}
+
+/** 
+ * @brief 对序列 [first, last) 进行插入排序（自定义比较器）
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+*/
+template<class RandomAccessIterator, class Compare>
+void __insert_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
+    if(first == last) return;
+    for(RandomAccessIterator i = first + 1; i != last; ++i) {
+        __liner_insert(first,i,value_type(first), comp);
     }
 }
 
@@ -2630,6 +2667,38 @@ inline const T& __median(const T& a, const T& b, const T& c) {
     }
 }
 
+/**
+ * @brief 找出序列中的中位数
+ * 
+ * @param a 序列中的第一个元素
+ * @param b 序列中的第二个元素
+ * @param c 序列中的第三个元素
+ * @return const T& 序列中的中位数
+ */
+template<class T, class Compare>
+inline const T& __median(const T& a, const T& b, const T& c, Compare comp) {
+    if(comp(a, b)) {
+        if(comp(b, c)) return b;
+        else if(comp(a, c)) return c;
+        else return a;
+    }else{
+        if(comp(a, c)) return a;
+        else if(comp(b, c)) return c;
+        else return b;
+    }
+}
+
+/**
+ * @brief 无哨兵的分区操作
+ * 
+ * 对序列 [first, last) 进行分区操作,将序列分为两部分,
+ * 一部分小于等于 pivot,另一部分大于 pivot。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pivot 分区的基准值
+ * @return RandomAccessIterator 分区操作后的分割点迭代器
+ */
 template<class RandomAccessIterator, class T>
 RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
                                            RandomAccessIterator last, 
@@ -2644,7 +2713,38 @@ RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
     }
 }
 
+/**
+ * @brief 无哨兵的分区操作
+ * 
+ * 对序列 [first, last) 进行分区操作,将序列分为两部分,
+ * 一部分小于等于 pivot,另一部分大于 pivot。
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param pivot 分区的基准值
+ * @param comp 比较函数对象
+ * @return RandomAccessIterator 分区操作后的分割点迭代器
+ */
+template<class RandomAccessIterator, class T, class Compare>
+RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
+                                           RandomAccessIterator last, 
+                                           const T& pivot, Compare comp) {
+    while(true) {
+        while(comp(*first, pivot)) ++first;
+        --last;
+        while(comp(pivot, *last)) --last;
+        if(!(first < last)) return first;
+        msl::iter_swap(first, last);
+        ++first;
+    }
+}
 
+/**
+ * @brief 计算 2 ^ k <= n 的最大 k
+ * 
+ * @param n 输入的整数
+ * @return Size 2 ^ k <= n 的最大 k
+ */
 template<class Size>
 inline Size __lg(Size n) { //找到  2 ^ k <= n 的最大 k
     Size k = 0;
@@ -2659,14 +2759,32 @@ void __unguarded_insert_sort_aux(RandomAccessIterator first, RandomAccessIterato
     }
 }
 
+template<class RandomAccessIterator, class T, class Compare>
+void __unguarded_insert_sort_aux(RandomAccessIterator first, RandomAccessIterator last, T*, Compare comp) {
+    for(RandomAccessIterator i = first; i != last; ++i) {
+        __unguarder_linear_insert(i, T(*i), comp);
+    }
+}
 
 template<class RandomAccessIterator>
 void __unguarded_insert_sort(RandomAccessIterator first, RandomAccessIterator last) {
     __unguarded_insert_sort_aux(first, last, value_type(first));
 }
 
+template<class RandomAccessIterator, class Compare>
+void __unguarded_insert_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
+    __unguarded_insert_sort_aux(first, last, value_type(first), comp);
+}
 
-
+/**
+ * @brief 对序列 [first, last) 进行插入排序（自定义比较器）
+ * 
+ * 当序列长度大于阈值时,先对前__stl_threshold个元素进行排序,
+ * 然后对剩余元素进行插入排序
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ */
 template<class RandomAccessIterator, class T>
 void __final_insert_sort(RandomAccessIterator first, RandomAccessIterator last, T*) {
     if(last - first > __stl_threshold) {
@@ -2677,6 +2795,39 @@ void __final_insert_sort(RandomAccessIterator first, RandomAccessIterator last, 
     }
 }
 
+/**
+ * @brief 对序列 [first, last) 进行插入排序（自定义比较器）
+ * 
+ * 当序列长度大于阈值时,先对前__stl_threshold个元素进行排序,
+ * 然后对剩余元素进行插入排序
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+ */
+template<class RandomAccessIterator, class T, class Compare>
+void __final_insert_sort(RandomAccessIterator first, RandomAccessIterator last, T*, Compare comp) {
+    if(last - first > __stl_threshold) {
+        __insert_sort(first, first + __stl_threshold, comp);
+        __unguarded_insert_sort(first + __stl_threshold, last, comp);
+    }else{
+        __insert_sort(first, last, comp);
+    }
+}
+
+
+/**
+ * @brief 对序列 [first, last) 进行排序（自定义比较器）
+ * 
+ * 当序列长度大于阈值时,使用 introsort 算法进行排序,
+ * 否则使用堆排序
+ * 当子序列的长度小于等于__stl_threshold时,跳出递归
+ * 使排序整体有序,方便之后使用插入排序
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param depth_limit 递归深度限制
+ */
 template<class RandomAccessIterator, class T, class Size>
 void __introsort_loop(RandomAccessIterator first, RandomAccessIterator last, T*, Size depth_limit) {
     while(last - first > __stl_threshold) {
@@ -2693,6 +2844,34 @@ void __introsort_loop(RandomAccessIterator first, RandomAccessIterator last, T*,
     }
 }
 
+
+/**
+ * @brief 对序列 [first, last) 进行排序（自定义比较器）
+ * 
+ * 当序列长度大于阈值时,使用 introsort 算法进行排序,
+ * 否则使用堆排序
+ * 当子序列的长度小于等于__stl_threshold时,跳出递归
+ * 使排序整体有序,方便之后使用插入排序
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param depth_limit 递归深度限制
+ * @param comp 比较函数对象
+ */
+template<class RandomAccessIterator, class T, class Size, class Compare>
+void __introsort_loop(RandomAccessIterator first, RandomAccessIterator last, T*, Size depth_limit, Compare comp) {
+    while(last - first > __stl_threshold) {
+        if(depth_limit == 0) {
+            msl::partial_sort(first, last, last, comp);
+            return;
+        }
+        --depth_limit;
+        RandomAccessIterator cut = __unguarded_partition(first, last, __median(*first, *(first + (last - first) / 2), *(last - 1), comp), comp);
+        __introsort_loop(cut, last, value_type(first), depth_limit, comp);
+        last = cut; 
+    }
+}
+
 /**
  * @brief 对序列 [first, last) 进行排序
  * 
@@ -2704,6 +2883,21 @@ inline void sort(RandomAccessIterator first, RandomAccessIterator last) {
     if(first != last) {
         __introsort_loop(first, last, value_type(first), __lg(last - first) * 2);
         __final_insert_sort(first, last, value_type(first));
+    }
+}
+
+/**
+ * @brief 对序列 [first, last) 进行排序（自定义比较器）
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+ */
+template<class RandomAccessIterator, class Compare>
+inline void sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
+    if(first != last) {
+        __introsort_loop(first, last, value_type(first), __lg(last - first) * 2, comp);
+        __final_insert_sort(first, last, value_type(first), comp);
     }
 }
 
