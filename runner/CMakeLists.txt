@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 # 源文件使用 UTF-8，执行文件输出使用 GBK (适配默认 Windows 终端)
 if(MSVC)
     add_compile_options(/source-charset:utf-8 /execution-charset:gbk)
-elseif(MINGW OR CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+elseif(MINGW)
     add_compile_options(-finput-charset=UTF-8 -fexec-charset=GBK)
     # 静态链接标准库，方便分发 exe
     add_link_options(-static)
