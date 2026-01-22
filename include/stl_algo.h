@@ -2926,6 +2926,15 @@ __equal_range(RandomAccessIterator first, RandomAccessIterator last, const T& va
     }
 }
 
+
+/**
+ * @brief 查找序列 [first, last) 中等于 value 的元素范围
+ * 
+ * @param first 序列的起始迭代器
+ * @param last 序列的结束迭代器
+ * @param value 要查找的值
+ * @return pair<ForwardIterator, ForwardIterator> 等于 value 的元素范围
+ */
 template<class ForwardIterator, class T>
 pair<ForwardIterator, ForwardIterator>
 equal_range(ForwardIterator first, ForwardIterator last, const T& value) {
