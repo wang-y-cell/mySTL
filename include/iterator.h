@@ -80,7 +80,7 @@ value_type(const InputIterator&) {
     return static_cast<typename iterator_traits<InputIterator>::value_type*>(0);
 }
 
-//不是stl中的,是我自己定义的,可以不用
+//我自己定义的,为了区分std和msl
 template<typename T> struct is_msl_iterator_tag { static const bool value = false; };
 template<> struct is_msl_iterator_tag<input_iterator_tag> { static const bool value = true; };
 template<> struct is_msl_iterator_tag<output_iterator_tag> { static const bool value = true; };

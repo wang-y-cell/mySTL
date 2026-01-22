@@ -2901,9 +2901,38 @@ inline void sort(RandomAccessIterator first, RandomAccessIterator last, Compare 
     }
 }
 
+/***************************************************************************** */
+//equal_range
+template<class RandomAccessIterator, class T, class Distance>
+pair<RandomAccessIterator, RandomAccessIterator>
+__equal_range(RandomAccessIterator first, RandomAccessIterator last, const T& value,
+              Distance*, random_access_iterator_tag){
+    Distance len = last - first;
+    Distance half;
+    RandomAccessIterator middle,left,right;
+    while(len > 0) {
+        half = len >> 1;
+        middle = first + half;
+        if(*middle < value) {
+            first = middle + 1;
+            len = len - half - 1;
+        }else if(*middle > value){
+            len = half;
+        }else{
+            left = lower_bound(first, middle, value);
+            right = upper_bound(++middle, first + len, value);
+            return pair<RandomAccessIterator, RandomAccessIterator>(left, right);
+        }
+    }
+}
 
-
-
+template<class ForwardIterator, class T>
+pair<ForwardIterator, ForwardIterator>
+equal_range(ForwardIterator first, ForwardIterator last, const T& value) {
+    typedef typename iterator_traits<ForwardIterator>::iterator_category category;
+    static_assert(is_msl_iterator_tag<category>::value, "iterator must be msl iterator");
+    return __equal_range(first, last, value, distance_type(first), category());
+}
 
 
 

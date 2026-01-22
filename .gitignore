@@ -4,3 +4,4 @@ bin/
 build/
 *.exe
 *.o
+main.cpp
