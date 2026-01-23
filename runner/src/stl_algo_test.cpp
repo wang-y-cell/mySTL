@@ -2293,9 +2293,9 @@ void test_nth_element() {
     }
 }
 
-void test_mergesort() {
+void test_stable_sort() {
     print();
-    std::cout << "Testing mergesort..." << std::endl;
+    std::cout << "Testing stable_sort..." << std::endl;
 
     // Test 1: Vector (Random Access Iterator)
     {
@@ -2303,16 +2303,16 @@ void test_mergesort() {
         int arr[] = {5, 2, 9, 1, 5, 6};
         for(int x : arr) v.push_back(x);
         
-        msl::mergesort(v.begin(), v.end());
+        msl::stable_sort(v.begin(), v.end());
         
         bool passed = true;
         for(size_t i=0; i<v.size()-1; ++i) {
             if(v[i] > v[i+1]) passed = false;
         }
         
-        if (passed) std::cout << "Vector mergesort PASSED" << std::endl;
+        if (passed) std::cout << "Vector stable_sort PASSED" << std::endl;
         else {
-             std::cout << "Vector mergesort FAILED" << std::endl;
+             std::cout << "Vector stable_sort FAILED" << std::endl;
              for(auto x : v) std::cout << x << " "; std::cout << std::endl;
         }
     }
@@ -2323,7 +2323,7 @@ void test_mergesort() {
         int arr[] = {5, 2, 9, 1, 5, 6};
         for(int x : arr) l.push_back(x);
         
-        msl::mergesort(l.begin(), l.end());
+        msl::stable_sort(l.begin(), l.end());
         
         bool passed = true;
         auto it = l.begin();
@@ -2334,9 +2334,9 @@ void test_mergesort() {
             prev = *it;
         }
         
-        if (passed) std::cout << "List mergesort PASSED" << std::endl;
+        if (passed) std::cout << "List stable_sort PASSED" << std::endl;
         else {
-             std::cout << "List mergesort FAILED" << std::endl;
+             std::cout << "List stable_sort FAILED" << std::endl;
              for(auto x : l) std::cout << x << " "; std::cout << std::endl;
         }
     }
@@ -2347,16 +2347,16 @@ void test_mergesort() {
         int arr[] = {1, 5, 2, 9, 6};
         for(int x : arr) v.push_back(x);
         
-        msl::mergesort(v.begin(), v.end(), [](int a, int b){ return a > b; });
+        msl::stable_sort(v.begin(), v.end(), [](int a, int b){ return a > b; });
         
         bool passed = true;
         for(size_t i=0; i<v.size()-1; ++i) {
             if(v[i] < v[i+1]) passed = false;
         }
         
-        if (passed) std::cout << "Custom Comparator mergesort PASSED" << std::endl;
+        if (passed) std::cout << "Custom Comparator stable_sort PASSED" << std::endl;
         else {
-             std::cout << "Custom Comparator mergesort FAILED" << std::endl;
+             std::cout << "Custom Comparator stable_sort FAILED" << std::endl;
              for(auto x : v) std::cout << x << " "; std::cout << std::endl;
         }
     }
@@ -2369,7 +2369,7 @@ int main() {
     std::cout << std::endl;
     test_nth_element();
     std::cout << std::endl;
-    test_mergesort();
+    test_stable_sort();
     std::cout << std::endl;
     test_insert_sort();
     std::cout << std::endl;

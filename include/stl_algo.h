@@ -3203,15 +3203,16 @@ inline void nth_element(RandomAccessIterator first,
 }
 
 /*************************************************************************** */
-//不在stl范围中,sgi stl中没有这个算法,这个算法在<<stl源码剖析>>中提及,但似乎存在一些问题,已修改
+//不在stl范围中,但是sgi_stl中使用的stable_sort就是归并实现的,这个算法在<<stl源码剖析>>中实现的归并有些问题,已修改
 /**
  * @brief 对序列进行归并排序
+ * 本算法就是归并排序,但是一般作为stable_sort使用
  * 
  * @param first 序列的起始迭代器
  * @param last 序列的结束迭代器
  */
 template<class BidirectionalIterator>
-void mergesort(BidirectionalIterator first,
+void stable_sort(BidirectionalIterator first,
                         BidirectionalIterator last) {
     typename iterator_traits<BidirectionalIterator>::difference_type n = distance(first, last);
     if(n == 0 || n == 1)return;
@@ -3219,30 +3220,35 @@ void mergesort(BidirectionalIterator first,
     advance(middle, n / 2);
     //<<stl源码剖析>>中写的是 middle = first + n / 2,
     //但是这里是双向迭代器,并非随机迭代器
-    mergesort(first, middle);
-    mergesort(middle, last);
+    stable_sort(first, middle);
+    stable_sort(middle, last);
     inplace_merge(first, middle, last);
 }
 
 /**
  * @brief 对序列进行归并排序（自定义比较器）
+ * 本算法就是归并排序,但是一般作为stable_sort使用
+ * 
  * 
  * @param first 序列的起始迭代器
  * @param last 序列的结束迭代器
  * @param comp 比较函数对象
  */
 template<class BidirectionalIterator, class Compare>
-void mergesort(BidirectionalIterator first,
+void stable_sort(BidirectionalIterator first,
                         BidirectionalIterator last, Compare comp) {
     typename iterator_traits<BidirectionalIterator>::difference_type n = distance(first, last);
     if(n == 0 || n == 1)return;
     BidirectionalIterator middle = first;
     advance(middle, n / 2);
-    
-    mergesort(first, middle, comp);
-    mergesort(middle, last, comp);
+    //<<stl源码剖析>>中写的是 middle = first + n / 2,
+    //但是这里是双向迭代器,并非随机迭代器
+    stable_sort(first, middle, comp);
+    stable_sort(middle, last, comp);
     inplace_merge(first, middle, last, comp);
 }
+
+
 
 }// namespace msl
 
