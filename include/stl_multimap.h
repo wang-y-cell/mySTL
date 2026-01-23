@@ -97,11 +97,10 @@ public:
     bool empty() const { return t.empty(); }
     size_type size() const { return t.size(); }
     size_type max_size() const { return t.max_size(); }
-    void swap(map<Key, T, Compare, Alloc>& x) { t.swap(x.t); }
+    void swap(multimap<Key, T, Compare, Alloc>& x) { t.swap(x.t); }
 
     // insert/erase
-    typedef pair<iterator, bool> pair_iterator_bool; 
-    pair<iterator, bool> insert(const value_type& x) {
+    iterator insert(const value_type& x) {
         return t.insert_equal(x);
     }
     iterator insert(iterator position, const value_type& x) {
@@ -137,11 +136,6 @@ public:
     }
     pair<const_iterator, const_iterator> equal_range(const key_type& x) const {
         return t.equal_range(x);
-    }
-
-    // operator[]
-    T& operator[](const key_type& k) {
-        return (*((insert(value_type(k, T()))).first)).second;
     }
 
 };
