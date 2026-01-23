@@ -111,7 +111,43 @@ void test_random_operations() {
     }
 }
 
+void test_hint_insert() {
+    std::cout << "Testing insert_unique with hint..." << std::endl;
+    typedef msl::rb_tree<int, int, identity<int>, std::less<int>, msl::alloc> TreeType;
+    TreeType tree;
+
+    // 1. Insert into empty tree
+    tree.insert_unique(tree.begin(), 10);
+    assert(tree.size() == 1);
+    assert(*tree.begin() == 10);
+
+    // 2. Insert at beginning
+    tree.insert_unique(tree.begin(), 5);
+    assert(tree.size() == 2);
+    assert(*tree.begin() == 5);
+
+    // 3. Insert at end
+    tree.insert_unique(tree.end(), 15);
+    assert(tree.size() == 3);
+    assert(*tree.rbegin() == 15);
+
+    // 4. Insert in middle
+    auto it = tree.find(15);
+    tree.insert_unique(it, 12);
+    assert(tree.size() == 4);
+
+    // Verify order
+    auto iter = tree.begin();
+    assert(*iter++ == 5);
+    assert(*iter++ == 10);
+    assert(*iter++ == 12);
+    assert(*iter++ == 15);
+
+    std::cout << "insert_unique hint tests passed!" << std::endl;
+}
+
 int main() {
+    test_hint_insert();
     test_random_operations();
     return 0;
 }

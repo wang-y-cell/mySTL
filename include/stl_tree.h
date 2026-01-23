@@ -560,10 +560,45 @@ public:
             insert_unique(*first);
     }
     
+    /**
+     * @brief 插入不相等元素
+     * 
+     * @param position 插入位置的迭代器
+     * @param v 要插入的值
+     * @return iterator 指向插入位置的迭代器
+     */
     iterator insert_unique(iterator position, const value_type& v) {
-        return insert_unique(v).first;
+        if (position.node == header->left) { // begin()
+            if (size() > 0 && key_compare(KeyOfValue()(v), key(position.node)))
+                return __insert(position.node, position.node, v);
+            else
+                return insert_unique(v).first;
+        } else if (size() > 0 && position.node == header) { // end()
+            if (key_compare(key(rightmost()), KeyOfValue()(v)))
+                return __insert(0, rightmost(), v);
+            else
+                return insert_unique(v).first;
+        } else {
+            iterator before = position;
+            --before;
+            if (key_compare(key(before.node), KeyOfValue()(v)) &&
+                key_compare(KeyOfValue()(v), key(position.node))) {
+                if (right(before.node) == 0)// 如果前驱节点没有右孩子，就挂在它的右边
+                    return __insert(0, before.node, v);
+                else
+                    return __insert(position.node, position.node, v);
+            } else {
+                return insert_unique(v).first;
+            }
+        }
     }
 
+    /**
+     * @brief 插入不相等元素
+     * 
+     * @param v 要插入的值
+     * @return pair<iterator, bool> 指向插入位置的迭代器和是否成功插入的标志
+     */
     pair<iterator, bool> insert_unique(const value_type& v) {
         link_type y = header;
         link_type x = root();
@@ -578,13 +613,23 @@ public:
             if (j == begin())
                 return pair<iterator, bool>(__insert(x, y, v), true);
             else
-                --j;
+                --j;//回到前驱节点
         }
         if (key_compare(key(j.node), KeyOfValue()(v)))
             return pair<iterator, bool>(__insert(x, y, v), true);
         return pair<iterator, bool>(j, false);
+        //例子：树中有 [10, 20] ，我们要插入 10 。
+        //走到 20 时，发现 10 < 20 ，准备插在 20 的左边。
+        //此时 y = 20 。我们知道 10 != 20 。
+        //但我们需要检查 20 的前一个数（也就是 10 ）是不是和新来的 10 相等。
     }
 
+    /**
+     * @brief 可以插入相等元素
+     * 
+     * @param v 要插入的值
+     * @return iterator 指向插入位置的迭代器
+     */
     iterator insert_equal(const value_type& v) {
         link_type y = header;
         link_type x = root();
@@ -594,6 +639,45 @@ public:
         }
         return __insert(x, y, v);
     }
+
+    /**
+     * @brief 可以插入相等元素
+     * 
+     * @param first 输入迭代器的起始位置
+     * @param last 输入迭代器的结束位置
+     */
+    template<typename InputIterator>
+    void insert_equal(InputIterator first, InputIterator last) {
+        for (; first != last; ++first)
+            insert_equal(*first);
+    }
+
+    iterator insert_equal(iterator position, const value_type& v) {
+        if(position.node == header->left) { // begin()
+            if(size() > 0 && key_compare(KeyOfValue()(v), key(position.node)))
+                return __insert(position.node, position.node, v);
+            else
+                return insert_equal(v);
+        } else if (size() > 0 && position.node == header) { // end()
+            if (!key_compare(KeyOfValue()(v), key(rightmost())))
+                return __insert(0, rightmost(), v);
+            else
+                return insert_equal(v);
+        } else {
+            iterator before = position;
+            --before;
+            if (!key_compare(KeyOfValue()(v),key(before.node)) &&
+                !key_compare(key(position.node),KeyOfValue()(v))) {
+                if (right(before.node) == 0)
+                    return __insert(0, before.node, v);
+                else
+                    return __insert(position.node, position.node, v);
+            } else {
+                return insert_equal(v);
+            }
+        }
+    }
+
 
 private:
     link_type __copy(link_type x, link_type p) {
@@ -621,7 +705,22 @@ private:
         return top;
     }
 
+
+    /**
+     * @brief 递归删除所有子节点
+     * 
+     * @param __x 要删除的节点
+     */
     void __erase(link_type __x);  //递归删除所有子节点
+
+    /**
+     * @brief 递归插入节点
+     * 
+     * @param x_ 要插入的位置的节点
+     * @param y_ 要插入的位置的父节点
+     * @param v 要插入的值
+     * @return iterator 指向插入位置的迭代器
+     */
     iterator __insert(base_ptr x_, base_ptr y_, const value_type& v) {
         link_type x = (link_type)x_;
         link_type y = (link_type)y_;
@@ -630,12 +729,12 @@ private:
         if (y == header || x != 0 || key_compare(KeyOfValue()(v), key(y))) {
             z = create_node(v);  // 创建新节点
             left(y) = z;         // 挂在父节点的左边
-        if (y == header) {   // 情况 A: 树为空，这是第一个节点
-            root() = z;      // header->parent 指向根节点
-            rightmost() = z; // header->right 指向最大值（也就是目前唯一的节点）
-        } else if (y == leftmost()) { // 情况 B: 父节点是当前的最小值
-            leftmost() = z;  // 新节点比最小值还小，更新 header->left 指向新节点
-        }
+            if (y == header) {   // 情况 A: 树为空，这是第一个节点
+                root() = z;      // header->parent 指向根节点
+                rightmost() = z; // header->right 指向最大值（也就是目前唯一的节点）
+            } else if (y == leftmost()) { // 情况 B: 父节点是当前的最小值
+                leftmost() = z;  // 新节点比最小值还小，更新 header->left 指向新节点
+            }
         } else {
             z = create_node(v);// 创建新节点
             right(y) = z;       // 挂在父节点的右边
