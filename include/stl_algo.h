@@ -2674,6 +2674,7 @@ inline const T& __median(const T& a, const T& b, const T& c) {
  * @param a 序列中的第一个元素
  * @param b 序列中的第二个元素
  * @param c 序列中的第三个元素
+ * @param comp 比较函数对象
  * @return const T& 序列中的中位数
  */
 template<class T, class Compare>
@@ -3135,6 +3136,73 @@ inline void inplace_merge(BidirectionalIterator first,
     if(first == middle || middle == last)return;
     __inplace_merge(first, middle, last, value_type(first), distance_type(first), comp);
 }
+
+
+
+
+template<class RandomAccessIterator, class T>
+void __nth_element(RandomAccessIterator first,
+                        RandomAccessIterator nth,
+                        RandomAccessIterator last,
+                        T*) {
+    while(last - first > 3) {
+       RandomAccessIterator cut = __unguarded_partition(first, last, __median(
+        *first, *(first + (last - first) / 2), *(last - 1)
+       ));
+       if(cut <= nth)first = cut;
+       else last = cut;
+    }
+    msl::__insert_sort(first, last);
+}
+
+template<class RandomAccessIterator, class T, class Compare>
+void __nth_element(RandomAccessIterator first,
+                        RandomAccessIterator nth,
+                        RandomAccessIterator last,
+                        T*, Compare comp) {
+    while(last - first > 3) {
+       RandomAccessIterator cut = __unguarded_partition(first, last, __median(
+        *first, *(first + (last - first) / 2), *(last - 1), comp
+       ), comp);
+       if(cut <= nth)first = cut;
+       else last = cut;
+    }
+    msl::__insert_sort(first, last, comp);
+}
+
+/**
+ * @brief 找到序列中第n小的元素
+ * 
+ * @param first 序列的起始迭代器
+ * @param nth 序列中第n小的元素的迭代器
+ * @param last 序列的结束迭代器
+ */
+template<class RandomAccessIterator>
+inline void nth_element(RandomAccessIterator first,
+                        RandomAccessIterator nth,
+                        RandomAccessIterator last) {
+    if(first == last)return;
+    __nth_element(first, nth, last, value_type(first));
+}
+
+/**
+ * @brief 找到序列中第n小的元素（自定义比较器）
+ * 
+ * @param first 序列的起始迭代器
+ * @param nth 序列中第n小的元素的迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+ */
+template<class RandomAccessIterator, class Compare>
+inline void nth_element(RandomAccessIterator first,
+                        RandomAccessIterator nth,
+                        RandomAccessIterator last,
+                        Compare comp) {
+    if(first == last)return;
+    __nth_element(first, nth, last, value_type(first), comp);
+}
+
+
 
 
 }// namespace msl

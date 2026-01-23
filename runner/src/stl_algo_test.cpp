@@ -2238,10 +2238,67 @@ void test_inplace_merge() {
     }
 }
 
+void test_nth_element() {
+    print();
+    std::cout << "Testing nth_element..." << std::endl;
+
+    // Test 1: Basic test
+    {
+        msl::vector<int> v;
+        for(int i=0; i<10; ++i) v.push_back(i);
+        msl::random_shuffle(v.begin(), v.end());
+
+        msl::nth_element(v.begin(), v.begin() + 5, v.end());
+
+        if (v[5] == 5) {
+             // Check partition property
+             bool left_ok = true;
+             for(int i=0; i<5; ++i) if(v[i] > 5) left_ok = false;
+             bool right_ok = true;
+             for(int i=6; i<10; ++i) if(v[i] < 5) right_ok = false;
+
+             if(left_ok && right_ok)
+                std::cout << "Basic nth_element PASSED" << std::endl;
+             else
+                std::cout << "Basic nth_element Partition FAILED" << std::endl;
+        } else {
+            std::cout << "Basic nth_element FAILED (nth is " << v[5] << ", expected 5)" << std::endl;
+        }
+    }
+
+    // Test 2: Custom comparator (descending)
+    {
+        msl::vector<int> v;
+        for(int i=0; i<10; ++i) v.push_back(i);
+        msl::random_shuffle(v.begin(), v.end());
+        // 9 8 7 6 5 4 3 2 1 0
+        // nth=5 (6th element) should be 4
+
+        msl::nth_element(v.begin(), v.begin() + 5, v.end(), [](int a, int b){ return a > b; });
+
+        if (v[5] == 4) {
+             // Check partition property
+             bool left_ok = true;
+             for(int i=0; i<5; ++i) if(v[i] < 4) left_ok = false;
+             bool right_ok = true;
+             for(int i=6; i<10; ++i) if(v[i] > 4) right_ok = false;
+
+             if(left_ok && right_ok)
+                std::cout << "Custom Comparator nth_element PASSED" << std::endl;
+             else
+                std::cout << "Custom Comparator nth_element Partition FAILED" << std::endl;
+        } else {
+            std::cout << "Custom Comparator nth_element FAILED (nth is " << v[5] << ", expected 4)" << std::endl;
+        }
+    }
+}
+
 int main() {
     test_sort();
     std::cout << std::endl;
     test_equal_range();
+    std::cout << std::endl;
+    test_nth_element();
     std::cout << std::endl;
     test_insert_sort();
     std::cout << std::endl;
