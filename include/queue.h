@@ -27,6 +27,21 @@ protected:
     Sequence c;
 
 public:
+    queue() : c() { }
+    queue(const Sequence& s) : c(s) { }
+    queue(const queue& x) : c(x.c) { }
+    queue& operator=(const queue& x) {
+        c = x.c;
+        return *this;
+    }
+    #if MYSTL_CPP_VERSION >= 11
+    queue(Sequence&& s) : c(msl::move(s)) { }
+    queue(queue&& x) : c(msl::move(x.c)) { }
+    queue& operator=(queue&& x) {
+        c = msl::move(x.c);
+        return *this;
+    }
+    #endif
     bool empty() const { return c.empty(); }
     size_type size() const { return c.size(); }
     reference front() { return c.front(); }
