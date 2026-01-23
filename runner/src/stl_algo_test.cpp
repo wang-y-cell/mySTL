@@ -2167,6 +2167,77 @@ void test_equal_range() {
     }
 }
 
+void test_inplace_merge() {
+    print();
+    std::cout << "Testing inplace_merge..." << std::endl;
+
+    // Test 1: Vector (Random Access)
+    {
+        int arr[] = {1, 3, 5, 7, 2, 4, 6, 8};
+        msl::vector<int> v(arr, arr + 8);
+        msl::inplace_merge(v.begin(), v.begin() + 4, v.end());
+        
+        bool passed = true;
+        for(size_t i=0; i<v.size()-1; ++i) {
+            if(v[i] > v[i+1]) passed = false;
+        }
+        
+        if (passed) std::cout << "Vector inplace_merge PASSED" << std::endl;
+        else {
+             std::cout << "Vector inplace_merge FAILED" << std::endl;
+             for(auto x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 2: Custom Comparator
+    {
+        int arr[] = {7, 5, 3, 1, 8, 6, 4, 2};
+        msl::vector<int> v(arr, arr + 8);
+        auto comp = [](int a, int b){ return a > b; };
+        // First half sorted desc: 7 5 3 1
+        // Second half sorted desc: 8 6 4 2
+        msl::inplace_merge(v.begin(), v.begin() + 4, v.end(), comp);
+
+        bool passed = true;
+        for(size_t i=0; i<v.size()-1; ++i) {
+            if(v[i] < v[i+1]) passed = false; // Should be descending
+        }
+
+        if (passed) std::cout << "Custom Comparator inplace_merge PASSED" << std::endl;
+        else {
+             std::cout << "Custom Comparator inplace_merge FAILED" << std::endl;
+             for(auto x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 3: List (Bidirectional Iterator)
+    {
+        int arr[] = {1, 3, 5, 2, 4, 6};
+        msl::list<int> l;
+        for(int x : arr) l.push_back(x);
+        
+        auto middle = l.begin();
+        msl::advance(middle, 3); // 1, 3, 5 | 2, 4, 6
+        
+        msl::inplace_merge(l.begin(), middle, l.end());
+        
+        bool passed = true;
+        auto it = l.begin();
+        int prev = *it;
+        ++it;
+        for(; it != l.end(); ++it) {
+            if(prev > *it) passed = false;
+            prev = *it;
+        }
+        
+        if (passed) std::cout << "List inplace_merge PASSED" << std::endl;
+        else {
+             std::cout << "List inplace_merge FAILED" << std::endl;
+             for(auto x : l) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+}
+
 int main() {
     test_sort();
     std::cout << std::endl;
@@ -2215,6 +2286,8 @@ int main() {
     test_min_max_element();
     std::cout << std::endl;
     test_merge();
+    std::cout << std::endl;
+    test_inplace_merge();
     std::cout << std::endl;
     test_partition();
     std::cout << std::endl;

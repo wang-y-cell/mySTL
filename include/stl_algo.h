@@ -7,6 +7,7 @@
 #include "iterator.h"
 #include <cstdlib>
 #include "stl_heap.h"
+#include "vector.h"
 
 
 namespace msl {
@@ -3040,6 +3041,100 @@ equal_range(ForwardIterator first, ForwardIterator last, const T& value, Compare
     return __equal_range(first, last, value, distance_type(first), category(), comp);
 }
 
+
+template<class BidirectionalIterator, class Distance, class Pointer>
+inline void __merge_adaptive(BidirectionalIterator first, 
+                          BidirectionalIterator middle, 
+                          BidirectionalIterator last,
+                          Distance len1, Distance len2,
+                          Pointer buffer) {
+    if(len1 < len2){
+        Pointer end_buf = copy(first, middle, buffer);
+        merge(buffer, end_buf, middle, last, first);
+    }else{
+        Pointer end_buf = copy(middle, last, buffer);
+        merge(first, middle, buffer, end_buf, first);
+    }
+}
+
+
+template<class BidirectionalIterator, class Distance, class Pointer, class Compare>
+inline void __merge_adaptive(BidirectionalIterator first, 
+                          BidirectionalIterator middle, 
+                          BidirectionalIterator last,
+                          Distance len1, Distance len2,
+                          Pointer buffer, Compare comp) {
+    if(len1 < len2){
+        Pointer end_buf = copy(first, middle, buffer);
+        merge(buffer, end_buf, middle, last, first, comp);
+    }else{
+        Pointer end_buf = copy(middle, last, buffer);
+        merge(first, middle, buffer, end_buf, first, comp);
+    }
+}
+
+
+
+template<class BidirectionalIterator, class T, class Distance>
+inline void __inplace_merge(BidirectionalIterator first, 
+                          BidirectionalIterator middle, 
+                          BidirectionalIterator last,
+                          T*, Distance*) {
+    Distance len1 = 0;
+    distance(first, middle, len1);
+    Distance len2 = 0;
+    distance(middle, last, len2);
+    msl::vector<T> buf(len1 < len2 ? len1 : len2);  
+    //源码中使用了缓存,需要给缓存传递迭代器类型,
+    //但是我的msl和std的迭代器类型可能会冲突,这里使用的就是vector来代替,效率可能会降低一些,但是实现更简单了
+    __merge_adaptive(first, middle, last, len1, len2, buf.begin());
+    
+}
+
+template<class BidirectionalIterator, class T, class Distance, class Compare>
+inline void __inplace_merge(BidirectionalIterator first, 
+                          BidirectionalIterator middle, 
+                          BidirectionalIterator last,
+                          T*, Distance*, Compare comp) {
+    Distance len1 = 0;
+    distance(first, middle, len1);
+    Distance len2 = 0;
+    distance(middle, last, len2);
+    msl::vector<T> buf(len1 < len2 ? len1 : len2);  
+    __merge_adaptive(first, middle, last, len1, len2, buf.begin(), comp);
+}
+
+/**
+ * @brief 合并两个已排序的序列 [first, middle) 和 [middle, last) 到 [first, last)
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 序列的中间迭代器
+ * @param last 序列的结束迭代器
+ */
+template<class BidirectionalIterator>
+inline void inplace_merge(BidirectionalIterator first, 
+                          BidirectionalIterator middle, 
+                          BidirectionalIterator last) {
+    if(first == middle || middle == last)return;
+    __inplace_merge(first, middle, last, value_type(first), distance_type(first));
+}
+
+/**
+ * @brief 合并两个已排序的序列 [first, middle) 和 [middle, last) 到 [first, last)（自定义比较器）
+ * 
+ * @param first 序列的起始迭代器
+ * @param middle 序列的中间迭代器
+ * @param last 序列的结束迭代器
+ * @param comp 比较函数对象
+ */
+template<class BidirectionalIterator, class Compare>
+inline void inplace_merge(BidirectionalIterator first, 
+                          BidirectionalIterator middle, 
+                          BidirectionalIterator last,
+                          Compare comp) {
+    if(first == middle || middle == last)return;
+    __inplace_merge(first, middle, last, value_type(first), distance_type(first), comp);
+}
 
 
 }// namespace msl
