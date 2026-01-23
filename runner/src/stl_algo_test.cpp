@@ -2293,12 +2293,83 @@ void test_nth_element() {
     }
 }
 
+void test_mergesort() {
+    print();
+    std::cout << "Testing mergesort..." << std::endl;
+
+    // Test 1: Vector (Random Access Iterator)
+    {
+        msl::vector<int> v;
+        int arr[] = {5, 2, 9, 1, 5, 6};
+        for(int x : arr) v.push_back(x);
+        
+        msl::mergesort(v.begin(), v.end());
+        
+        bool passed = true;
+        for(size_t i=0; i<v.size()-1; ++i) {
+            if(v[i] > v[i+1]) passed = false;
+        }
+        
+        if (passed) std::cout << "Vector mergesort PASSED" << std::endl;
+        else {
+             std::cout << "Vector mergesort FAILED" << std::endl;
+             for(auto x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 2: List (Bidirectional Iterator)
+    {
+        msl::list<int> l;
+        int arr[] = {5, 2, 9, 1, 5, 6};
+        for(int x : arr) l.push_back(x);
+        
+        msl::mergesort(l.begin(), l.end());
+        
+        bool passed = true;
+        auto it = l.begin();
+        int prev = *it;
+        ++it;
+        for(; it != l.end(); ++it) {
+            if(prev > *it) passed = false;
+            prev = *it;
+        }
+        
+        if (passed) std::cout << "List mergesort PASSED" << std::endl;
+        else {
+             std::cout << "List mergesort FAILED" << std::endl;
+             for(auto x : l) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+
+    // Test 3: Custom Comparator
+    {
+        msl::vector<int> v;
+        int arr[] = {1, 5, 2, 9, 6};
+        for(int x : arr) v.push_back(x);
+        
+        msl::mergesort(v.begin(), v.end(), [](int a, int b){ return a > b; });
+        
+        bool passed = true;
+        for(size_t i=0; i<v.size()-1; ++i) {
+            if(v[i] < v[i+1]) passed = false;
+        }
+        
+        if (passed) std::cout << "Custom Comparator mergesort PASSED" << std::endl;
+        else {
+             std::cout << "Custom Comparator mergesort FAILED" << std::endl;
+             for(auto x : v) std::cout << x << " "; std::cout << std::endl;
+        }
+    }
+}
+
 int main() {
     test_sort();
     std::cout << std::endl;
     test_equal_range();
     std::cout << std::endl;
     test_nth_element();
+    std::cout << std::endl;
+    test_mergesort();
     std::cout << std::endl;
     test_insert_sort();
     std::cout << std::endl;
