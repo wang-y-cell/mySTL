@@ -4,20 +4,10 @@
 #include "stl_alloc.h"
 #include "stl_tree.h"
 #include "stl_pair.h"
+#include "stl_functional.h"
+
 
 namespace msl {
-
-template <class Pair>
-struct select1st {
-    const typename Pair::first_type& operator()(const Pair& x) const {
-        return x.first;
-    }
-};
-
-template <class T>
-struct less {
-    bool operator()(const T& x, const T& y) const { return x < y; }
-};
 
 template <class Key, class T, class Compare = less<Key>, class Alloc = alloc>
 class map {
