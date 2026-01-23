@@ -1,7 +1,7 @@
 #ifndef MYSTL_HEAP_H
 #define MYSTL_HEAP_H
 
-#include "iterator.h"
+#include "stl_iterator.h"
 
 namespace msl {
 

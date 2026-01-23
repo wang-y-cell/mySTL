@@ -3,7 +3,7 @@
 
 
 #include"stl_construct.h"
-#include"auto_ptr.h"
+#include"stl_auto_ptr.h"
 #include"stl_uninitialized.h"
 #include"stl_alloc.h"
 

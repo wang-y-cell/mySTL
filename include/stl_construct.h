@@ -2,8 +2,8 @@
 #define MY_STL_CONSTRUCT_HPP_
 
 #include <new>          // placement new
-#include "iterator.h"
-#include "type_traits.h"
+#include "stl_iterator.h"
+#include "stl_type_traits.h"
 
 namespace msl {
 

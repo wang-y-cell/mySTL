@@ -2,8 +2,8 @@
 #define STL_UNINITIALIZED_H
 
 #include "stl_config.h"
-#include "iterator.h"
-#include "type_traits.h"
+#include "stl_iterator.h"
+#include "stl_type_traits.h"
 #include "stl_construct.h"
 #include "stl_algobase.h"
 

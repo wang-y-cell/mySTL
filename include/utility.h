@@ -1,8 +1,8 @@
 //简单实现move语义
-#ifndef MYSTL_MOVE_H
-#define MYSTL_MOVE_H
+#ifndef MYSTL_UTILITY_H
+#define MYSTL_UTILITY_H
 
-#include "type_traits.h"
+#include "stl_type_traits.h"
 
 namespace msl {
 
@@ -34,4 +34,4 @@ move(T&& t) noexcept {
 
 
 
-#endif
+#endif // MYSTL_UTILITY_H

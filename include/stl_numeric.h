@@ -1,7 +1,7 @@
  #ifndef STL_NUMERIC_H
 #define STL_NUMERIC_H
 
-#include "iterator.h"
+#include "stl_iterator.h"
 #include "stl_functional.h"
 
 namespace msl {

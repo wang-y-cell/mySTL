@@ -1,11 +1,10 @@
-#ifndef DEQUE_H
-#define DEQUE_H
+#ifndef ALLOC_H
+#define ALLOC_H
 
-
-#include "stl_deque.h"
 #include "stl_alloc.h"
 #include "stl_construct.h"
 #include "stl_uninitialized.h"
 #include "stl_algobase.h"
+#include "stl_numeric.h"
 
-#endif
+#endif // ALLOC_H
