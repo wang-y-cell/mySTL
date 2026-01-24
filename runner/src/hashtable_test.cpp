@@ -96,6 +96,31 @@ void test_hashtable() {
     
     std::cout << "count() successful." << std::endl;
 
+    std::cout << "Testing erase..." << std::endl;
+    // Erase by key
+    size_t erased_count = ht.erase(10);
+    assert(erased_count == 3);
+    assert(ht.count(10) == 0);
+    std::cout << "erase(key) successful." << std::endl;
+
+    // Erase by iterator
+    ht.insert_unique(99);
+    auto it = ht.find(99);
+    assert(it != ht.end());
+    ht.erase(it);
+    assert(ht.find(99) == ht.end());
+    std::cout << "erase(iterator) successful." << std::endl;
+
+    std::cout << "Testing swap..." << std::endl;
+    ht.clear(); // Clear ht first to make it empty
+    hashtable<int, int, IntHash, IntIdentity, IntEqual> ht2(50, IntHash(), IntEqual());
+    ht2.insert_unique(777);
+    ht.swap(ht2);
+    assert(ht.count(777) == 1);
+    assert(ht2.count(777) == 0);
+    assert(ht2.empty()); // Now ht2 should be empty because ht was cleared before swap
+    std::cout << "swap() successful." << std::endl;
+
     std::cout << "All basic tests passed!" << std::endl;
 }
 

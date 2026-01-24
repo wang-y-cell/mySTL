@@ -66,8 +66,8 @@ struct hashtable_iterator{
         increment();
         return *this;
     }
-    iterator& operator++(int){
-        hashtable_iterator tmp = *this;
+    iterator operator++(int){
+        iterator tmp = *this;
         ++*this;
         return tmp;
     }
@@ -117,7 +117,7 @@ struct hashtable_const_iterator{
         increment();
         return *this;
     }
-    const_iterator& operator++(int){
+    const_iterator operator++(int){
         const_iterator tmp = *this;
         increment();
         return tmp;
@@ -283,6 +283,8 @@ public:
         return *this;
     }
 
+    ~hashtable() { clear(); }
+
     /**
      * @brief 插入唯一元素
      * 
@@ -335,6 +337,95 @@ public:
         return cnt;
     }
 
+    void swap(hashtable& ht) {
+        msl::swap(hash, ht.hash);
+        msl::swap(equals, ht.equals);
+        msl::swap(get_key, ht.get_key);
+        buckets.swap(ht.buckets);
+        msl::swap(num_elements, ht.num_elements);
+    }
+
+    /**
+     * @brief 删除指定键的元素
+     * 
+     * @param k 要删除的键
+     * @return size_type 删除的元素数量
+     */
+    size_type erase(const key_type& k) {
+        const size_type bucket = bkt_num_key(k);
+        node* first = buckets[bucket];
+        size_type erased = 0;
+
+        if (first) {
+            node* cur = first;
+            node* prev = 0;
+            while (cur) {
+                if (equals(get_key(cur->val), k)) {
+                    if (prev) { //不是第一个节点
+                        prev->next = cur->next;
+                        delete_node(cur);
+                        cur = prev->next;
+                    } else { // cur 是第一个节点
+                        buckets[bucket] = cur->next;
+                        delete_node(cur);
+                        cur = buckets[bucket];
+                    }
+                    ++erased;
+                    --num_elements;
+                } else {
+                    prev = cur;
+                    cur = cur->next;
+                }
+            }
+        }
+        return erased;
+    }
+
+    /**
+     * @brief 删除指定迭代器指向的元素
+     * 
+     * @param it 要删除的迭代器
+     */
+    void erase(iterator it) {
+        if (node* const p = it.cur) {
+            const size_type bucket = bkt_num(p->val);
+            node* cur = buckets[bucket];
+
+            if (cur == p) {
+                buckets[bucket] = cur->next;
+                delete_node(cur);
+                --num_elements;
+            } else {
+                node* next = cur->next;
+                while (next) {
+                    if (next == p) {
+                        cur->next = next->next;
+                        delete_node(next);
+                        --num_elements;
+                        break;
+                    } else {
+                        cur = next;
+                        next = cur->next;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @brief 删除指定迭代器范围内的元素
+     * 
+     * @param first 范围的开始迭代器
+     * @param last 范围的结束迭代器
+     */
+    void erase(iterator first, iterator last) {
+         //源码中实现更加复杂,以适应不同的情况,这里只是使用了最简单的方法
+        if (first.cur == last.cur) return;
+        while (first != last) {
+            erase(first++);
+        }
+    }
+
     iterator begin() {
         for(size_type i = 0; i < buckets.size(); ++i){
             if(buckets[i])
@@ -358,8 +449,6 @@ public:
     const_iterator end() const {
         return const_iterator(0, const_cast<hashtable*>(this));
     }
-
-
 
     /**
      * @brief 清空哈希表
@@ -476,7 +565,8 @@ template<typename v, typename k,
          typename eq, typename a>
 void hashtable<v,k,hf,ex,eq,a>::copy_from(const hashtable& ht) {
     buckets.clear();
-    buckets.resize(ht.bucket_count());
+    buckets.reserve(ht.bucket_count());
+    buckets.insert(buckets.end(), ht.bucket_count(), (node*)0);
     MYSTL_TRY{
         for(size_type bucket = 0; bucket < ht.bucket_count(); ++bucket) {
             node* first = ht.buckets[bucket];
@@ -494,7 +584,12 @@ void hashtable<v,k,hf,ex,eq,a>::copy_from(const hashtable& ht) {
     MYSTL_UNWIND(clear())
 }
 
-
+template<typename value, typename key, typename hashfcn,
+         typename extractkey,class equalkey, typename alloc>
+inline void swap(hashtable<value, key, hashfcn, extractkey, equalkey, alloc>& ht1,
+                 hashtable<value, key, hashfcn, extractkey, equalkey, alloc>& ht2) {
+    ht1.swap(ht2);
+}
 
 } // namespace msl
 
