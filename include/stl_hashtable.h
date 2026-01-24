@@ -33,7 +33,7 @@ struct hashtable_const_iterator;
 template<typename value, typename key, typename hashfcn,
          typename extractkey,class equalkey, typename alloc>
 struct hashtable_iterator{
-    typedef hashtable<value, key, hashfcn, extractkey, equalkey, alloc> hashtable;
+    typedef hashtable<value, key, hashfcn, extractkey, equalkey, alloc> hashtable_type;
     typedef hash_node<value> node;
     typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc> 
         iterator;
@@ -48,7 +48,7 @@ struct hashtable_iterator{
     typedef value* pointer;
 
     node* cur;
-    hashtable* ht;
+    hashtable_type* ht;
 
     void increment(){ //operator++ 的辅助函数
         const node* old = cur;
@@ -60,7 +60,7 @@ struct hashtable_iterator{
         }
     }
 
-    hashtable_iterator(node* n, hashtable* h) : cur(n), ht(h) {}
+    hashtable_iterator(node* n, hashtable_type* h) : cur(n), ht(h) {}
     hashtable_iterator() : cur(0), ht(0) {}
     reference operator*() const { return cur->val;}
     pointer operator->() const { return &(operator*()); }
@@ -84,7 +84,7 @@ struct hashtable_iterator{
 template<typename value, typename key, typename hashfcn,
          typename extractkey,class equalkey, typename alloc>
 struct hashtable_const_iterator{
-    typedef hashtable<value, key, hashfcn, extractkey, equalkey, alloc> hashtable;
+    typedef hashtable<value, key, hashfcn, extractkey, equalkey, alloc> hashtable_type;
     typedef hash_node<value> node;
     typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc> 
         iterator;
@@ -99,7 +99,7 @@ struct hashtable_const_iterator{
     typedef const value* pointer;
 
     node* cur;
-    hashtable* ht;
+    hashtable_type* ht;
 
     void increment(){ //hash增长没有顺序之分,只是遍历hashtable
         const node* old = cur;
@@ -112,7 +112,7 @@ struct hashtable_const_iterator{
     }
 
     hashtable_const_iterator(const iterator& it) : cur(it.cur), ht(it.ht) {}
-    hashtable_const_iterator(node* n, hashtable* h) : cur(n), ht(h) {}
+    hashtable_const_iterator(node* n, hashtable_type* h) : cur(n), ht(h) {}
     hashtable_const_iterator() : cur(0), ht(0) {}
     reference operator*() const { return cur->val;}
     pointer operator->() const { return &(operator*()); }
