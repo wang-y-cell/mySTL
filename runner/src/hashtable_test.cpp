@@ -98,6 +98,7 @@ void test_hashtable() {
 
     std::cout << "Testing erase..." << std::endl;
     // Erase by key
+    
     size_t erased_count = ht.erase(10);
     assert(erased_count == 3);
     assert(ht.count(10) == 0);
