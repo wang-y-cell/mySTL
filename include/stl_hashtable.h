@@ -4,6 +4,7 @@
 #include "stl_alloc.h"
 #include "stl_iterator.h"
 #include "stl_algo.h"
+#include "stl_hash_fun.h"
 
 namespace msl{
 
