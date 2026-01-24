@@ -69,7 +69,7 @@ struct hashtable_iterator{
         ++*this;
         return tmp;
     }
-    bool operator=(const iterator& it) const {
+    bool operator==(const iterator& it) const {
         return cur == it.cur;
     }
     bool operator!=(const iterator& it) const {
@@ -80,7 +80,7 @@ struct hashtable_iterator{
 template<typename value, typename key, typename hashfcn,
          typename extractkey,class equalkey, typename alloc>
 struct hashtable_const_iterator{
-    typedef hashtable<value, key, hashfcn, extractkey, alloc> hashtable;
+    typedef hashtable<value, key, hashfcn, extractkey, equalkey, alloc> hashtable;
     typedef hash_node<value> node;
     typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc> 
         iterator;
@@ -116,11 +116,11 @@ struct hashtable_const_iterator{
         return *this;
     }
     const_iterator& operator++(int){
-        hashtable_iterator tmp = *this;
+        const_iterator tmp = *this;
         increment();
         return tmp;
     }
-    bool operator=(const const_iterator& it) const {
+    bool operator==(const const_iterator& it) const {
         return cur == it.cur;
     }
     bool operator!=(const const_iterator& it) const {
@@ -238,6 +238,7 @@ private:
     pair<iterator, bool> insert_unique_noresize(const value_type& val);
     iterator insert_equal_noresize(const value_type& val);
 
+    void copy_from(const hashtable& ht); //不可直接使用,会造成内存泄漏
 public:
     hashtable(size_type n,
               const hashfcn& hf,
@@ -256,6 +257,28 @@ public:
           num_elements(0)
     {
         initiallize_buckets(n);
+    }
+
+    hashtable(const hashtable& ht)
+        : hash(ht.hash),
+          equals(ht.equals), 
+          get_key(ht.get_key),
+          buckets(ht.get_allocator()),
+          num_elements(0)
+    {
+        copy_from(ht);
+    }
+
+
+    hashtable& operator=(const hashtable& ht){
+        if(this != &ht){
+            clear();
+            hash = ht.hash;
+            equals = ht.equals;
+            get_key = ht.get_key;
+            copy_from(ht);
+        }
+        return *this;
     }
 
     /**
@@ -280,11 +303,56 @@ public:
         return insert_equal_noresize(val);
     }
 
+    iterator find(const key_type& k) {
+        size_type n = bkt_num_key(k);
+        node* first = buckets[n];
+        for(node* cur = first; cur; cur = cur->next){
+            if(equals(get_key(cur->val), k))
+                return iterator(cur, this);
+        }
+        return end();
+    }
+
+    const_iterator find(const key_type& k) const {
+        size_type n = bkt_num_key(k);
+        node* first = buckets[n];
+        for(node* cur = first; cur; cur = cur->next){
+            if(equals(get_key(cur->val), k))
+                return const_iterator(cur, const_cast<hashtable*>(this));
+        }
+        return end();
+    }
+
+    iterator begin() {
+        for(size_type i = 0; i < buckets.size(); ++i){
+            if(buckets[i])
+                return iterator(buckets[i], this);
+        }
+        return end();
+    }
+
+    iterator end() {
+        return iterator(0, this);
+    }
+
+    const_iterator begin() const {
+        for(size_type i = 0; i < buckets.size(); ++i){
+            if(buckets[i])
+                return const_iterator(buckets[i], const_cast<hashtable*>(this));
+        }
+        return end();
+    }
+
+    const_iterator end() const {
+        return const_iterator(0, const_cast<hashtable*>(this));
+    }
+
     /**
      * @brief 清空哈希表
      * 
      */
     void clear();
+
 
 private:
     //以下四个函数用来索引bucket的序号
@@ -388,6 +456,31 @@ void hashtable<v,k,hf,ex,eq,a>::clear() {
     }
     num_elements = 0;
 } 
+
+template<typename v, typename k, 
+         typename hf, typename ex, 
+         typename eq, typename a>
+void hashtable<v,k,hf,ex,eq,a>::copy_from(const hashtable& ht) {
+    buckets.clear();
+    buckets.resize(ht.bucket_count());
+    MYSTL_TRY{
+        for(size_type bucket = 0; bucket < ht.bucket_count(); ++bucket) {
+            node* first = ht.buckets[bucket];
+            if(first) {
+                node* tmp = new_node(first->val);
+                buckets[bucket] = tmp;
+                for(node* cur = first->next; cur; cur = cur->next) {
+                    tmp->next = new_node(cur->val);
+                    tmp = tmp->next;
+                }
+            }
+        }
+        num_elements = ht.num_elements;
+    }
+    MYSTL_UNWIND(clear())
+}
+
+
 
 } // namespace msl
 
