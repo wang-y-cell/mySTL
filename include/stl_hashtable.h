@@ -95,8 +95,8 @@ struct hashtable_const_iterator{
     typedef value value_type;
     typedef ptrdiff_t difference_type;
     typedef size_t size_type;
-    typedef value& reference;
-    typedef value* pointer;
+    typedef const value& reference;
+    typedef const value* pointer;
 
     node* cur;
     hashtable* ht;
@@ -111,6 +111,7 @@ struct hashtable_const_iterator{
         }
     }
 
+    hashtable_const_iterator(const iterator& it) : cur(it.cur), ht(it.ht) {}
     hashtable_const_iterator(node* n, hashtable* h) : cur(n), ht(h) {}
     hashtable_const_iterator() : cur(0), ht(0) {}
     reference operator*() const { return cur->val;}
@@ -165,16 +166,18 @@ inline unsigned long __stl_next_prime(unsigned long n){
 template<typename value, typename key, typename hashfcn,
          typename extractkey,class equalkey, typename alloc>
 class hashtable {
+public:
     typedef key key_type;
     typedef value value_type;
-    typedef  hashfcn hasher;
+    typedef hashfcn hasher;
+    typedef equalkey key_equal;
 
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
     typedef value_type* pointer;
+    typedef const value_type* const_pointer;
     typedef value_type& reference;
     typedef const value_type& const_reference;
-    typedef const value_type* const_pointer;
 
 private:
     typedef hash_node<value> node;
@@ -194,7 +197,11 @@ private:
     size_type num_elements;
 
 public:
-      typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc>
+    hasher hash_funct() const { return hash; }
+    key_equal key_eq() const { return equals; }
+
+public:
+    typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc>
           iterator;
   typedef hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,alloc>
           const_iterator;
@@ -307,6 +314,28 @@ public:
     iterator insert_equal(const value_type& val) {
         resize(num_elements + 1);
         return insert_equal_noresize(val);
+    }
+
+    template <class InputIterator>
+    void insert_unique(InputIterator first, InputIterator last) {
+        for (; first != last; ++first)
+            insert_unique(*first);
+    }
+
+    template <class InputIterator>
+    void insert_equal(InputIterator first, InputIterator last) {
+        for (; first != last; ++first)
+            insert_equal(*first);
+    }
+
+    void insert_unique(const value_type* first, const value_type* last) {
+        for (; first != last; ++first)
+            insert_unique(*first);
+    }
+
+    void insert_equal(const value_type* first, const value_type* last) {
+        for (; first != last; ++first)
+            insert_equal(*first);
     }
 
     iterator find(const key_type& k) {
@@ -504,7 +533,12 @@ template<typename v, typename k,
         }
     }
 
-
+/**
+ * @brief 插入唯一元素,不调整大小
+ * 
+ * @param obj 要插入的元素
+ * @return pair<iterator,bool> 包含迭代器和是否成功插入的pair
+ */
 template<typename v, typename k, 
          typename hf, typename ex, 
          typename eq, typename a>
