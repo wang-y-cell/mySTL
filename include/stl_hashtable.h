@@ -26,6 +26,8 @@ template<typename value, typename key, typename hashfcn,
          typename extractkey,class equalkey, typename alloc>
 struct hashtable_const_iterator;
 
+
+//迭代器
 template<typename value, typename key, typename hashfcn,
          typename extractkey,class equalkey, typename alloc>
 struct hashtable_iterator{
@@ -97,7 +99,7 @@ struct hashtable_const_iterator{
     node* cur;
     hashtable* ht;
 
-    void increment(){
+    void increment(){ //hash增长没有顺序之分,只是遍历hashtable
         const node* old = cur;
         cur = cur->next;
         if(!cur){
@@ -227,11 +229,11 @@ private:
         return __stl_next_prime(n);
     }
 
-    size_type initiallize_buckets(size_type n){
+    void initiallize_buckets(size_type n){
         const size_type n_buckets = next_size(n);
         buckets.reserve(n_buckets);
         buckets.insert(buckets.end(), n_buckets, (node*)0);
-        return n_buckets;
+        num_elements = 0;
     }
 
     void resize(size_type num_elements_hint);
@@ -323,6 +325,16 @@ public:
         return end();
     }
 
+    size_type count(const key_type& k) const {
+        const size_type bucket = bkt_num_key(k);
+        size_type cnt = 0;
+        for(node* cur = buckets[bucket]; cur; cur = cur->next){
+            if(equals(get_key(cur->val), k))
+                ++cnt;
+        }
+        return cnt;
+    }
+
     iterator begin() {
         for(size_type i = 0; i < buckets.size(); ++i){
             if(buckets[i])
@@ -346,6 +358,8 @@ public:
     const_iterator end() const {
         return const_iterator(0, const_cast<hashtable*>(this));
     }
+
+
 
     /**
      * @brief 清空哈希表

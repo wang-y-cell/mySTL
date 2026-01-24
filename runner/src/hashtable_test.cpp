@@ -79,6 +79,23 @@ void test_hashtable() {
     assert(*ht.insert_unique(100).first == 100);
     std::cout << "Insert after clear successful." << std::endl;
 
+    std::cout << "Testing count..." << std::endl;
+    ht.clear();
+    ht.insert_unique(10);
+    ht.insert_unique(20);
+    ht.insert_unique(10); // duplicate, count should still be 1 for unique
+    
+    assert(ht.count(10) == 1);
+    assert(ht.count(20) == 1);
+    assert(ht.count(30) == 0);
+
+    ht.insert_equal(10);
+    assert(ht.count(10) == 2);
+    ht.insert_equal(10);
+    assert(ht.count(10) == 3);
+    
+    std::cout << "count() successful." << std::endl;
+
     std::cout << "All basic tests passed!" << std::endl;
 }
 
