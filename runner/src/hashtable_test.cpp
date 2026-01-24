@@ -61,6 +61,24 @@ void test_hashtable() {
     ht.delete_node(node);
     std::cout << "new_node/delete_node successful." << std::endl;
 
+    std::cout << "Testing clear()..." << std::endl;
+    // Current size should be > 0 (1, 54, 1(equal) -> 3 elements)
+    assert(!ht.empty());
+    assert(ht.size() == 3);
+    
+    ht.clear();
+    
+    assert(ht.empty());
+    assert(ht.size() == 0);
+    assert(ht.bucket_count() == 53); // Bucket count should remain same
+    std::cout << "clear() successful. Size is 0." << std::endl;
+
+    // Insert again after clear
+    ht.insert_unique(100);
+    assert(ht.size() == 1);
+    assert(*ht.insert_unique(100).first == 100);
+    std::cout << "Insert after clear successful." << std::endl;
+
     std::cout << "All basic tests passed!" << std::endl;
 }
 

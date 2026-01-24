@@ -204,6 +204,9 @@ public:
     size_type max_bucket_count() const 
     { return __stl_prime_list[__stl_num_primes - 1]; }
 
+    size_type size() const { return num_elements; }
+    bool empty() const { return num_elements == 0; }
+
     node* new_node(const value_type& val) {
         node* n = get_node();
         n->next = 0;
@@ -276,6 +279,12 @@ public:
         resize(num_elements + 1);
         return insert_equal_noresize(val);
     }
+
+    /**
+     * @brief 清空哈希表
+     * 
+     */
+    void clear();
 
 private:
     //以下四个函数用来索引bucket的序号
@@ -364,9 +373,23 @@ hashtable<v,k,hf,ex,eq,a>::insert_equal_noresize(const value_type& obj) {
     return iterator(tmp,this);
 }
 
+template<typename v, typename k, 
+         typename hf, typename ex, 
+         typename eq, typename a>
+void hashtable<v,k,hf,ex,eq,a>::clear() {
+    for(size_type bucket = 0; bucket < bucket_count(); ++bucket) {
+        node* first = buckets[bucket];
+        while(first) {
+            node* tmp = first;
+            first = first->next;
+            delete_node(tmp);
+        }
+        buckets[bucket] = 0;
+    }
+    num_elements = 0;
+} 
 
-
-}   // namespace msl
+} // namespace msl
 
 
 #endif // STL_HASHTABLE_H
