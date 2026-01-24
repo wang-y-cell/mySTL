@@ -1,9 +1,7 @@
 /*
-当前哈希函数实现的都是内置的整数类型
-用来给hashtable使用,实现的基本上都是整数本身
-
-
-
+可以看出源码的哈希函数实现的十分简单,
+只是堆数值本身作为哈希值进行一次封装
+由此看出,在使用hashtable的时候更推荐使用提供自己的哈希函数
 */
 #ifndef STL_HASH_FUN_H
 #define STL_HASH_FUN_H
@@ -15,6 +13,15 @@
 namespace msl{
 
 template<typename key> struct hash{ };
+
+inline size_t __stl_hash_string(const char* str) {
+    unsigned long h = 0;
+    for(; *str ; ++str){
+        h = h * 5 + *str;
+    }
+    return size_t(h);
+}
+
 /**************************************************************** */
 //非源码,但是我认为比较常用所以添加
 inline size_t __stl_hash_string(const std::string& str) {
@@ -24,14 +31,21 @@ inline size_t __stl_hash_string(const std::string& str) {
     }
     return size_t(h);
 } 
-/***************************************************************** */
-inline size_t __stl_hash_string(const char* str) {
-    unsigned long h = 0;
-    for(; *str ; ++str){
-        h = h * 5 + *str;
+
+template<> struct hash<double> {
+    size_t operator()(const double& d) const {
+        return size_t(d * 100);
     }
-    return size_t(h);
-}
+};
+
+template<> struct hash<float> {
+    size_t operator()(const float& f) const {
+        return size_t(f * 100);
+    }
+};
+
+/***************************************************************** */
+
 
 template<> struct hash<std::string> {
     size_t operator()(const std::string& str) const {
