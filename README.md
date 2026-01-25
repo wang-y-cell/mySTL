@@ -8,6 +8,8 @@
 # 项目介绍
 本项目用于学习stl的内部实现和编程技巧
 
+使用ai测试代码寻找错误,但也只是简单的测试,并不能完全覆盖所有情况,这也是测试样例混乱的原因
+
 本项目不包括:
 
 ``string`` 严格来说不属于stl,没有实现
@@ -73,6 +75,8 @@ As a beginner's first project, this STL implementation is mainly inspired by the
 
 ## Project Overview
 This project is intended for learning the internal implementation of the STL and improving programming skills.
+
+Using AI to test code and find errors is a simple test that cannot fully cover all situations, which is why the test cases are messy.
 
 ### What this project does **not** include:
 - `string`: Strictly speaking, it is not part of the STL, so it is not implemented.
