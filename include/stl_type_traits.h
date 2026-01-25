@@ -7,10 +7,10 @@
 namespace msl {
 
 struct true_type {
-    static const bool value = true;
+    static const bool value = true; //用来判断is_integer为true还是false
 };
 struct false_type {
-    static const bool value = false;
+    static const bool value = false; //用来判断is_integer为true还是false
 };
 
 template <bool B, class T = void>
@@ -190,7 +190,11 @@ template<typename T> struct type_traits<T*> {
 
 
 
-
+/**
+ * @brief 判断一个类型是否是整数类型
+ * 
+ * @tparam T 要判断的类型
+ */
 template<typename T> struct is_integer{
     typedef false_type Integral;
 };

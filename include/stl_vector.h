@@ -6,6 +6,7 @@
 #include "stl_iterator.h"
 #include "stl_algobase.h"
 #include <stdexcept>
+#include "stl_type_traits.h"
 #if MYSTL_CPP_VERSION >= 11
 #include <initializer_list>
 #include "utility.h"
@@ -181,8 +182,8 @@ public:
      * @param last 范围结束迭代器
      * @param alloc 分配器
      */
-    template <typename InputIt>
-    vector(InputIt first, InputIt last, const allocator_type& alloc = allocator_type()) :
+    template <typename InputIt,typename = typename msl::enable_if<!msl::is_integer<InputIt>::Integral::value>::type>
+    vector(InputIt first, InputIt last,const allocator_type& alloc = allocator_type()) :
      base(msl::distance(first, last), alloc) {
         finish_ = msl::uninitialized_copy(first, last, start_);
     }
@@ -394,7 +395,7 @@ public:
      * @param first 范围起始迭代器
      * @param last 范围结束迭代器
      */
-    template <typename InputIterator>
+    template <typename InputIterator,typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
     void assign(InputIterator first, InputIterator last);
 
     #if MYSTL_CPP_VERSION >= 11
@@ -895,7 +896,7 @@ void vector<T,Alloc>::insert(iterator position,const_iterator first,const_iterat
 
 #if MYSTL_CPP_VERSION >= 0
 template<typename T, typename Alloc>
-template<typename InputIterator>
+template<typename InputIterator, typename V>
 void vector<T,Alloc>::assign(InputIterator first, InputIterator last) {
     typedef typename msl::is_integer<InputIterator>::Integral Integral;
     assign_dispatch(first, last, Integral());
