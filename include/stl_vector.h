@@ -697,18 +697,24 @@ void vector<T,Alloc>::realloc_insert(iterator position, const_reference value) {
     const size_type new_capacity = old_size ? old_size * 2 : 1;
     iterator new_start = data_allocator::allocate(new_capacity);
     iterator new_finish = new_start;
+
+    const size_type elems_before = position - start_;
+    msl::construct(new_start + elems_before, value);
+
     #if MYSTL_CPP_VERSION >= 11
     new_finish = msl::uninitialized_move(start_, position, new_start);
     #else
     new_finish = msl::uninitialized_copy(start_, position, new_start);
     #endif
-    msl::construct(new_finish, value);
+    
     ++new_finish;
+
     #if MYSTL_CPP_VERSION >= 11
     new_finish = msl::uninitialized_move(position, finish_, new_finish);
     #else
     new_finish = msl::uninitialized_copy(position, finish_, new_finish);
     #endif
+
     msl::destroy(start_, finish_);
     data_allocator::deallocate(start_, end_of_storage_ - start_);
     start_ = new_start;

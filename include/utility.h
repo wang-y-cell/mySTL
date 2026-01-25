@@ -6,7 +6,7 @@
 
 namespace msl {
 
-
+#if MYSTL_CPP_VERSION >= 11
 //处理左值
 template<typename _Tp>
 constexpr _Tp&&
@@ -28,6 +28,8 @@ move(T&& t) noexcept {
     return static_cast<typename msl::remove_reference<T>::type&&>(t);
 }
 
+
+#endif
 
 } // namespace msl
 

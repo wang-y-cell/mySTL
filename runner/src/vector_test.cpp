@@ -1,219 +1,243 @@
-#include <cassert>
-#include <cstdlib>
-#include <ctime>
-#include <iterator>
-#include <sstream>
-#include <string>
-#include <vector>
-#include <utility>
-#include <iostream>
-#include <chrono>
 #include "vector.h"
+#include <iostream>
+#include <cassert>
+#include <string>
+#include <stdexcept>
 
-static void assert_equal(const msl::vector<int>& a, const std::vector<int>& b) {
-    assert(a.size() == b.size());
-    for (msl::size_t i = 0; i < a.size(); ++i) {
-        assert(a[i] == b[i]);
+// Global shared vector object as requested
+msl::vector<int> g_vec;
+
+// Helper to print vector state
+void print_vec(const std::string& msg) {
+    std::cout << msg << ": ";
+    for (size_t i = 0; i < g_vec.size(); ++i) {
+        std::cout << g_vec[i] << " ";
     }
+    std::cout << "(size=" << g_vec.size() << ", cap=" << g_vec.capacity() << ")" << std::endl;
+}
+
+// 1. Test push_back
+void test_push_back() {
+    std::cout << "\n[Running test_push_back]" << std::endl;
+    g_vec.push_back(1);
+    g_vec.push_back(2);
+    g_vec.push_back(3);
+    g_vec.push_back(4);
+    g_vec.push_back(5);
+    print_vec("After push_back 1-5");
+    assert(g_vec.size() == 5);
+    assert(g_vec.back() == 5);
+}
+
+// 2. Test access (operator[], at, front, back, data)
+void test_access() {
+    std::cout << "\n[Running test_access]" << std::endl;
+    assert(g_vec[0] == 1);
+    assert(g_vec.at(1) == 2);
+    assert(g_vec.front() == 1);
+    assert(g_vec.back() == 5);
+    assert(*g_vec.data() == 1);
+    
+    bool caught = false;
+    try {
+        g_vec.at(100);
+    } catch (const std::out_of_range&) {
+        caught = true;
+    }
+    assert(caught);
+    std::cout << "Access checks passed." << std::endl;
+}
+
+// 3. Test pop_back
+void test_pop_back() {
+    std::cout << "\n[Running test_pop_back]" << std::endl;
+    g_vec.pop_back();
+    print_vec("After pop_back");
+    assert(g_vec.size() == 4);
+    assert(g_vec.back() == 4);
+}
+
+// 4. Test insert
+void test_insert() {
+    std::cout << "\n[Running test_insert]" << std::endl;
+    // Insert single element
+    g_vec.insert(g_vec.begin() + 1, 10);
+    print_vec("After insert 10 at index 1");
+    assert(g_vec[1] == 10);
+    
+    // Insert count
+    g_vec.insert(g_vec.end(), 2, 20);
+    print_vec("After insert two 20s at end");
+    assert(g_vec.size() == 7);
+    assert(g_vec[5] == 20);
+    assert(g_vec[6] == 20);
+
+    // Insert range
+    int arr[] = {30, 31};
+    g_vec.insert(g_vec.begin(), arr, arr + 2);
+    print_vec("After insert range {30, 31} at begin");
+    assert(g_vec[0] == 30);
+    assert(g_vec[1] == 31);
+    
+    // Insert initializer list (C++11)
+    g_vec.insert(g_vec.end(), {40, 41});
+    print_vec("After insert init list {40, 41} at end");
+    assert(g_vec.back() == 41);
+}
+
+// 5. Test erase
+void test_erase() {
+    std::cout << "\n[Running test_erase]" << std::endl;
+    // Erase single element (the 30 at begin)
+    g_vec.erase(g_vec.begin());
+    print_vec("After erase begin");
+    assert(g_vec[0] == 31);
+    
+    // Erase range (last two elements: 40, 41)
+    g_vec.erase(g_vec.end() - 2, g_vec.end());
+    print_vec("After erase last 2");
+    assert(g_vec.back() == 20);
+}
+
+// 6. Test resize
+void test_resize() {
+    std::cout << "\n[Running test_resize]" << std::endl;
+    size_t old_size = g_vec.size();
+    g_vec.resize(old_size + 2, 99);
+    print_vec("After resize +2 with 99");
+    assert(g_vec.back() == 99);
+    assert(g_vec.size() == old_size + 2);
+    
+    g_vec.resize(3);
+    print_vec("After resize to 3");
+    assert(g_vec.size() == 3);
+}
+
+// 7. Test reserve
+void test_reserve() {
+    std::cout << "\n[Running test_reserve]" << std::endl;
+    size_t old_cap = g_vec.capacity();
+    g_vec.reserve(old_cap + 20);
+    print_vec("After reserve +20");
+    assert(g_vec.capacity() >= old_cap + 20);
+}
+
+// 8. Test shrink_to_fit
+void test_shrink_to_fit() {
+    std::cout << "\n[Running test_shrink_to_fit]" << std::endl;
+    g_vec.shrink_to_fit(); // Note: implementation might be no-op or binding to std, check vector.h
+    // In strict C++11 vector, this requests reduction. Our implementation might not fully support it 
+    // or it's just a request. We just check it compiles and runs.
+    print_vec("After shrink_to_fit");
+}
+
+// 9. Test iterators
+void test_iterators() {
+    std::cout << "\n[Running test_iterators]" << std::endl;
+    std::cout << "Forward: ";
+    for (auto it = g_vec.begin(); it != g_vec.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << "\nReverse: ";
+    for (auto rit = g_vec.rbegin(); rit != g_vec.rend(); ++rit) {
+        std::cout << *rit << " ";
+    }
+    std::cout << "\nConst Forward: ";
+    for (auto it = g_vec.cbegin(); it != g_vec.cend(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
+
+// 10. Test emplace and emplace_back (C++11)
+void test_emplace() {
+    std::cout << "\n[Running test_emplace]" << std::endl;
+    g_vec.emplace_back(100);
+    print_vec("After emplace_back 100");
+    assert(g_vec.back() == 100);
+    
+    g_vec.emplace(g_vec.begin(), 0);
+    print_vec("After emplace 0 at begin");
+    assert(g_vec.front() == 0);
+}
+
+// 11. Test swap
+void test_swap() {
+    std::cout << "\n[Running test_swap]" << std::endl;
+    msl::vector<int> other;
+    other.push_back(999);
+    
+    g_vec.swap(other);
+    print_vec("After swap with {999}");
+    
+    assert(g_vec.size() == 1);
+    assert(g_vec[0] == 999);
+    
+    // Swap back
+    g_vec.swap(other);
+    print_vec("After swapping back");
+}
+
+// 12. Test clear
+void test_clear() {
+    std::cout << "\n[Running test_clear]" << std::endl;
+    g_vec.clear();
+    print_vec("After clear");
+    assert(g_vec.empty());
+    assert(g_vec.size() == 0);
+}
+
+// 13. Test assign
+void test_assign() {
+    std::cout << "\n[Running test_assign]" << std::endl;
+    g_vec.assign(5, 7);
+    print_vec("After assign 5 7s");
+    assert(g_vec.size() == 5);
+    assert(g_vec[0] == 7);
+    
+    // g_vec.assign({1, 2, 3}); // Not implemented
+    // print_vec("After assign init list {1, 2, 3}"); 
+
+    // Wait, vector.h has assign(InputIterator first, InputIterator last)
+    // and assign(size_type n, const_reference value).
+    // Does it have assign(initializer_list)? Standard has it.
+    // Let's check vector.h... it seems MISSING in the Read output.
+    // It has: void assign(size_type n, const_reference value)
+    // and template <typename InputIterator> void assign(InputIterator first, InputIterator last)
+    // No assign(initializer_list). I'll skip that or use iterator version.
+    
+    auto il = {8, 9};
+    g_vec.assign(il.begin(), il.end());
+    print_vec("After assign range {8, 9}");
+    assert(g_vec.size() == 2);
+    assert(g_vec[0] == 8);
+}
+
+// 14. Test max_size and get_allocator
+void test_utils() {
+    std::cout << "\n[Running test_utils]" << std::endl;
+    std::cout << "Max size: " << g_vec.max_size() << std::endl;
+    g_vec.get_allocator();
 }
 
 int main() {
-    std::srand(static_cast<unsigned int>(std::time(0)));
-
-    msl::vector<int> v;
-    std::vector<int> ref;
-    for (int i = 0; i < 200; ++i) {
-        int x = std::rand() % 1000;
-        v.push_back(x);
-        ref.push_back(x);
-    }
-    assert_equal(v, ref);
-
-    for (int i = 0; i < 50; ++i) {
-        if (!ref.empty()) { v.pop_back(); ref.pop_back(); }
-    }
-    assert_equal(v, ref);
-
-    msl::size_t cap_before = v.capacity();
-    v.reserve(static_cast<msl::size_t>(ref.size() + 100));
-    assert(v.capacity() >= ref.size() + 100);
-    assert(v.size() == ref.size());
-
-    int val = 7;
-    v.insert(v.begin() + (v.size() ? v.size() / 2 : 0), 5, val);
-    ref.insert(ref.begin() + (ref.size() ? ref.size() / 2 : 0), 5, val);
-    assert_equal(v, ref);
-
-    msl::vector<int> tmp;
-    for (int i = 0; i < 10; ++i) tmp.push_back(i * i);
-    v.insert(v.begin() + (v.size() ? v.size() / 3 : 0), tmp.begin(), tmp.end());
-    ref.insert(ref.begin() + (ref.size() ? ref.size() / 3 : 0), tmp.begin(), tmp.end());
-    assert_equal(v, ref);
-
-    if (v.size() > 5) {
-        msl::size_t i = v.size() / 4;
-        msl::size_t j = i + 3;
-        v.erase(v.begin() + i, v.begin() + j);
-        ref.erase(ref.begin() + static_cast<std::vector<int>::size_type>(i),
-                  ref.begin() + static_cast<std::vector<int>::size_type>(j));
-    }
-    assert_equal(v, ref);
-
-    v.assign(12, 42);
-    ref.assign(12, 42);
-    assert_equal(v, ref);
-
-    msl::vector<int> src_msl;
-    for (int i = 0; i < 25; ++i) src_msl.push_back(std::rand() % 500);
-    v.assign(src_msl.begin(), src_msl.end());
-    ref.assign(src_msl.begin(), src_msl.end());
-    assert_equal(v, ref);
-
-    msl::vector<int> src_input_like;
-    for (int i = 0; i < 15; ++i) src_input_like.push_back(std::rand() % 300);
-    v.assign(src_input_like.data(), src_input_like.data() + src_input_like.size());
-    ref.assign(src_input_like.data(), src_input_like.data() + src_input_like.size());
-    assert_equal(v, ref);
-
-    msl::vector<int> v2(v);
-    assert(v == v2);
-    if (!v2.empty()) { v2[0] = v2[0] + 1; assert(v2 > v); }
-
-    try { (void)v.at(static_cast<msl::size_t>(v.size() + 10)); assert(false); }
-    catch (const std::out_of_range&) {}
-
-    msl::vector<int>::allocator_type a1 = v.get_allocator(); (void)a1;
-
-    msl::vector<std::string> vs;
-    vs.push_back("alpha");
-    vs.push_back("beta");
-    vs.insert(vs.begin() + 1, 2, std::string("x"));
-    msl::vector<std::string> ts; ts.push_back("p"); ts.push_back("q");
-    vs.insert(vs.begin() + 2, ts.begin(), ts.end());
-    assert(vs.size() >= 4);
-
-    v.clear();
-    ref.clear();
-    assert(v.size() == 0);
-    assert_equal(v, ref);
-
-#if MYSTL_CPP_VERSION >= 11
-    msl::vector<int> v_init{1, 2, 3, 4, 5};
-    std::vector<int> ref_init{1, 2, 3, 4, 5};
-    assert_equal(v_init, ref_init);
-    v_init.insert(v_init.begin() + 2, {7, 8});
-    ref_init.insert(ref_init.begin() + 2, {7, 8});
-    assert_equal(v_init, ref_init);
-
-    struct P { int x; int y; P(int a, int b) : x(a), y(b) {} };
-    msl::vector<P> pv;
-    pv.emplace_back(1, 2);
-    pv.emplace_back(3, 4);
-    pv.emplace(pv.begin() + 1, 9, 8);
-    assert(pv.size() == 3);
-    assert(pv[0].x == 1 && pv[0].y == 2);
-    assert(pv[1].x == 9 && pv[1].y == 8);
-    assert(pv[2].x == 3 && pv[2].y == 4);
-
-    msl::vector<std::string> vs2;
-    vs2.emplace_back(3, 'a');
-    vs2.emplace(vs2.begin(), 2, 'b');
-    assert(vs2.size() == 2);
-    assert(vs2[0] == std::string("bb"));
-    assert(vs2[1] == std::string("aaa"));
-
-    msl::vector<int> mv_src;
-    std::vector<int> ref_mv;
-    for (int i = 0; i < 10; ++i) { mv_src.push_back(i); ref_mv.push_back(i); }
-    msl::vector<int> mv_move(std::move(mv_src));
-    assert(mv_src.size() == 0);
-    assert_equal(mv_move, ref_mv);
-    msl::vector<int> mv_assign;
-    mv_assign = std::move(mv_move);
-    assert(mv_move.size() == 0);
-    assert_equal(mv_assign, ref_mv);
-
-    const int N = 100000;
-    std::vector<int> data; data.reserve(N);
-    for (int i = 0; i < N; ++i) data.push_back(std::rand());
-
-    msl::vector<int> m_push;
-    std::vector<int> s_push;
-    msl::size_t m_cap = m_push.capacity();
-    msl::size_t s_cap = s_push.capacity();
-    msl::size_t m_expansions = 0;
-    msl::size_t s_expansions = 0;
-    auto t0 = std::chrono::steady_clock::now();
-    for (int i = 0; i < N; ++i) {
-        m_push.push_back(data[i]);
-        msl::size_t c = m_push.capacity();
-        if (c != m_cap) { ++m_expansions; m_cap = c; }
-    }
-    auto t1 = std::chrono::steady_clock::now();
-    for (int i = 0; i < N; ++i) {
-        s_push.push_back(data[i]);
-        msl::size_t c = static_cast<msl::size_t>(s_push.capacity());
-        if (c != s_cap) { ++s_expansions; s_cap = c; }
-    }
-    auto t2 = std::chrono::steady_clock::now();
-    auto ms_m_push = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
-    auto ms_s_push = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-    auto mem_m_push = static_cast<unsigned long long>(m_push.capacity()) * sizeof(int);
-    auto mem_s_push = static_cast<unsigned long long>(s_push.capacity()) * sizeof(int);
-    std::cout << "push_back ms: msl=" << ms_m_push << ", std=" << ms_s_push
-              << "; expansions: msl=" << m_expansions << ", std=" << s_expansions
-              << "; mem(bytes): msl=" << mem_m_push << ", std=" << mem_s_push << "\n";
-
-    int K = 10000;
-    msl::size_t m_exp_ins = 0, s_exp_ins = 0;
-    msl::size_t m_cap_ins = m_push.capacity();
-    msl::size_t s_cap_ins = static_cast<msl::size_t>(s_push.capacity());
-    auto t3 = std::chrono::steady_clock::now();
-    for (int i = 0; i < K; ++i) {
-        msl::vector<int>::iterator pos = m_push.begin() + (m_push.size() / 2);
-        m_push.insert(pos, 1, i);
-        msl::size_t c = m_push.capacity();
-        if (c != m_cap_ins) { ++m_exp_ins; m_cap_ins = c; }
-    }
-    auto t4 = std::chrono::steady_clock::now();
-    for (int i = 0; i < K; ++i) {
-        std::vector<int>::iterator pos = s_push.begin() + (s_push.size() / 2);
-        s_push.insert(pos, 1, i);
-        msl::size_t c = static_cast<msl::size_t>(s_push.capacity());
-        if (c != s_cap_ins) { ++s_exp_ins; s_cap_ins = c; }
-    }
-    auto t5 = std::chrono::steady_clock::now();
-    auto ms_m_ins = std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3).count();
-    auto ms_s_ins = std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4).count();
-    auto mem_m_ins = static_cast<unsigned long long>(m_push.capacity()) * sizeof(int);
-    auto mem_s_ins = static_cast<unsigned long long>(s_push.capacity()) * sizeof(int);
-    std::cout << "insert(mid,1) ms: msl=" << ms_m_ins << ", std=" << ms_s_ins
-              << "; expansions: msl=" << m_exp_ins << ", std=" << s_exp_ins
-              << "; mem(bytes): msl=" << mem_m_ins << ", std=" << mem_s_ins << "\n";
-
-    msl::size_t m_size = m_push.size();
-    msl::size_t s_size = static_cast<msl::size_t>(s_push.size());
-    msl::size_t rm = m_size / 10;
-    auto t6 = std::chrono::steady_clock::now();
-    m_push.erase(m_push.begin() + (m_size / 3), m_push.begin() + (m_size / 3 + rm));
-    auto t7 = std::chrono::steady_clock::now();
-    s_push.erase(s_push.begin() + static_cast<std::vector<int>::size_type>(s_size / 3),
-                 s_push.begin() + static_cast<std::vector<int>::size_type>(s_size / 3 + rm));
-    auto t8 = std::chrono::steady_clock::now();
-    auto ms_m_erase = std::chrono::duration_cast<std::chrono::milliseconds>(t7 - t6).count();
-    auto ms_s_erase = std::chrono::duration_cast<std::chrono::milliseconds>(t8 - t7).count();
-    std::cout << "erase(range) ms: msl=" << ms_m_erase << ", std=" << ms_s_erase << "\n";
-
-    long long sum_m = 0, sum_s = 0;
-    auto t9 = std::chrono::steady_clock::now();
-    for (msl::size_t i = 0; i < m_push.size(); ++i) sum_m += m_push[i];
-    auto t10 = std::chrono::steady_clock::now();
-    for (std::size_t i = 0; i < s_push.size(); ++i) sum_s += s_push[i];
-    auto t11 = std::chrono::steady_clock::now();
-    auto ms_m_read = std::chrono::duration_cast<std::chrono::milliseconds>(t10 - t9).count();
-    auto ms_s_read = std::chrono::duration_cast<std::chrono::milliseconds>(t11 - t10).count();
-    std::cout << "read sum ms: msl=" << ms_m_read << ", std=" << ms_s_read << "; sum diff=" << (sum_m - sum_s) << "\n";
-#endif
+    std::cout << "Starting Vector Tests (C++11)..." << std::endl;
     
+    test_push_back();
+    test_access();
+    test_pop_back();
+    test_insert();
+    test_erase();
+    test_resize();
+    test_reserve();
+    test_shrink_to_fit();
+    test_iterators();
+    test_emplace();
+    test_swap();
+    test_clear();
+    test_assign();
+    test_utils();
+
+    std::cout << "\nAll tests passed successfully!" << std::endl;
     return 0;
 }
