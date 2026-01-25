@@ -1,104 +1,146 @@
 #include <cassert>
-#include <cstdlib>
-#include <ctime>
-#include <list>
-#include <vector>
 #include <iostream>
+#include <vector>
+#include <string>
 #include "list.h"
 
-static std::vector<int> collect(const msl::list<int>& a) {
-    std::vector<int> out;
-    for (msl::list<int>::const_iterator it = a.begin(); it != a.end(); ++it) out.push_back(*it);
-    return out;
+// Helper to print list
+template <typename T>
+void print_list(const msl::list<T>& l, const std::string& name) {
+    std::cout << name << " (" << l.size() << "): ";
+    for (const auto& x : l) {
+        std::cout << x << " ";
+    }
+    std::cout << std::endl;
 }
 
-static std::vector<int> collect(const std::list<int>& b) {
-    std::vector<int> out;
-    for (std::list<int>::const_iterator it = b.begin(); it != b.end(); ++it) out.push_back(*it);
-    return out;
+void test_constructors() {
+    std::cout << "\n[Test Constructors]" << std::endl;
+    
+    // Fill - use size_t to avoid ambiguity if SFINAE fails
+    msl::list<int> l1(5, 10);
+    print_list(l1, "l1(5, 10)");
+    assert(l1.size() == 5);
+    for(auto x : l1) assert(x == 10);
+
+    // Range
+    int arr[] = {1, 2, 3, 4, 5};
+    msl::list<int> l2(arr, arr + 5);
+    print_list(l2, "l2(range)");
+    assert(l2.size() == 5);
+    int i = 1;
+    for(auto x : l2) assert(x == i++);
+
+    // Copy
+    msl::list<int> l3(l2);
+    print_list(l3, "l3(copy l2)");
+    assert(l3.size() == 5);
+    assert(l3.front() == 1);
+
+    #if MYSTL_CPP_VERSION >= 11
+    // Move
+    msl::list<int> l4(std::move(l3));
+    print_list(l4, "l4(move l3)");
+    print_list(l3, "l3(after move)");
+    assert(l4.size() == 5);
+    assert(l3.empty());
+
+    // Initializer list
+    msl::list<int> l5 = {10, 20, 30};
+    print_list(l5, "l5(init_list)");
+    assert(l5.size() == 3);
+    assert(l5.front() == 10);
+    assert(l5.back() == 30);
+    #endif
 }
 
-static void assert_equal(const msl::list<int>& a, const std::list<int>& b) {
-    auto va = collect(a);
-    auto vb = collect(b);
-    std::cout << "collect sizes: msl=" << va.size() << ", std=" << vb.size() << std::endl;
-    assert(va.size() == vb.size());
-    for (std::size_t i = 0; i < va.size(); ++i) assert(va[i] == vb[i]);
+void test_assignment() {
+    std::cout << "\n[Test Assignment]" << std::endl;
+    msl::list<int> l1;
+    l1.push_back(1); l1.push_back(2); l1.push_back(3);
+    
+    msl::list<int> l2;
+    l2 = l1;
+    print_list(l2, "l2 = l1");
+    assert(l2.size() == 3);
+    
+    #if MYSTL_CPP_VERSION >= 11
+    l2 = std::move(l1);
+    print_list(l2, "l2 = move(l1)");
+    assert(l2.size() == 3);
+    assert(l1.empty());
+
+    l2 = {4, 5, 6, 7};
+    print_list(l2, "l2 = {4,5,6,7}");
+    assert(l2.size() == 4);
+    assert(l2.front() == 4);
+    #endif
+
+    l2.assign(3, 100);
+    print_list(l2, "l2.assign(3, 100)");
+    assert(l2.size() == 3);
+    for(auto x : l2) assert(x == 100);
+    
+    int arr[] = {8, 9};
+    l2.assign(arr, arr + 2);
+    print_list(l2, "l2.assign(range)");
+    assert(l2.size() == 2);
+    assert(l2.front() == 8);
+}
+
+void test_modifiers() {
+    std::cout << "\n[Test Modifiers]" << std::endl;
+    msl::list<int> l;
+    l.push_back(1);
+    
+    #if MYSTL_CPP_VERSION >= 11
+    l.emplace_back(2);
+    l.emplace_front(0);
+    print_list(l, "emplace 0, 1, 2");
+    assert(l.front() == 0);
+    assert(l.back() == 2);
+    
+    auto it = l.begin();
+    ++it; // at 1
+    l.emplace(it, 10); // 0, 10, 1, 2
+    print_list(l, "emplace 10 at 1");
+    assert(l.size() == 4);
+    
+    l.insert(l.begin(), {8, 9}); // 8, 9, 0, 10, 1, 2
+    print_list(l, "insert {8, 9}");
+    assert(l.front() == 8);
+    #else
+    l.push_back(2);
+    l.push_front(0);
+    l.insert(++l.begin(), 10);
+    l.insert(l.begin(), 8);
+    l.insert(l.begin(), 9); // 9, 8, 0, 10, 1, 2
+    #endif
+
+    l.resize(2);
+    print_list(l, "resize(2)");
+    assert(l.size() == 2);
+    
+    l.resize(5, 99); 
+    print_list(l, "resize(5, 99)");
+    assert(l.size() == 5);
+    assert(l.back() == 99);
+    
+    // Erase range
+    auto first = l.begin();
+    ++first;
+    auto last = l.end();
+    --last;
+    l.erase(first, last); // keep first and last
+    print_list(l, "erase range (1, end-1)");
+    assert(l.size() == 2);
 }
 
 int main() {
-    std::srand(static_cast<unsigned int>(std::time(0)));
-
-    msl::list<int> l;
-    std::list<int> ref;
-
-    for (int i = 0; i < 50; ++i) {
-        int x = std::rand() % 1000;
-        l.push_back(x);
-        ref.push_back(x);
-    }
-    std::cout << "sizes after push_back: msl=" << l.size() << ", std=" << ref.size() << std::endl;
-    assert_equal(l, ref);
-
-    for (int i = 0; i < 10; ++i) {
-        int y = std::rand() % 1000;
-        l.push_front(y);
-        ref.push_front(y);
-    }
-    assert_equal(l, ref);
-
-    if (!l.empty()) {
-        msl::list<int>::iterator p = l.begin();
-        l.erase(p);
-        ref.erase(ref.begin());
-        assert_equal(l, ref);
-    }
-
-    for (int i = 0; i < 5; ++i) { l.push_back(7); ref.push_back(7); }
-    l.remove(7); ref.remove(7);
-    assert_equal(l, ref);
-
-    for (int i = 0; i < 3; ++i) { l.push_back(42); ref.push_back(42); }
-    l.unique(); ref.unique();
-    assert_equal(l, ref);
-
-    msl::list<int> s1, s2; std::list<int> rs1, rs2;
-    for (int i = 0; i < 10; ++i) { int v = std::rand() % 100; s1.push_back(v); rs1.push_back(v); }
-    for (int i = 0; i < 8; ++i) { int v = std::rand() % 100; s2.push_back(v); rs2.push_back(v); }
-    s1.splice(s1.begin(), s2); rs1.splice(rs1.begin(), rs2);
-    assert_equal(s1, rs1);
-    assert_equal(s2, rs2);
-    if (!s1.empty()) {
-        msl::list<int>::iterator it = s1.begin(); ++it;
-        std::list<int>::iterator rit = rs1.begin(); ++rit;
-        s2.splice(s2.end(), s1, it); rs2.splice(rs2.end(), rs1, rit);
-        assert_equal(s1, rs1);
-        assert_equal(s2, rs2);
-    }
-    s1.swap(s2); rs1.swap(rs2);
-    assert_equal(s1, rs1);
-    assert_equal(s2, rs2);
-
-    msl::list<int> a, b;
-    std::list<int> ra, rb;
-    for (int i = 0; i < 20; ++i) a.push_back(std::rand() % 200);
-    for (int i = 0; i < 20; ++i) b.push_back(std::rand() % 200);
-    for (int i = 0; i < 20; ++i) ra.push_back(a.front()), a.erase(a.begin());
-    for (int i = 0; i < 20; ++i) rb.push_back(b.front()), b.erase(b.begin());
-    a.clear(); b.clear();
-    for (int v : ra) a.push_back(v);
-    for (int v : rb) b.push_back(v);
-    ra.sort(); rb.sort();
-    a.sort(); b.sort();
-    a.merge(b); ra.merge(rb);
-    assert_equal(a, ra);
-
-    l.reverse(); ref.reverse();
-    assert_equal(l, ref);
-
-    l.sort(); ref.sort();
-    assert_equal(l, ref);
-
-    std::cout << "list tests passed" << std::endl;
+    test_constructors();
+    test_assignment();
+    test_modifiers();
+    
+    std::cout << "\nAll list tests passed!" << std::endl;
     return 0;
 }

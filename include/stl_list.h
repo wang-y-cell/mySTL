@@ -157,6 +157,21 @@ protected:
         }
     }
 
+    #if MYSTL_CPP_VERSION >= 11
+    template <typename... Args>
+    link_type create_node(Args&&... args) {
+        link_type p = get_node();
+        MYSTL_TRY{
+            construct(&p->data, msl::forward<Args>(args)...);
+            return p;
+        }
+        MYSTL_CATCH_ALL{
+            put_node(p);
+            MYSTL_RETHROW;
+        }
+    }
+    #endif
+
     void destroy_node(link_type p) {
         destroy(&p->data);
         put_node(p);
@@ -177,6 +192,36 @@ protected:
 
 public:
     explicit list(const allocator_type& a = allocator_type()) : base(a) {}
+
+    list(size_type n, const_reference value) : base(allocator_type()) {
+        insert(begin(), n, value);
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
+    list(InputIterator first, InputIterator last) : base(allocator_type()) {
+        insert(begin(), first, last);
+    }
+    #else
+    template <typename InputIterator>
+    list(InputIterator first, InputIterator last) : base(allocator_type()) {
+        insert(begin(), first, last);
+    }
+    #endif
+
+    list(const list& x) : base(x.get_allocator()) {
+        insert(begin(), x.begin(), x.end());
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    list(list&& x) : base(x.get_allocator()) {
+        msl::swap(node_, x.node_);
+    }
+
+    list(std::initializer_list<T> ilist) : base(allocator_type()) {
+        insert(begin(), ilist.begin(), ilist.end());
+    }
+    #endif
     iterator begin()             { return static_cast<link_type>(node_->next); }
     const_iterator begin() const { return static_cast<const link_type>(node_->next); }
     iterator end()               { return static_cast<link_type>(node_); }
@@ -204,6 +249,79 @@ public:
     const_reference back() const { return *--end(); }
     void swap(list& x){msl::swap(node_, x.node_);}
 
+    list& operator=(const list& x) {
+        if (this != &x) {
+            assign(x.begin(), x.end());
+        }
+        return *this;
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    list& operator=(list&& x) {
+        clear();
+        msl::swap(node_, x.node_);
+        return *this;
+    }
+
+    list& operator=(std::initializer_list<T> ilist) {
+        assign(ilist.begin(), ilist.end());
+        return *this;
+    }
+    #endif
+
+    void assign(size_type n, const_reference value) {
+        iterator first = begin();
+        iterator last = end();
+        for (; n > 0 && first != last; --n, ++first) {
+            *first = value;
+        }
+        if (n > 0) {
+            insert(end(), n, value);
+        } else {
+            erase(first, last);
+        }
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
+    void assign(InputIterator first, InputIterator last) {
+        iterator start = begin();
+        iterator finish = end();
+        while (start != finish && first != last) {
+            *start = *first;
+            ++start;
+            ++first;
+        }
+        if (first == last) {
+            erase(start, finish);
+        } else {
+            insert(finish, first, last);
+        }
+    }
+    #else
+    template <typename InputIterator>
+    void assign(InputIterator first, InputIterator last) {
+        iterator start = begin();
+        iterator finish = end();
+        while (start != finish && first != last) {
+            *start = *first;
+            ++start;
+            ++first;
+        }
+        if (first == last) {
+            erase(start, finish);
+        } else {
+            insert(finish, first, last);
+        }
+    }
+    #endif
+
+    #if MYSTL_CPP_VERSION >= 11
+    void assign(std::initializer_list<T> ilist) {
+        assign(ilist.begin(), ilist.end());
+    }
+    #endif
+
     iterator insert(iterator pos, const_reference val) {
         link_type p = create_node(val);
         p->next = pos.node;
@@ -212,6 +330,63 @@ public:
         pos.node->prev = p;
         return iterator(p);
     }
+
+    void insert(iterator pos, size_type n, const_reference value) {
+        for (; n > 0; --n) {
+            insert(pos, value);
+        }
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
+    void insert(iterator pos, InputIterator first, InputIterator last) {
+        for (; first != last; ++first) {
+            insert(pos, *first);
+        }
+    }
+    #else
+    template <typename InputIterator>
+    void insert(iterator pos, InputIterator first, InputIterator last) {
+        for (; first != last; ++first) {
+            insert(pos, *first);
+        }
+    }
+    #endif
+
+    #if MYSTL_CPP_VERSION >= 11
+    iterator insert(iterator pos, value_type&& value) {
+        link_type p = create_node(msl::move(value));
+        p->next = pos.node;
+        p->prev = pos.node->prev;
+        pos.node->prev->next = p;
+        pos.node->prev = p;
+        return iterator(p);
+    }
+
+    void insert(iterator pos, std::initializer_list<T> ilist) {
+        insert(pos, ilist.begin(), ilist.end());
+    }
+
+    template <typename... Args>
+    iterator emplace(iterator pos, Args&&... args) {
+        link_type p = create_node(msl::forward<Args>(args)...);
+        p->next = pos.node;
+        p->prev = pos.node->prev;
+        pos.node->prev->next = p;
+        pos.node->prev = p;
+        return iterator(p);
+    }
+
+    template <typename... Args>
+    void emplace_front(Args&&... args) {
+        emplace(begin(), msl::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    void emplace_back(Args&&... args) {
+        emplace(end(), msl::forward<Args>(args)...);
+    }
+    #endif
 
     void push_back(const_reference val) {
         insert(end(), val);
@@ -238,6 +413,28 @@ public:
         destroy_node(p);
         return iterator(next);
     }
+
+    iterator erase(iterator first, iterator last) {
+        while (first != last) {
+            first = erase(first);
+        }
+        return last;
+    }
+
+    void resize(size_type new_size, const_reference value = T()) {
+        size_type len = size();
+        if (len < new_size) {
+            insert(end(), new_size - len, value);
+        } else {
+            iterator new_end = begin();
+            while(new_size--) {
+                ++new_end;
+            }
+            erase(new_end, end());
+        }
+    }
+
+    size_type max_size() const { return size_type(-1); }
 
     void clear() { base::clear(); }
 

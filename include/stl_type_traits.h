@@ -6,9 +6,20 @@
 
 namespace msl {
 
-struct true_type {};
-struct false_type {};
+struct true_type {
+    static const bool value = true;
+};
+struct false_type {
+    static const bool value = false;
+};
 
+template <bool B, class T = void>
+struct enable_if {};
+
+template <class T>
+struct enable_if<true, T> {
+    typedef T type;
+};
 
 template <typename T>
 struct type_traits {
