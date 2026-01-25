@@ -3,8 +3,11 @@
 #include "list.h"
 #include <cassert>
 #include "queue.h"
-
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 int main() {
+    print();
     msl::queue<int> q;
     std::queue<int> std_q;
     msl::queue<int, msl::list<int>> qt; // 可以使用list作为底层容器

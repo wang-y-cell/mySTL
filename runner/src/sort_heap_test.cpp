@@ -5,6 +5,9 @@
 #include <random>
 #include "stl_heap.h"
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 // Helper to print vector
 void print_vec(const std::vector<int>& v) {
     for (int x : v) std::cout << x << " ";
@@ -16,6 +19,7 @@ bool greater_cmp(int a, int b) {
 }
 
 int main() {
+    print();
     // Test 1: Standard Max Heap -> Ascending Sort
     std::cout << "Test 1: Standard Max Heap -> Ascending Sort" << std::endl;
     std::vector<int> v;

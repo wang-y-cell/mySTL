@@ -24,6 +24,8 @@ protected:
     Sequence c;
 
 public:
+    stack() : c() { }
+    stack(const Sequence& s) : c(s) { }
     bool empty() const { return c.empty(); }
     size_type size() const { return c.size(); }
     reference top() { return c.back(); }

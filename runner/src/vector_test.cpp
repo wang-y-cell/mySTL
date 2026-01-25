@@ -4,6 +4,10 @@
 #include <string>
 #include <stdexcept>
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 // Global shared vector object as requested
 msl::vector<int> g_vec;
 
@@ -221,6 +225,7 @@ void test_utils() {
 }
 
 int main() {
+    print();
     std::cout << "Starting Vector Tests (C++11)..." << std::endl;
     
     test_push_back();

@@ -6,6 +6,10 @@
 
 using namespace msl;
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 struct IntHash {
     size_t operator()(int x) const { return (size_t)x; }
 };
@@ -128,6 +132,7 @@ void test_hashtable() {
 
 
 int main() {
+    print();
     test_hashtable();
     return 0;
 }

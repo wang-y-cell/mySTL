@@ -5,6 +5,10 @@
 
 using namespace msl;
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 void test_hash_multimap() {
     std::cout << "Testing hash_multimap..." << std::endl;
 
@@ -105,6 +109,7 @@ void test_hash_multimap() {
 }
 
 int main() {
+    print();
     test_hash_multimap();
     return 0;
 }

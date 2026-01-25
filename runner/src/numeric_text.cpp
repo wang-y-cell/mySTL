@@ -1,7 +1,9 @@
 #include "stl_numeric.h"
 #include "stl_functional.h"
 #include <iostream>
-
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 void text_adjacent_difference(){
     int a[] = {1, 2, 3, 4, 5};
     int b[5];
@@ -70,6 +72,7 @@ void text_iota(){
 }
 
 int main(){
+    print();
     text_accumulate();
     text_adjacent_difference();
     text_adjacent_difference_v2();

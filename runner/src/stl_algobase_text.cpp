@@ -3,6 +3,9 @@
 #include <vector>
 #include <algorithm> // For comparison if needed, but we use msl
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 void test_equal() {
     int a[] = {1, 2, 3, 4, 5};
     int b[] = {1, 2, 3, 4, 5};
@@ -145,6 +148,7 @@ void test_copy_backward() {
 }
 
 int main() {
+    print();
     test_equal();
     test_fill();
     test_fill_n();

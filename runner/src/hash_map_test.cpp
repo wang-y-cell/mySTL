@@ -5,6 +5,10 @@
 
 using namespace msl;
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 void test_hash_map() {
     std::cout << "Testing hash_map..." << std::endl;
 
@@ -108,6 +112,7 @@ void test_hash_map() {
 }
 
 int main() {
+    print();
     test_hash_map();
     return 0;
 }

@@ -2,8 +2,12 @@
 #include <iostream>
 #include <string>
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 // Simple test for set
 int main() {
+    print();
     msl::set<int> s;
     s.insert(10);
     s.insert(5);

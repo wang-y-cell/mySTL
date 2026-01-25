@@ -2,6 +2,12 @@
 #include <iostream>
 #include <string>
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
+
+
 void process(int& i) {
     std::cout << "process(int&): " << i << std::endl;
 }
@@ -24,6 +30,7 @@ public:
 };
 
 int main() {
+    print();
     int a = 10;
     std::cout << "Test forward lvalue:" << std::endl;
     wrapper(a); // Should call process(int&)

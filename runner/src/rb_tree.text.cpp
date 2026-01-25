@@ -6,6 +6,9 @@
 #include <random>
 #include <ctime>
 #include <cassert>
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 
 // Define identity functor
 template <class T>
@@ -147,6 +150,7 @@ void test_hint_insert() {
 }
 
 int main() {
+    print();
     test_hint_insert();
     test_random_operations();
     return 0;

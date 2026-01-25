@@ -1,9 +1,12 @@
 #include "stl_multiset.h"
 #include <iostream>
 #include <cassert>
-
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 // Simple test for multiset
 int main() {
+    print();
     std::cout << "Testing multiset..." << std::endl;
     msl::multiset<int> ms;
     

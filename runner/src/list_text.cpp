@@ -4,6 +4,13 @@
 #include <string>
 #include "list.h"
 
+
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
+
+
 // Helper to print list
 template <typename T>
 void print_list(const msl::list<T>& l, const std::string& name) {

@@ -2,7 +2,9 @@
 #include "queue.h"
 #include <vector>
 #include <cassert>
-
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 // Simple test for priority_queue
 void test_priority_queue() {
     msl::priority_queue<int> pq;
@@ -63,6 +65,7 @@ void test_priority_queue() {
 }
 
 int main() {
+    print();
     test_priority_queue();
     return 0;
 }

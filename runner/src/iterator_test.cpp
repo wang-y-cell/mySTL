@@ -6,6 +6,12 @@
 #include "stl_iterator.h"
 #include "stl_algo.h" 
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
+
+
 void text_back_insert_iterator(){
     std::cout << "Testing back_insert_iterator..." << std::endl;
 
@@ -184,6 +190,7 @@ void text_global_functions() {
 }
 
 int main() {
+    print();
     text_back_insert_iterator();
     text_front_insert_iterator();
     text_reverse_iterator();

@@ -2,8 +2,15 @@
 #include <iostream>
 #include <string>
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
+
+
 // Simple test for map
 int main() {
+    print();
     msl::map<int, std::string> m;
     
     // Insert using pair

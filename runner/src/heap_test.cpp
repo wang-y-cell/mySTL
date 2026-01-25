@@ -4,11 +4,16 @@
 #include <cassert>
 #include "stl_heap.h"
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 bool greater_cmp(int a, int b) {
     return a > b;
 }
 
 int main() {
+    print();
     // Test 1: Standard Max Heap
     std::vector<int> v;
     v.push_back(10);

@@ -5,6 +5,10 @@
 #include<iostream>
 #include "deque.h"
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 void deque_equal(const std::deque<int>& dq, const msl::deque<int>& dq2) {
     assert(dq.size() == dq2.size());
     for(int i = 0; i < dq.size(); ++i) {
@@ -13,6 +17,7 @@ void deque_equal(const std::deque<int>& dq, const msl::deque<int>& dq2) {
 }
 
 int main(){
+    print();
     srand(time(0));
 
 

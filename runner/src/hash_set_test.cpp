@@ -6,6 +6,10 @@
 
 using namespace msl;
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 void test_hash_set() {
     std::cout << "Testing hash_set..." << std::endl;
 
@@ -90,6 +94,7 @@ void test_hash_set() {
 }
 
 int main() {
+    print();
     test_hash_set();
     return 0;
 }

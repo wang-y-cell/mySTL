@@ -3,7 +3,12 @@
 #include <cassert>
 #include "stack.h"
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 int main() {
+    print();
     msl::stack<int> s;
     std::stack<int> std_s;
 

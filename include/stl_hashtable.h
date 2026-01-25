@@ -4,6 +4,8 @@
 #include "stl_alloc.h"
 #include "stl_iterator.h"
 #include "stl_algo.h"
+#include "stl_vector.h"
+#include "stl_pair.h"
 #include "stl_hash_fun.h"
 #include "stl_functional.h"
 
@@ -17,27 +19,27 @@ struct hash_node{
 };
 //声明
 template<typename value, typename key, typename hashfcn,
-         typename extractkey,class equalkey, typename alloc = alloc>
+         typename extractkey,class equalkey, typename Alloc = alloc>
 class hashtable;
 
 template<typename value, typename key, typename hashfcn,
-         typename extractkey,class equalkey, typename alloc>
+         typename extractkey,class equalkey, typename Alloc>
 struct hashtable_iterator;
 
 template<typename value, typename key, typename hashfcn,
-         typename extractkey,class equalkey, typename alloc>
+         typename extractkey,class equalkey, typename Alloc>
 struct hashtable_const_iterator;
 
 
 //迭代器
 template<typename value, typename key, typename hashfcn,
-         typename extractkey,class equalkey, typename alloc>
+         typename extractkey,class equalkey, typename Alloc>
 struct hashtable_iterator{
-    typedef hashtable<value, key, hashfcn, extractkey, equalkey, alloc> hashtable_type;
+    typedef hashtable<value, key, hashfcn, extractkey, equalkey, Alloc> hashtable_type;
     typedef hash_node<value> node;
-    typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc> 
+    typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,Alloc> 
         iterator;
-    typedef hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,alloc> 
+    typedef hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,Alloc> 
         const_iterator;
 
     typedef forward_iterator_tag iterator_category;
@@ -82,13 +84,13 @@ struct hashtable_iterator{
 };
 
 template<typename value, typename key, typename hashfcn,
-         typename extractkey,class equalkey, typename alloc>
+         typename extractkey,class equalkey, typename Alloc>
 struct hashtable_const_iterator{
-    typedef hashtable<value, key, hashfcn, extractkey, equalkey, alloc> hashtable_type;
+    typedef hashtable<value, key, hashfcn, extractkey, equalkey, Alloc> hashtable_type;
     typedef hash_node<value> node;
-    typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc> 
+    typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,Alloc> 
         iterator;
-    typedef hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,alloc> 
+    typedef hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,Alloc> 
         const_iterator;
 
     typedef forward_iterator_tag iterator_category;
@@ -164,7 +166,7 @@ inline unsigned long __stl_next_prime(unsigned long n){
  * @tparam alloc 分配器类型
  */
 template<typename value, typename key, typename hashfcn,
-         typename extractkey,class equalkey, typename alloc>
+         typename extractkey,class equalkey, typename Alloc>
 class hashtable {
 public:
     typedef key key_type;
@@ -182,7 +184,7 @@ public:
 private:
     typedef hash_node<value> node;
 public:
-    typedef alloc allocator_type;
+    typedef Alloc allocator_type;
     allocator_type get_allocator() const { return allocator_type(); }
 private:
     typedef simple_alloc<node, allocator_type> node_allocator;
@@ -193,7 +195,7 @@ private:
     hasher hash;
     equalkey equals;
     extractkey get_key;
-    vector<node*,alloc> buckets;
+    vector<node*,Alloc> buckets;
     size_type num_elements;
 
 public:
@@ -201,15 +203,15 @@ public:
     key_equal key_eq() const { return equals; }
 
 public:
-    typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc>
+    typedef hashtable_iterator<value,key,hashfcn,extractkey,equalkey,Alloc>
           iterator;
-  typedef hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,alloc>
+  typedef hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,Alloc>
           const_iterator;
 
   friend struct
-  hashtable_iterator<value,key,hashfcn,extractkey,equalkey,alloc>;
+  hashtable_iterator<value,key,hashfcn,extractkey,equalkey,Alloc>;
   friend struct
-  hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,alloc>;
+  hashtable_const_iterator<value,key,hashfcn,extractkey,equalkey,Alloc>;
 
     size_type bucket_count() const { return buckets.size(); }
     size_type max_bucket_count() const 
@@ -238,7 +240,7 @@ private:
         return __stl_next_prime(n);
     }
 
-    void initiallize_buckets(size_type n){
+    void initialize_buckets(size_type n){
         const size_type n_buckets = next_size(n);
         buckets.reserve(n_buckets);
         buckets.insert(buckets.end(), n_buckets, (node*)0);
@@ -257,7 +259,7 @@ public:
         : hash(hf), equals(eql), get_key(extractkey()),
           num_elements(0)
     {
-        initiallize_buckets(n);
+        initialize_buckets(n);
     }
 
     hashtable(size_type n,
@@ -267,7 +269,7 @@ public:
         : hash(hf), equals(eql), get_key(getk),
           num_elements(0)
     {
-        initiallize_buckets(n);
+        initialize_buckets(n);
     }
 
     hashtable(const hashtable& ht)
@@ -517,7 +519,7 @@ template<typename v, typename k,
         if (num_elements_hint > old_size) {
             const size_type new_size = next_size(num_elements_hint);
             if(new_size > old_size) {
-                vector<node*,alloc> tmp(new_size, (node*)0);
+                vector<node*,a> tmp(new_size, (node*)0);
                 for(size_type bucket = 0; bucket < old_size; ++bucket) {
                     node* first = buckets[bucket];
                     while(first) {
@@ -621,9 +623,9 @@ void hashtable<v,k,hf,ex,eq,a>::copy_from(const hashtable& ht) {
 }
 
 template<typename value, typename key, typename hashfcn,
-         typename extractkey,class equalkey, typename alloc>
-inline void swap(hashtable<value, key, hashfcn, extractkey, equalkey, alloc>& ht1,
-                 hashtable<value, key, hashfcn, extractkey, equalkey, alloc>& ht2) {
+         typename extractkey,class equalkey, typename Alloc>
+inline void swap(hashtable<value, key, hashfcn, extractkey, equalkey, Alloc>& ht1,
+                 hashtable<value, key, hashfcn, extractkey, equalkey, Alloc>& ht2) {
     ht1.swap(ht2);
 }
 

@@ -3,8 +3,12 @@
 #include <string>
 #include <cassert>
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
 // Simple test for multimap
 int main() {
+    print();
     std::cout << "Testing multimap..." << std::endl;
     msl::multimap<int, std::string> mm;
     

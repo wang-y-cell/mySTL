@@ -5,6 +5,10 @@
 
 using namespace msl;
 
+void print(){
+    std::cout << "==========================================" << std::endl;
+}
+
 void test_hash_multiset() {
     std::cout << "Testing hash_multiset..." << std::endl;
 
@@ -105,6 +109,7 @@ void test_hash_multiset() {
 }
 
 int main() {
+    print();
     test_hash_multiset();
     return 0;
 }
