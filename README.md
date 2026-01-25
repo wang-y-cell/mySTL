@@ -1,6 +1,6 @@
 # mySTL
 ## 简介
-这是一个基于c++11的STL库,主要是面向c++学习及stl的学习,所以只是实现最基础的代码,包含了常用的容器、算法和迭代器。目前是第一个版本,可能会出现许多错误,后续会不断更改,但也只是修复一些bug和错误,少量增加内容,如有发现错误,请在``issues``指出,如有时间,会尽快修复。
+这是一个基于c++11的STL库,主要是面向c++学习及stl的学习,包含了常用的容器、算法和迭代器。目前是第一个版本,可能会出现许多错误,后续会不断更改,但也只是修复一些bug和错误,少量增加内容,如有发现错误,请在``issues``指出,如有时间,会尽快修复。
 
 作为新手第一个项目,stl的实现主要是参考了sgi stl的源码,也增加了少许自己的理解何实现,你在学习过程中一定会发现许多不完整的地方,那是故意为之,stl中虽有许多容器,但是核心思想非常相似,像构造函数的参数,大多都是一摸一样的,只是实现根据不同的数据结构而有所不同,所以我只在前面的序列容器中实现,后面的关联容器中只实现必要的函数
 
@@ -67,7 +67,7 @@ $ make
 # mySTL
 
 ## Introduction
-This is an STL library based on C++11, primarily aimed at C++ learners and those studying the STL. Therefore, it only implements the most fundamental code, including commonly used containers, algorithms, and iterators. This is the first version, so there may be many bugs. We will continuously make updates—mainly fixing bugs and errors, with only minor additions. If you find any issues, please report them in the **Issues** section. If time permits, we will fix them as soon as possible.
+This is an STL library based on C++11, primarily aimed at C++ learners and those studying the STL, including commonly used containers, algorithms, and iterators. This is the first version, so there may be many bugs. We will continuously make updates—mainly fixing bugs and errors, with only minor additions. If you find any issues, please report them in the **Issues** section. If time permits, we will fix them as soon as possible.
 
 As a beginner's first project, this STL implementation is mainly inspired by the SGI STL source code, with some of my own understanding and modifications added. During your learning process, you will certainly notice many incomplete parts—this is intentional. Although the STL includes many containers, their core design principles are very similar. For example, constructor parameters are mostly identical; only the internal implementations differ based on the underlying data structure. Thus, I fully implement these common interfaces in the early sequential containers, while later associative containers only include essential functions.
 
