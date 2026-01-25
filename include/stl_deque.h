@@ -6,7 +6,12 @@
 #include "stl_uninitialized.h"
 #include "stl_alloc.h"
 #include "stl_algobase.h"
+#include "stl_type_traits.h"
 #include <cstddef>
+#if MYSTL_CPP_VERSION >= 11
+#include <initializer_list>
+#include "utility.h"
+#endif
 
 namespace msl {
 
@@ -257,6 +262,99 @@ public:
     deque(size_type n, const value_type& value, allocator_type alloc = allocator_type())
     : base(alloc, n) { fill_initialize(n, value); }
 
+    template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
+    deque(InputIterator first, InputIterator last, allocator_type alloc = allocator_type())
+    : base(alloc, 0) {
+        for (; first != last; ++first)
+            push_back(*first);
+    }
+
+    deque(const deque& x) : base(x.get_allocator(), x.size()) {
+        msl::uninitialized_copy(x.begin(), x.end(), start_);
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    deque(deque&& x) : base(x.get_allocator(), 0) {
+        swap(x);
+    }
+    
+    deque(std::initializer_list<value_type> il, allocator_type alloc = allocator_type())
+    : base(alloc, 0) {
+        for (const auto& val : il) {
+            push_back(val);
+        }
+    }
+    #endif
+
+    ~deque() {
+        if (map_) {
+            msl::destroy(begin(), end());
+        }
+    }
+
+    deque& operator=(const deque& x) {
+        if (&x != this) {
+            const size_type len = size();
+            if (x.size() >= len) {
+                const_iterator mid = x.begin() + len;
+                msl::copy(x.begin(), mid, start_);
+                for (const_iterator it = mid; it != x.end(); ++it) {
+                    push_back(*it);
+                }
+            } else {
+                erase(msl::copy(x.begin(), x.end(), start_), finish_);
+            }
+        }
+        return *this;
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    deque& operator=(deque&& x) {
+        if (&x != this) {
+            clear();
+            swap(x);
+        }
+        return *this;
+    }
+
+    deque& operator=(std::initializer_list<value_type> il) {
+        assign(il.begin(), il.end());
+        return *this;
+    }
+    #endif
+    
+    void swap(deque& x) {
+        msl::swap(start_, x.start_);
+        msl::swap(finish_, x.finish_);
+        msl::swap(map_, x.map_);
+        msl::swap(map_size_, x.map_size_);
+    }
+
+    void assign(size_type n, const value_type& val) {
+        if (n > size()) {
+            msl::fill(begin(), end(), val);
+            n -= size();
+            while (n--) push_back(val);
+        } else {
+            erase(begin() + n, end());
+            msl::fill(begin(), end(), val);
+        }
+    }
+
+    template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
+    void assign(InputIterator first, InputIterator last) {
+        clear();
+        for (; first != last; ++first) {
+            push_back(*first);
+        }
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    void assign(std::initializer_list<value_type> il) {
+        assign(il.begin(), il.end());
+    }
+    #endif
+
     void push_back(const value_type& value) {
         if (finish_.cur != finish_.last - 1) {
             msl::construct(finish_.cur, value);
@@ -355,11 +453,11 @@ public:
 
     //insert
     iterator insert(iterator pos, const value_type& value) {
-        if(pos == start_) { // 如果插入位置在头部
+        if(pos == start_) {
             push_front(value);
             return start_;
         }
-        else if(pos == finish_) { // 如果插入位置在尾部
+        else if(pos == finish_) {
             push_back(value);
             return finish_ - 1;
         }
@@ -367,6 +465,69 @@ public:
             return insert_aux(pos, value);
         }
     }
+
+    void insert(iterator pos, size_type n, const value_type& value) {
+         size_type index = pos - start_;
+         for(size_type i=0; i<n; ++i) {
+             insert(start_ + index + i, value); 
+         }
+    }
+
+    template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
+    void insert(iterator pos, InputIterator first, InputIterator last) {
+        size_type index = pos - start_;
+        for (; first != last; ++first) {
+            insert(start_ + index, *first);
+            ++index;
+        }
+    }
+
+    void resize(size_type new_size, const value_type& value) {
+        if (new_size < size()) {
+            erase(start_ + new_size, finish_);
+        } else {
+            insert(finish_, new_size - size(), value);
+        }
+    }
+
+    void resize(size_type new_size) {
+        resize(new_size, value_type());
+    }
+
+    #if MYSTL_CPP_VERSION >= 11
+    template <class... Args>
+    void emplace_back(Args&&... args) {
+        if (finish_.cur != finish_.last - 1) {
+            msl::construct(finish_.cur, msl::forward<Args>(args)...);
+            ++finish_.cur;
+        } else {
+            push_back(value_type(msl::forward<Args>(args)...));
+        }
+    }
+
+    template <class... Args>
+    void emplace_front(Args&&... args) {
+        if (start_.cur != start_.first) {
+            msl::construct(start_.cur - 1, msl::forward<Args>(args)...);
+            --start_.cur;
+        } else {
+             push_front(value_type(msl::forward<Args>(args)...));
+        }
+    }
+    
+    template <class... Args>
+    iterator emplace(iterator pos, Args&&... args) {
+        if (pos == start_) {
+            emplace_front(msl::forward<Args>(args)...);
+            return start_;
+        } else if (pos == finish_) {
+            emplace_back(msl::forward<Args>(args)...);
+            return finish_ - 1;
+        } else {
+            return insert(pos, value_type(msl::forward<Args>(args)...));
+        }
+    }
+    #endif
 
 };
 
