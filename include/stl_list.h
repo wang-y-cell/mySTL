@@ -82,6 +82,11 @@ template<typename T,typename Alloc>
 class list_base{
 public:
     typedef Alloc allocator_type;
+    /**
+     * @brief 获取分配器
+     * 
+     * @return allocator_type 
+     */
     allocator_type get_allocator() const { return allocator_type(); }
 
     list_base(const allocator_type&){
@@ -132,6 +137,11 @@ public:
     typedef ptrdiff_t difference_type;
 
     typedef typename base::allocator_type allocator_type;
+    /**
+     * @brief 获取分配器
+     * 
+     * @return allocator_type 
+     */
     allocator_type get_allocator() const { return base::get_allocator(); }
 
     typedef __list_iterator<T, T&, T*>             iterator;
@@ -191,24 +201,34 @@ protected:
     }
 
 public:
+    /**
+     * @brief 构造函数
+     * 
+     * @param a 分配器
+     */
     explicit list(const allocator_type& a = allocator_type()) : base(a) {}
 
+    /**
+     * @brief 构造函数
+     * 
+     * @param n 元素数量
+     * @param value 元素值
+     */
     list(size_type n, const_reference value) : base(allocator_type()) {
         insert(begin(), n, value);
     }
 
-    #if MYSTL_CPP_VERSION >= 11
+    /**
+     * @brief 构造函数
+     * 
+     * @param first 迭代器开始
+     * @param last 迭代器结束
+     */
     template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
     list(InputIterator first, InputIterator last) : base(allocator_type()) {
         insert(begin(), first, last);
     }
-    #else
-    template <typename InputIterator>
-    list(InputIterator first, InputIterator last) : base(allocator_type()) {
-        insert(begin(), first, last);
-    }
-    #endif
-
+    
     list(const list& x) : base(x.get_allocator()) {
         insert(begin(), x.begin(), x.end());
     }
@@ -268,7 +288,13 @@ public:
         return *this;
     }
     #endif
-
+    
+    /**
+     * @brief 将链表赋值为n个value
+     * 
+     * @param n 元素数量
+     * @param value 元素值
+     */
     void assign(size_type n, const_reference value) {
         iterator first = begin();
         iterator last = end();
@@ -282,7 +308,12 @@ public:
         }
     }
 
-    #if MYSTL_CPP_VERSION >= 11
+    /**
+     * @brief 将链表赋值为迭代器范围[first, last)的元素
+     * 
+     * @param first 迭代器开始
+     * @param last 迭代器结束
+     */
     template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
     void assign(InputIterator first, InputIterator last) {
         iterator start = begin();
@@ -298,30 +329,25 @@ public:
             insert(finish, first, last);
         }
     }
-    #else
-    template <typename InputIterator>
-    void assign(InputIterator first, InputIterator last) {
-        iterator start = begin();
-        iterator finish = end();
-        while (start != finish && first != last) {
-            *start = *first;
-            ++start;
-            ++first;
-        }
-        if (first == last) {
-            erase(start, finish);
-        } else {
-            insert(finish, first, last);
-        }
-    }
-    #endif
 
     #if MYSTL_CPP_VERSION >= 11
+    /**
+     * @brief 将链表赋值为initializer_list ilist的元素
+     * 
+     * @param ilist initializer_list
+     */
     void assign(std::initializer_list<T> ilist) {
         assign(ilist.begin(), ilist.end());
     }
     #endif
-
+    
+    /**
+     * @brief 在迭代器pos前插入value
+     * 
+     * @param pos 迭代器位置
+     * @param val 元素值
+     * @return iterator 插入位置迭代器
+     */
     iterator insert(iterator pos, const_reference val) {
         link_type p = create_node(val);
         p->next = pos.node;
@@ -331,28 +357,41 @@ public:
         return iterator(p);
     }
 
+    /**
+     * @brief 在迭代器pos前插入n个value
+     * 
+     * @param pos 迭代器位置
+     * @param n 元素数量
+     * @param value 元素值
+     */
     void insert(iterator pos, size_type n, const_reference value) {
         for (; n > 0; --n) {
             insert(pos, value);
         }
     }
-
-    #if MYSTL_CPP_VERSION >= 11
-    template <typename InputIterator, typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
+    
+    /**
+     * @brief 在迭代器pos前插入迭代器范围[first, last)的元素
+     * 
+     * @param pos 迭代器位置
+     * @param first 迭代器开始
+     * @param last 迭代器结束
+     */
+    template <typename InputIterator, 
+    typename = typename msl::enable_if<!msl::is_integer<InputIterator>::Integral::value>::type>
     void insert(iterator pos, InputIterator first, InputIterator last) {
         for (; first != last; ++first) {
             insert(pos, *first);
         }
     }
-    #else
-    template <typename InputIterator>
-    void insert(iterator pos, InputIterator first, InputIterator last) {
-        for (; first != last; ++first) {
-            insert(pos, *first);
-        }
-    }
-    #endif
 
+    /**
+     * @brief 在迭代器pos前插入value的移动版本
+     * 
+     * @param pos 迭代器位置
+     * @param value 元素值
+     * @return iterator 插入位置迭代器
+     */
     #if MYSTL_CPP_VERSION >= 11
     iterator insert(iterator pos, value_type&& value) {
         link_type p = create_node(msl::move(value));
@@ -363,10 +402,23 @@ public:
         return iterator(p);
     }
 
+    /**
+     * @brief 在迭代器pos前插入initializer_list ilist的元素
+     * 
+     * @param pos 迭代器位置
+     * @param ilist initializer_list
+     */
     void insert(iterator pos, std::initializer_list<T> ilist) {
         insert(pos, ilist.begin(), ilist.end());
     }
 
+    /**
+     * @brief 在迭代器pos前插入Args... args的元素
+     * 
+     * @param pos 迭代器位置
+     * @param args 元素值
+     * @return iterator 插入位置迭代器
+     */
     template <typename... Args>
     iterator emplace(iterator pos, Args&&... args) {
         link_type p = create_node(msl::forward<Args>(args)...);
@@ -377,34 +429,68 @@ public:
         return iterator(p);
     }
 
+    /**
+     * @brief 在链表头插入Args... args的元素
+     * 
+     * @param args 元素值
+     */
     template <typename... Args>
     void emplace_front(Args&&... args) {
         emplace(begin(), msl::forward<Args>(args)...);
     }
-
+    
+    /**
+     * @brief 在链表尾插入Args... args的元素
+     * 
+     * @param args 元素值
+     */
     template <typename... Args>
     void emplace_back(Args&&... args) {
         emplace(end(), msl::forward<Args>(args)...);
     }
     #endif
 
+    /**
+     * @brief 在链表尾插入value
+     * 
+     * @param val 元素值
+     */
     void push_back(const_reference val) {
         insert(end(), val);
     }
 
+    /**
+     * @brief 在链表头插入value
+     * 
+     * @param val 元素值
+     */
     void push_front(const_reference val) {
         insert(begin(), val);
     }
-
+    
+    /**
+     * @brief 删除链表头元素
+     * 
+     */
     void pop_front() {
         erase(begin());
     }
 
+    /**
+     * @brief 删除链表尾元素
+     * 
+     */
     void pop_back() {
         iterator tmp = end();
         erase(--tmp);
     }
-
+    
+    /**
+     * @brief 删除迭代器pos指向的元素
+     * 
+     * @param pos 迭代器位置
+     * @return iterator 下一个元素迭代器
+     */
     iterator erase(iterator pos){
         link_type p = static_cast<link_type>(pos.node);
         link_type next = static_cast<link_type>(p->next);
@@ -414,13 +500,27 @@ public:
         return iterator(next);
     }
 
+    /**
+     * @brief 删除迭代器范围[first, last)的元素
+     * 
+     * @param first 迭代器开始
+     * @param last 迭代器结束
+     * @return iterator 下一个元素迭代器
+     */
     iterator erase(iterator first, iterator last) {
         while (first != last) {
             first = erase(first);
         }
         return last;
     }
-
+    
+    /**
+     * @brief 改变链表大小为new_size，若new_size大于当前大小，则在链表尾插入value，
+     * 若new_size小于当前大小，则删除链表尾元素
+     * 
+     * @param new_size 新大小
+     * @param value 元素值
+     */
     void resize(size_type new_size, const_reference value = T()) {
         size_type len = size();
         if (len < new_size) {
@@ -434,10 +534,24 @@ public:
         }
     }
 
+    /**
+     * @brief 返回链表最大大小
+     * 
+     * @return size_type 最大大小
+     */
     size_type max_size() const { return size_type(-1); }
 
+    /**
+     * @brief 清空链表
+     * 
+     */
     void clear() { base::clear(); }
 
+    /**
+     * @brief 删除链表中所有等于val的元素
+     * 
+     * @param val 元素值
+     */
     void remove(const_reference val) {
         iterator first = begin();
         iterator last = end();
@@ -450,6 +564,10 @@ public:
         }
     }
 
+    /**
+     * @brief 删除链表中所有连续重复的元素
+     * 
+     */
     void unique(){
         iterator first = begin();
         iterator last = end();
@@ -461,13 +579,26 @@ public:
             next = first;
         }
     }
-
+    
+    /**
+     * @brief 将链表x的元素移动到pos位置
+     * 
+     * @param pos 目标位置
+     * @param x 链表x
+     */
     void splice(iterator pos, list& x) {
         if (!x.empty()) {
             transfer(pos, x.begin(), x.end());
         }
     }
 
+    /**
+     * @brief 将链表x的元素i移动到pos位置
+     * 
+     * @param pos 目标位置
+     * @param x 链表x
+     * @param i 元素i
+     */
     void splice(iterator pos, list& x, iterator i) {
         iterator j = i;
         ++j;
@@ -475,6 +606,11 @@ public:
         transfer(pos, i, j);
     }
 
+    /**
+     * @brief 将链表x合并到当前链表，要求x链表元素有序
+     * 
+     * @param x 链表x
+     */
     void merge(list& x) {
         if (this != &x) {
             iterator first1 = begin();
@@ -494,6 +630,10 @@ public:
         }
     }
 
+    /**
+     * @brief 反转链表
+     * 
+     */
     void reverse() {
         if (node_->next != node_ && node_->next->next != node_) {
             iterator first = begin();
@@ -507,6 +647,7 @@ public:
         }
     }
     
+
     // 归并排序,非递归实现
     void sort(){
         if (node_->next != node_->prev) {
