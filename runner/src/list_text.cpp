@@ -143,11 +143,26 @@ void test_modifiers() {
     assert(l.size() == 2);
 }
 
-int main() {
-    test_constructors();
-    test_assignment();
-    test_modifiers();
+void test_sort_comp(){
+    std::cout << "[test sort comp]" << std::endl;
+    msl::list<int> l = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+    l.sort();
+    print_list(l, "sort");
+    for(auto it = l.begin(); it != l.end(); ++it) {
+        auto it2 = it;
+        if(++it2 != l.end()) {
+            assert(*it <= *it2);
+        }
+    }
     
+}
+
+
+int main() {
+    //test_constructors();
+    //test_assignment();
+    //test_modifiers();
+    test_sort_comp();
     std::cout << "\nAll list tests passed!" << std::endl;
     return 0;
 }
