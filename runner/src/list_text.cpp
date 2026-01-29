@@ -154,14 +154,23 @@ void test_sort_comp(){
             assert(*it <= *it2);
         }
     }
+
+    l.sort([](int a, int b) {return a > b; });
+    print_list(l, "sort comp");
+    for(auto it = l.begin(); it != l.end(); ++it) {
+        auto it2 = it;
+        if(++it2 != l.end()) {
+            assert(*it >= *it2);
+        }
+    }
     
 }
 
 
 int main() {
-    //test_constructors();
-    //test_assignment();
-    //test_modifiers();
+    test_constructors();
+    test_assignment();
+    test_modifiers();
     test_sort_comp();
     std::cout << "\nAll list tests passed!" << std::endl;
     return 0;
