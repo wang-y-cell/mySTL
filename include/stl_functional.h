@@ -134,6 +134,11 @@ struct project2nd : public binary_function<Arg1, Arg2, Arg2> {
     Arg2 operator()(const Arg1&, const Arg2& y) const { return y; }
 };
 
+/**
+ * @brief 一元否定仿函数
+ * 
+ * @tparam Predicate 谓词类型, 
+ */
 template <class Predicate>
 class unary_negate : 
 public unary_function<typename Predicate::argument_type, bool> {
@@ -185,6 +190,15 @@ public:
     }
 };  
 
+
+/**
+ * @brief 绑定第一个参数的仿函数
+ * 
+ * @tparam Operation 操作类型
+ * @param o 操作对象
+ * @param f 第一个参数
+ * @return binder1st<Operation> 绑定第一个参数的仿函数对象
+ */
 template <class Operation>
 inline binder1st<Operation> bind1st
 (const Operation& o, const typename Operation::first_argument_type& f) {
