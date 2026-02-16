@@ -10,7 +10,8 @@ endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-file(GLOB SRC ${CMAKE_SOURCE_DIR}/src/*.cpp)
+file(GLOB SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+
 foreach(src ${SRC})
     get_filename_component(name ${src} NAME_WE)
     add_executable(${name} ${src})
