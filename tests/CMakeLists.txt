@@ -1,7 +1,3 @@
-cmake_minimum_required(VERSION 3.15)
-project(mystl)
-set(CMAKE_CXX_STANDARD 11)
-
 # 解决 Windows 下中文乱码问题
 # 源文件使用 UTF-8，执行文件输出使用 GBK (适配默认 Windows 终端)
 if(MSVC)
@@ -13,7 +9,6 @@ elseif(MINGW)
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-include_directories(${PROJECT_SOURCE_DIR}/../include)
 
 file(GLOB SRC ${CMAKE_SOURCE_DIR}/src/*.cpp)
 foreach(src ${SRC})
