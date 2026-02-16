@@ -51,6 +51,12 @@ $ cmake .. -G "MinGW Makefiles" #其中..是CmakeLists.txt是相对build目录�
 $ cmake --build .
 
 # linux
+# 运行build.sh脚本
+cd scripts
+sh build.sh
+
+############################################
+# 手动构建
 $ mkdir build && cd build
 $ cmake .. 
 $ make
@@ -64,69 +70,3 @@ $ make
 
 ---
 
-# mySTL
-
-## Introduction
-This is an STL library based on C++11, primarily aimed at C++ learners and those studying the STL, including commonly used containers, algorithms, and iterators. This is the first version, so there may be many bugs. We will continuously make updates—mainly fixing bugs and errors, with only minor additions. If you find any issues, please report them in the **Issues** section. If time permits, we will fix them as soon as possible.
-
-As a beginner's first project, this STL implementation is mainly inspired by the SGI STL source code, with some of my own understanding and modifications added. During your learning process, you will certainly notice many incomplete parts—this is intentional. Although the STL includes many containers, their core design principles are very similar. For example, constructor parameters are mostly identical; only the internal implementations differ based on the underlying data structure. Thus, I fully implement these common interfaces in the early sequential containers, while later associative containers only include essential functions.
-
-> Reference book: *The Annotated STL Sources*
-
-## Project Overview
-This project is intended for learning the internal implementation of the STL and improving programming skills.
-
-Using AI to test code and find errors is a simple test that cannot fully cover all situations, which is why the test cases are messy.
-
-### What this project does **not** include:
-- `string`: Strictly speaking, it is not part of the STL, so it is not implemented.
-
-- `slist` (`forward_list`): Its implementation is similar to `list`, so it is omitted.
-
-- Container member functions: Only the most important ones are implemented; others are left out.
-
-
-This project guarantees to include many important STL algorithm implementations and programming techniques, while omitting some repetitive constructors and related functions. The main purpose is to learn and understand the internal implementation of STL, rather than for actual use (though use is still allowed: ).
-
-## Supported Platforms
----
-- **Operating Systems**
-  1. Linux
-  2. Windows
-  3. macOS
-
-- **Compilers**
-  1. g++
-  2. MSVC
-  3. Clang
-
-## How to Run
-
-### VS Code:
-1. Clone the repository
-```bash
-# If you don't have an SSH key:
-git clone https://github.com/wang-y-cell/mySTL.git
-
-# If you have an SSH key:
-git clone git@github.com:wang-y-cell/mySTL.git
-```
-2. build the project
-
-with g++
-```bash
-# In terminal or Git Bash
-
- # On Windows (PowerShell):
- $  mkdir build && cd build
- $  cmake .. -G "MinGW Makefiles"  # ".." is the path to CMakeLists.txt relative to the build directory
- $  cmake --build .
-
-# On Linux:
- $  mkdir build && cd build
- $  cmake ..
- $  make
-```
-
-With MSVC on windows:
-Download the ZIP file, extract it, and open the project directly in Visual Studio (MSVC).
