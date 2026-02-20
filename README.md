@@ -53,7 +53,8 @@ $ cmake --build .
 # linux
 # 运行build.sh脚本
 cd scripts
-sh build.sh
+bash build.sh
+bash run.sh
 
 ############################################
 # 手动构建
@@ -62,7 +63,12 @@ $ cmake ..
 $ make
 
 ```
+# 下载项目
+```bash
+# linux
+cmake --install . --prefix /usr/local
 
+```
 生成的可执行文件在bin目录中,可以在终端或git bash中运行。
 
 - msvc
