@@ -15,8 +15,6 @@ file(GLOB SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 foreach(src ${SRC})
     get_filename_component(name ${src} NAME_WE)
     add_executable(${name} ${src})
+    # 链接到 mystl 库，这样会自动包含头文件路径
+    target_link_libraries(${name} PRIVATE mystl)
 endforeach()
-
-
-
-
