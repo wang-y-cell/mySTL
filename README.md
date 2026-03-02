@@ -51,7 +51,7 @@ $ mkdir build && cd build
 $ cmake .. -G "MinGW Makefiles" #其中..是CmakeLists.txt是相对build目录的路径
 $ cmake --build .
 
-# linux
+# linux(下面选择其一,推荐一)
 ############################################
 # 运行build.sh脚本
 cd scripts
