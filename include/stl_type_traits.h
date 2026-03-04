@@ -13,6 +13,34 @@ struct false_type {
     static const bool value = false; //用来判断is_integer为true还是false
 };
 
+
+/**
+ * @brief  integral_constant是一个类型特征类模板，用于表示一个编译时的常量值。
+ * 
+ * @tparam Tp 常量值的类型
+ * @tparam _v 常量值
+ */
+template <typename Tp, Tp _v>
+struct integral_constant {
+    static const Tp value = _v;
+    typedef Tp value_type;
+    typedef integral_constant<Tp, _v> type;
+    operator value_type() const { return value; }
+};
+
+/**
+ * @brief  is_convertible是一个类型特征类模板，用于判断一个类型是否可以转换为另一个类型。
+ * 
+ * @tparam From 源类型
+ * @tparam To 目标类型
+ */
+template<typename From, typename To>
+struct is_convertible 
+    //__is_convertible是一个GCC内置的类型特征宏，用于判断一个类型是否可以转换为另一个类型。
+    : public integral_constant<bool, __is_convertible(From, To)> 
+{};
+
+
 template <bool B, class T = void>
 struct enable_if {};
 
