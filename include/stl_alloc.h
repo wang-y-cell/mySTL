@@ -148,11 +148,11 @@ public:
 
 
 typename default_alloc_template::obj*
-    default_alloc_template::free_list[NFREELISTS] = { 0 };
+    default_alloc_template::free_list[NFREELISTS] = { nullptr };
 
-char* default_alloc_template::start_free = 0;
+char* default_alloc_template::start_free = nullptr;
 
-char* default_alloc_template::end_free = 0;
+char* default_alloc_template::end_free = nullptr;
 
 size_t default_alloc_template::heap_size = 0;
 
