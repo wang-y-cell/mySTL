@@ -684,21 +684,30 @@ public:
     // 归并排序,非递归实现
     void sort(){
         if (node_->next != node_->prev) {
-            list carry;
-            list counter[64]; // 归并排序的辅助数组
-            int fill = 0;
+            list carry; //用来暂存从原链表取出的每一个节点
+            list counter[64]; // 归并排序的辅助数组,使用二进制的形式,counter[0]为2 ^ 0 counter[1] = 2 ^ 1
+            int fill = 0; //用来记录counter数组中实际用了多少层
             while (!empty()) {
-                carry.splice(carry.begin(), *this, begin());
-                int i = 0;
+                carry.splice(carry.begin(), *this, begin()); //每次切割链表的第一个元素,carry的元素大小是2 ^ 0 = 1
+                //所以我们接下来从counter[0]开始,这是归并排序的思想
+                //我们总是将两个相同数量或差不多的链表合并,模仿递归的方法,
+                //递归到最深处就是比较前两个元素,然后merge,之后比较后两个,在之后比较前两个和后两个,其中比较的结构放进counter[n]中
+                //其中2 ^ n 就是链表merge之后的长度
+                int i = 0; //从counter[0]开始
                 while (i < fill && !counter[i].empty()) {
-                    counter[i].merge(carry);
-                    carry.swap(counter[i++]);
+                    counter[i].merge(carry); //合并
+                    carry.swap(counter[i++]); //将合并之后的结果放进后面的counter中,
+                    // 因为两个相同长度list merge之后,长度 x 2 ,就是 2 ^ (n) ---> 2 ^ (n + 1)
                 }
+                //while循环结束之后,此时counter[i]为空,说明此时的merge最长
+
                 carry.swap(counter[i]);
                 if (i == fill) ++fill;
             }
+            //为什么需要这个循环,因为链表的长度不一定是2的n次方,比如 13 = 2 ^ 3 + 2 ^ 2 + 2 ^ 0
+            //所以如果链表的长度是13,除了最长的fill - 1 = 3外,还有 = 2 的地方也有,这时候需要merge一下
             for (int i = 1; i < fill; ++i) counter[i].merge(counter[i - 1]);
-            swap(counter[fill-1]);
+            swap(counter[fill-1]); //最终merge结果会在fill-1中
         }
     }
 
